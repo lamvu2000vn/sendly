@@ -24,6 +24,7 @@ const eslintConfig = defineConfig([
                     argsIgnorePattern: '^_',
                 },
             ],
+            '@typescript-eslint/no-explicit-any': 'off',
         },
     },
     // Keep prettier config last to override others.
