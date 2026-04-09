@@ -4,6 +4,7 @@ import { generateCode, sendSignal, pollSignal } from '@/lib/signaling';
 import { toast } from 'sonner';
 
 const CHUNK_SIZE = 16 * 1024; // 16 KB
+const CODE_EXPIRY_SECONDS = 10; // 5 minutes
 
 export interface TransferState {
     fileName: string;
@@ -16,12 +17,20 @@ export interface TransferState {
 export function useWebRTC() {
     const pcRef = useRef<RTCPeerConnection | null>(null);
     const dcRef = useRef<RTCDataChannel | null>(null);
-    const { setConnectionStatus, connectionCode, setConnectionCode } =
-        useAppStore();
-    const [localToken, setLocalToken] = useState<string>('');
+    const {
+        connectionStatus,
+        setConnectionStatus,
+        connectionCode,
+        setConnectionCode,
+        mode,
+        setMode,
+    } = useAppStore();
+    const abortControllerRef = useRef<AbortController | null>(null);
     const [transferState, setTransferState] = useState<TransferState | null>(
         null,
     );
+    const [expiryCountdown, setExpiryCountdown] =
+        useState<number>(CODE_EXPIRY_SECONDS);
 
     const receiveBuffer = useRef<ArrayBuffer[]>([]);
     const receivedSize = useRef<number>(0);
@@ -31,6 +40,10 @@ export function useWebRTC() {
 
     const cleanup = useCallback(() => {
         if (pollingRef.current) clearInterval(pollingRef.current);
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+            abortControllerRef.current = null;
+        }
         pcRef.current?.close();
         pcRef.current = null;
         dcRef.current = null;
@@ -115,7 +128,7 @@ export function useWebRTC() {
     }, [setConnectionStatus, setupDataChannel]);
 
     // Automated signaling logic for Sender
-    const startConnection = useCallback(async () => {
+    const performStartConnection = useCallback(async () => {
         try {
             cleanup();
             const code = generateCode();
@@ -138,33 +151,46 @@ export function useWebRTC() {
             const offer = await pc.createOffer();
             await pc.setLocalDescription(offer);
 
-            // Poll for Answer in a controlled loop
-            const pollForAnswer = async () => {
-                let attempts = 0;
-                while (attempts < 20) {
-                    // Total ~10 minutes
-                    if (!pcRef.current) break;
-                    attempts++;
+            const controller = new AbortController();
+            abortControllerRef.current = controller;
+
+            const pollForAnswer = async (signal: AbortSignal) => {
+                const startTime = Date.now();
+                while (Date.now() - startTime < CODE_EXPIRY_SECONDS * 1000) {
+                    if (signal.aborted || !pcRef.current) break;
                     try {
-                        const signal = await pollSignal(code, 'answer');
-                        if (signal && signal.type === 'answer') {
-                            const answer = JSON.parse(signal.data);
+                        const signalData = await pollSignal(
+                            code,
+                            'answer',
+                            signal,
+                        );
+                        if (
+                            signalData &&
+                            signalData.message.type === 'answer'
+                        ) {
+                            const answer = JSON.parse(signalData.message.data);
                             await pc.setRemoteDescription(
                                 new RTCSessionDescription(answer),
                             );
                             return; // Success
                         }
                     } catch (err) {
+                        if ((err as any).name === 'AbortError') break;
                         console.error('Poll answer error', err);
                     }
-                    // Wait a bit before next poll if it was a quick failure/null
                     await new Promise((resolve) => setTimeout(resolve, 2000));
                 }
-                setConnectionStatus('error');
-                toast.error('Connection timeout. Please try again.');
+                if (
+                    !signal.aborted &&
+                    pcRef.current &&
+                    connectionStatus !== 'connected'
+                ) {
+                    // Logic for automatic refresh is handled by the useEffect
+                    console.log('Connection polling timed out');
+                }
             };
 
-            pollForAnswer();
+            pollForAnswer(controller.signal);
         } catch (error) {
             console.error('Failed to start connection', error);
             setConnectionStatus('error');
@@ -175,33 +201,72 @@ export function useWebRTC() {
         setConnectionCode,
         setConnectionStatus,
         setupDataChannel,
+        connectionStatus,
     ]);
+
+    const startConnection = useCallback(async () => {
+        setMode('sender');
+        setExpiryCountdown(CODE_EXPIRY_SECONDS);
+        await performStartConnection();
+    }, [performStartConnection, setMode]);
 
     // Automated signaling logic for Receiver
     const joinConnection = useCallback(
         async (code: string) => {
             try {
+                setMode('receiver');
                 cleanup();
                 setConnectionCode(code);
                 setConnectionStatus('connecting');
 
-                // Wait for Offer in a loop
-                let offerSignal: any = null;
-                let attempts = 0;
-                while (attempts < 5) {
-                    attempts++;
-                    offerSignal = await pollSignal(code, 'offer');
-                    if (offerSignal && offerSignal.type === 'offer') break;
-                    // If offer not found yet, maybe sender is still gathering ICE.
-                }
-
-                if (!offerSignal || offerSignal.type !== 'offer') {
+                // 1. Validate code format
+                const CODE_REGEX = /^[0-9A-Z]{8}$/;
+                if (!CODE_REGEX.test(code.toUpperCase())) {
                     setConnectionStatus('error');
-                    toast.error('Could not find a sender with this code.');
+                    toast.error(
+                        'Mã code không hợp lệ (phải là 8 ký tự chữ và số).',
+                    );
                     return;
                 }
 
-                const offer = JSON.parse(offerSignal.data);
+                const controller = new AbortController();
+                abortControllerRef.current = controller;
+                const signal = controller.signal;
+
+                // Wait for Offer in a loop
+                let offerData: any = null;
+                let attempts = 0;
+                while (attempts < 10) {
+                    if (signal.aborted) break;
+                    attempts++;
+                    const result = await pollSignal(code, 'offer', signal);
+                    if (result && result.message.type === 'offer') {
+                        // 2. Check for expiration (e.g., 5 minutes = 300 seconds)
+                        const now = Math.floor(Date.now() / 1000);
+                        if (now - result.timestamp > CODE_EXPIRY_SECONDS) {
+                            setConnectionStatus('error');
+                            toast.error(
+                                'Mã code đã hết hạn. Vui lòng yêu cầu mã mới.',
+                            );
+                            return;
+                        }
+                        offerData = result.message;
+                        break;
+                    }
+                    await new Promise((resolve) => setTimeout(resolve, 1000));
+                }
+
+                if (signal.aborted) return;
+
+                if (!offerData || offerData.type !== 'offer') {
+                    setConnectionStatus('error');
+                    toast.error(
+                        'Không tìm thấy người gửi với mã code này hoặc mã đã hết hạn.',
+                    );
+                    return;
+                }
+
+                const offer = JSON.parse(offerData.data);
                 const pc = initializePeerConnection();
                 await pc.setRemoteDescription(new RTCSessionDescription(offer));
 
@@ -226,6 +291,7 @@ export function useWebRTC() {
             initializePeerConnection,
             setConnectionCode,
             setConnectionStatus,
+            setMode,
         ],
     );
 
@@ -264,12 +330,12 @@ export function useWebRTC() {
                     setTransferState((prev) =>
                         prev
                             ? {
-                                ...prev,
-                                progress: Math.min(
-                                    (offset / file.size) * 100,
-                                    100,
-                                ),
-                            }
+                                  ...prev,
+                                  progress: Math.min(
+                                      (offset / file.size) * 100,
+                                      100,
+                                  ),
+                              }
                             : prev,
                     );
 
@@ -300,17 +366,19 @@ export function useWebRTC() {
     }, [cleanup]);
 
     return {
-        localToken,
         connectionCode,
         transferState,
+        expiryCountdown,
         startConnection,
         joinConnection,
         sendFile,
-        disconnect: () => {
+        disconnect: (stayOnCurrentMode = false) => {
             cleanup();
             setConnectionStatus('disconnected');
             setTransferState(null);
             setConnectionCode('');
+            setExpiryCountdown(0);
+            if (!stayOnCurrentMode) setMode('sender');
         },
     };
 }

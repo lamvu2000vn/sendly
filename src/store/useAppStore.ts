@@ -1,12 +1,16 @@
 import { create } from 'zustand';
 
+export type ConnectionStatus =
+    | 'disconnected'
+    | 'connecting'
+    | 'connected'
+    | 'error';
+
 interface AppState {
     mode: 'sender' | 'receiver' | null;
     setMode: (mode: 'sender' | 'receiver' | null) => void;
-    connectionStatus: 'disconnected' | 'connecting' | 'connected' | 'error';
-    setConnectionStatus: (
-        status: 'disconnected' | 'connecting' | 'connected' | 'error',
-    ) => void;
+    connectionStatus: ConnectionStatus;
+    setConnectionStatus: (status: ConnectionStatus) => void;
     connectionCode: string;
     setConnectionCode: (code: string) => void;
 }
