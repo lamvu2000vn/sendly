@@ -1,6 +1,7 @@
 # Antigravity Rules — Sendly
 
 You are assisting development of the Sendly project.
+Reading context.txt for full context.
 
 ## Architectural Assumptions
 - This project DOES NOT use a backend server.
