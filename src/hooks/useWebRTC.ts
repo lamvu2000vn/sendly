@@ -1,5 +1,7 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import { useAppStore } from '@/store/useAppStore';
+import { generateCode, sendSignal, pollSignal } from '@/lib/signaling';
+import { toast } from 'sonner';
 
 const CHUNK_SIZE = 16 * 1024; // 16 KB
 
@@ -14,7 +16,8 @@ export interface TransferState {
 export function useWebRTC() {
     const pcRef = useRef<RTCPeerConnection | null>(null);
     const dcRef = useRef<RTCDataChannel | null>(null);
-    const { setConnectionStatus } = useAppStore();
+    const { setConnectionStatus, connectionCode, setConnectionCode } =
+        useAppStore();
     const [localToken, setLocalToken] = useState<string>('');
     const [transferState, setTransferState] = useState<TransferState | null>(
         null,
@@ -24,11 +27,21 @@ export function useWebRTC() {
     const receivedSize = useRef<number>(0);
     const expectedSize = useRef<number>(0);
     const fileNameRef = useRef<string>('');
+    const pollingRef = useRef<NodeJS.Timeout | null>(null);
+
+    const cleanup = useCallback(() => {
+        if (pollingRef.current) clearInterval(pollingRef.current);
+        pcRef.current?.close();
+        pcRef.current = null;
+        dcRef.current = null;
+    }, []);
 
     const setupDataChannel = useCallback(
         (channel: RTCDataChannel) => {
             channel.onopen = () => {
                 setConnectionStatus('connected');
+                toast.success('Devices connected successfully!');
+                if (pollingRef.current) clearInterval(pollingRef.current);
             };
             channel.onclose = () => {
                 setConnectionStatus('disconnected');
@@ -70,6 +83,7 @@ export function useWebRTC() {
                             if (!prev) return prev;
                             return { ...prev, progress: 100, objectUrl: url };
                         });
+                        toast.success(`Received ${fileNameRef.current}`);
                     }
                 }
             };
@@ -100,56 +114,119 @@ export function useWebRTC() {
         return pc;
     }, [setConnectionStatus, setupDataChannel]);
 
-    const createOffer = useCallback(async () => {
-        setConnectionStatus('connecting');
-        const pc = initializePeerConnection();
-        const dc = pc.createDataChannel('sendly-file-transfer');
-        setupDataChannel(dc);
+    // Automated signaling logic for Sender
+    const startConnection = useCallback(async () => {
+        try {
+            cleanup();
+            const code = generateCode();
+            setConnectionCode(code);
+            setConnectionStatus('connecting');
 
-        pc.onicecandidate = (e) => {
-            if (e.candidate === null) {
-                // Gathering complete
-                const offer = JSON.stringify(pc.localDescription);
-                setLocalToken(btoa(offer));
-            }
-        };
+            const pc = initializePeerConnection();
+            const dc = pc.createDataChannel('sendly-file-transfer');
+            setupDataChannel(dc);
 
-        const offer = await pc.createOffer();
-        await pc.setLocalDescription(offer);
-    }, [initializePeerConnection, setConnectionStatus, setupDataChannel]);
-
-    const handleOfferOrAnswer = useCallback(
-        async (token: string, mode: 'sender' | 'receiver') => {
-            try {
-                const decoded = JSON.parse(atob(token));
-                if (mode === 'receiver') {
-                    setConnectionStatus('connecting');
-                    const pc = initializePeerConnection();
-                    await pc.setRemoteDescription(
-                        new RTCSessionDescription(decoded),
-                    );
-
-                    pc.onicecandidate = (e) => {
-                        if (e.candidate === null) {
-                            const answer = JSON.stringify(pc.localDescription);
-                            setLocalToken(btoa(answer));
-                        }
-                    };
-
-                    const answer = await pc.createAnswer();
-                    await pc.setLocalDescription(answer);
-                } else if (mode === 'sender') {
-                    if (!pcRef.current) return;
-                    await pcRef.current.setRemoteDescription(
-                        new RTCSessionDescription(decoded),
-                    );
+            pc.onicecandidate = (e) => {
+                if (e.candidate === null && pc.localDescription) {
+                    sendSignal(code, {
+                        type: 'offer',
+                        data: JSON.stringify(pc.localDescription),
+                    });
                 }
+            };
+
+            const offer = await pc.createOffer();
+            await pc.setLocalDescription(offer);
+
+            // Poll for Answer in a controlled loop
+            const pollForAnswer = async () => {
+                let attempts = 0;
+                while (attempts < 20) {
+                    // Total ~10 minutes
+                    if (!pcRef.current) break;
+                    attempts++;
+                    try {
+                        const signal = await pollSignal(code, 'answer');
+                        if (signal && signal.type === 'answer') {
+                            const answer = JSON.parse(signal.data);
+                            await pc.setRemoteDescription(
+                                new RTCSessionDescription(answer),
+                            );
+                            return; // Success
+                        }
+                    } catch (err) {
+                        console.error('Poll answer error', err);
+                    }
+                    // Wait a bit before next poll if it was a quick failure/null
+                    await new Promise((resolve) => setTimeout(resolve, 2000));
+                }
+                setConnectionStatus('error');
+                toast.error('Connection timeout. Please try again.');
+            };
+
+            pollForAnswer();
+        } catch (error) {
+            console.error('Failed to start connection', error);
+            setConnectionStatus('error');
+        }
+    }, [
+        cleanup,
+        initializePeerConnection,
+        setConnectionCode,
+        setConnectionStatus,
+        setupDataChannel,
+    ]);
+
+    // Automated signaling logic for Receiver
+    const joinConnection = useCallback(
+        async (code: string) => {
+            try {
+                cleanup();
+                setConnectionCode(code);
+                setConnectionStatus('connecting');
+
+                // Wait for Offer in a loop
+                let offerSignal: any = null;
+                let attempts = 0;
+                while (attempts < 5) {
+                    attempts++;
+                    offerSignal = await pollSignal(code, 'offer');
+                    if (offerSignal && offerSignal.type === 'offer') break;
+                    // If offer not found yet, maybe sender is still gathering ICE.
+                }
+
+                if (!offerSignal || offerSignal.type !== 'offer') {
+                    setConnectionStatus('error');
+                    toast.error('Could not find a sender with this code.');
+                    return;
+                }
+
+                const offer = JSON.parse(offerSignal.data);
+                const pc = initializePeerConnection();
+                await pc.setRemoteDescription(new RTCSessionDescription(offer));
+
+                pc.onicecandidate = (e) => {
+                    if (e.candidate === null && pc.localDescription) {
+                        sendSignal(code, {
+                            type: 'answer',
+                            data: JSON.stringify(pc.localDescription),
+                        });
+                    }
+                };
+
+                const answer = await pc.createAnswer();
+                await pc.setLocalDescription(answer);
             } catch (error) {
-                console.error('Invalid token', error);
-                alert('Invalid connection token!');
+                console.error('Failed to join connection', error);
+                setConnectionStatus('error');
             }
         },
-        [initializePeerConnection, setConnectionStatus],
+        [
+            cleanup,
+            initializePeerConnection,
+            setConnectionCode,
+            setConnectionStatus,
+        ],
     );
 
     const sendFile = useCallback((file: File) => {
@@ -187,17 +264,16 @@ export function useWebRTC() {
                     setTransferState((prev) =>
                         prev
                             ? {
-                                  ...prev,
-                                  progress: Math.min(
-                                      (offset / file.size) * 100,
-                                      100,
-                                  ),
-                              }
+                                ...prev,
+                                progress: Math.min(
+                                    (offset / file.size) * 100,
+                                    100,
+                                ),
+                            }
                             : prev,
                     );
 
                     if (offset < file.size) {
-                        // To avoid freezing the UI and flooding the buffer, wait a bit if buffer is full
                         if (dcRef.current.bufferedAmount > 1024 * 1024 * 5) {
                             setTimeout(readNextChunk, 50);
                         } else {
@@ -207,12 +283,11 @@ export function useWebRTC() {
                         setTransferState((prev) =>
                             prev ? { ...prev, progress: 100 } : prev,
                         );
+                        toast.success(`Sent ${file.name}`);
                     }
                 } catch (error) {
                     console.error('Error sending file', error);
-                    alert(
-                        'Error sending file. File might be too large or connection unstable.',
-                    );
+                    toast.error('Error sending file. Check connection.');
                 }
             }
         };
@@ -220,18 +295,22 @@ export function useWebRTC() {
         readNextChunk();
     }, []);
 
+    useEffect(() => {
+        return () => cleanup();
+    }, [cleanup]);
+
     return {
         localToken,
+        connectionCode,
         transferState,
-        createOffer,
-        handleOfferOrAnswer,
+        startConnection,
+        joinConnection,
         sendFile,
         disconnect: () => {
-            pcRef.current?.close();
-            pcRef.current = null;
+            cleanup();
             setConnectionStatus('disconnected');
             setTransferState(null);
-            setLocalToken('');
+            setConnectionCode('');
         },
     };
 }

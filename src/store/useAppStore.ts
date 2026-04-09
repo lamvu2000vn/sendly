@@ -7,6 +7,8 @@ interface AppState {
     setConnectionStatus: (
         status: 'disconnected' | 'connecting' | 'connected' | 'error',
     ) => void;
+    connectionCode: string;
+    setConnectionCode: (code: string) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -14,4 +16,6 @@ export const useAppStore = create<AppState>((set) => ({
     setMode: (mode) => set({ mode }),
     connectionStatus: 'disconnected',
     setConnectionStatus: (status) => set({ connectionStatus: status }),
+    connectionCode: '',
+    setConnectionCode: (code) => set({ connectionCode: code }),
 }));
