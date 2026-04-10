@@ -53,7 +53,7 @@ export const ReceiverView = ({
 
             <div className="space-y-4">
                 <Button
-                    className="w-full h-14 text-lg font-bold rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full h-16 text-lg font-bold rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                     disabled={inputCode.length !== 8 || isConnecting}
                     onClick={onJoin}
                 >
