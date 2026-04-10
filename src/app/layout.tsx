@@ -50,9 +50,7 @@ export default function RootLayout({
             )}
         >
             <body className="min-h-full flex flex-col" suppressHydrationWarning>
-                <QueryProvider>
-                    {children}
-                </QueryProvider>
+                <QueryProvider>{children}</QueryProvider>
                 <Toaster position="top-center" richColors />
             </body>
         </html>

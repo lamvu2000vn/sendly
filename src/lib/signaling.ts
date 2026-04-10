@@ -15,9 +15,6 @@ export async function sendSignal(code: string, message: SignalMessage) {
     await fetch(`${NTFY_URL}/${topic}`, {
         method: 'POST',
         body: JSON.stringify(message),
-        headers: {
-            'Content-Type': 'application/json',
-        },
     });
 }
 
@@ -34,7 +31,7 @@ export async function pollSignal(
     const topic = `sendly_${code}_${type}`;
     // Combine provided signal with timeout
     const timeoutSignal = AbortSignal.timeout(30000);
-    const combinedSignal = signal 
+    const combinedSignal = signal
         ? AbortSignal.any([signal, timeoutSignal])
         : timeoutSignal;
 
@@ -49,9 +46,12 @@ export async function pollSignal(
         if (!text) return null;
 
         // ntfy can return multiple messages, we take the last one
-        const lines = text.trim().split('\n').filter(line => line.trim() !== '');
+        const lines = text
+            .trim()
+            .split('\n')
+            .filter((line) => line.trim() !== '');
         if (lines.length === 0) return null;
-        
+
         const lastLine = lines[lines.length - 1];
         const ntfyMsg = JSON.parse(lastLine);
 
@@ -68,6 +68,5 @@ export async function pollSignal(
         return null;
     }
 }
-
 
 export { generateCode };

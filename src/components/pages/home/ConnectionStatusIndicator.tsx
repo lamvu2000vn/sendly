@@ -4,7 +4,9 @@ interface ConnectionStatusIndicatorProps {
     status: ConnectionStatus;
 }
 
-export const ConnectionStatusIndicator = ({ status }: ConnectionStatusIndicatorProps) => {
+export const ConnectionStatusIndicator = ({
+    status,
+}: ConnectionStatusIndicatorProps) => {
     const statusColors: Record<ConnectionStatus, string> = {
         connected: 'bg-green-500',
         connecting: 'bg-yellow-500',

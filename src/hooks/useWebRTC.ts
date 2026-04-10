@@ -6,6 +6,8 @@ import { useQuery } from '@tanstack/react-query';
 import { saveChunk, clearStorage, getBlobFromStorage } from '@/lib/fileStorage';
 
 const CHUNK_SIZE = 16 * 1024; // 16 KB
+const SEND_OFFER_DELAY = 3000;
+const POLL_INTERVAL = 2000;
 
 export interface TransferState {
     fileName: string;
@@ -49,9 +51,23 @@ export function useWebRTC() {
                 toast.success('Đã kết nối thành công!');
             };
             channel.onclose = () => {
-                setConnectionStatus('disconnected');
-                setTransferState(null);
-                toast.info('Đã ngắt kết nối.');
+                const currentMode = useAppStore.getState().mode;
+                const isReceiveComplete =
+                    currentMode === 'receiver' &&
+                    expectedSize.current > 0 &&
+                    receivedSize.current === expectedSize.current;
+
+                if (isReceiveComplete) {
+                    toast.info(
+                        'Người gửi đã ngắt kết nối. Bạn vẫn có thể truy cập file đã nhận.',
+                    );
+                } else {
+                    setConnectionStatus('disconnected');
+                    setTransferState(null);
+                    setConnectionCode('');
+                    useAppStore.getState().setMode(null);
+                    toast.info('Đã ngắt kết nối.');
+                }
             };
             channel.binaryType = 'arraybuffer';
             channel.onmessage = async (event) => {
@@ -75,7 +91,8 @@ export function useWebRTC() {
                         receivedSize.current += event.data.byteLength;
 
                         const now = Date.now();
-                        const isComplete = receivedSize.current === expectedSize.current;
+                        const isComplete =
+                            receivedSize.current === expectedSize.current;
 
                         if (isComplete || now - lastUpdateRef.current > 100) {
                             lastUpdateRef.current = now;
@@ -84,7 +101,8 @@ export function useWebRTC() {
                                 return {
                                     ...prev,
                                     progress:
-                                        (receivedSize.current / expectedSize.current) *
+                                        (receivedSize.current /
+                                            expectedSize.current) *
                                         100,
                                 };
                             });
@@ -95,7 +113,11 @@ export function useWebRTC() {
                             const url = URL.createObjectURL(blob);
                             setTransferState((prev) => {
                                 if (!prev) return prev;
-                                return { ...prev, progress: 100, objectUrl: url };
+                                return {
+                                    ...prev,
+                                    progress: 100,
+                                    objectUrl: url,
+                                };
                             });
                             toast.success(`Đã nhận: ${fileNameRef.current}`);
                         }
@@ -107,12 +129,16 @@ export function useWebRTC() {
             };
             dcRef.current = channel;
         },
-        [setConnectionStatus],
+        [setConnectionStatus, setConnectionCode],
     );
 
     const initializePeerConnection = useCallback(() => {
         const pc = new RTCPeerConnection({
-            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' },
+                { urls: 'stun:stun2.l.google.com:19302' },
+            ],
         });
 
         pc.oniceconnectionstatechange = () => {
@@ -137,38 +163,68 @@ export function useWebRTC() {
     const targetSignalType = mode === 'sender' ? 'answer' : 'offer';
     const { data: remoteSignal } = useQuery({
         queryKey: ['signaling', connectionCode, targetSignalType],
-        queryFn: ({ signal }) => pollSignal(connectionCode, targetSignalType, signal),
+        queryFn: ({ signal }) =>
+            pollSignal(connectionCode, targetSignalType, signal),
         enabled: connectionStatus === 'connecting' && !!connectionCode,
-        refetchInterval: 1500,
+        refetchInterval: POLL_INTERVAL,
         staleTime: 0,
         gcTime: 0,
     });
 
     // Reaction to remote signal
     useEffect(() => {
-        if (!remoteSignal || connectionStatus !== 'connecting' || !pcRef.current) return;
+        if (
+            !remoteSignal ||
+            connectionStatus !== 'connecting' ||
+            !pcRef.current
+        )
+            return;
 
         const handleHandshake = async () => {
             try {
-                if (mode === 'sender' && remoteSignal.message.type === 'answer') {
+                // Prevent repeated processing of the same signal since useQuery polls
+                if (pcRef.current?.remoteDescription) return;
+
+                if (
+                    mode === 'sender' &&
+                    remoteSignal.message.type === 'answer'
+                ) {
                     const answer = JSON.parse(remoteSignal.message.data);
-                    await pcRef.current?.setRemoteDescription(new RTCSessionDescription(answer));
-                } else if (mode === 'receiver' && remoteSignal.message.type === 'offer') {
+                    await pcRef.current?.setRemoteDescription(
+                        new RTCSessionDescription(answer),
+                    );
+                } else if (
+                    mode === 'receiver' &&
+                    remoteSignal.message.type === 'offer'
+                ) {
                     const offer = JSON.parse(remoteSignal.message.data);
-                    await pcRef.current?.setRemoteDescription(new RTCSessionDescription(offer));
+                    await pcRef.current?.setRemoteDescription(
+                        new RTCSessionDescription(offer),
+                    );
+
+                    let signalSent = false;
+                    const sendAnswer = () => {
+                        if (signalSent || !pcRef.current?.localDescription)
+                            return;
+                        signalSent = true;
+                        sendSignal(connectionCode, {
+                            type: 'answer',
+                            data: JSON.stringify(
+                                pcRef.current.localDescription,
+                            ),
+                        });
+                    };
 
                     pcRef.current!.onicecandidate = (e) => {
-                        if (e.candidate === null && pcRef.current?.localDescription) {
-                            sendSignal(connectionCode, {
-                                type: 'answer',
-                                data: JSON.stringify(pcRef.current.localDescription),
-                            });
+                        if (e.candidate === null) {
+                            sendAnswer();
                         }
                     };
 
                     const answer = await pcRef.current?.createAnswer();
                     if (answer) {
                         await pcRef.current?.setLocalDescription(answer);
+                        setTimeout(sendAnswer, 2000);
                     }
                 }
             } catch (err) {
@@ -179,44 +235,81 @@ export function useWebRTC() {
         };
 
         handleHandshake();
-    }, [remoteSignal, connectionStatus, mode, connectionCode, setConnectionStatus]);
+    }, [
+        remoteSignal,
+        connectionStatus,
+        mode,
+        connectionCode,
+        setConnectionStatus,
+    ]);
 
-    const startConnection = useCallback(async () => {
-        try {
-            cleanup();
-            setMode('sender');
-            const code = generateCode();
-            setConnectionCode(code);
-            setConnectionStatus('connecting');
+    const startConnection = useCallback(
+        async (predefinedCode?: string | unknown) => {
+            try {
+                cleanup();
+                setMode('sender');
+                // If predefinedCode is not a string (e.g. it's a MouseEvent from a button click),
+                // generate a new random code instead.
+                const code =
+                    typeof predefinedCode === 'string'
+                        ? predefinedCode
+                        : generateCode();
+                setConnectionCode(code);
+                setConnectionStatus('connecting');
 
-            const pc = initializePeerConnection();
-            const dc = pc.createDataChannel('sendly-file-transfer');
-            setupDataChannel(dc);
+                const pc = initializePeerConnection();
+                const dc = pc.createDataChannel('sendly-file-transfer');
+                setupDataChannel(dc);
 
-            pc.onicecandidate = (e) => {
-                if (e.candidate === null && pc.localDescription) {
+                let signalSent = false;
+                const sendOffer = () => {
+                    if (signalSent || !pc.localDescription) return;
+                    signalSent = true;
                     sendSignal(code, {
                         type: 'offer',
                         data: JSON.stringify(pc.localDescription),
                     });
-                }
-            };
+                };
 
-            const offer = await pc.createOffer();
-            await pc.setLocalDescription(offer);
-        } catch (error) {
-            console.error('Failed to start connection', error);
-            setConnectionStatus('error');
-            toast.error('Không thể tạo phiên kết nối mới.');
-        }
-    }, [cleanup, initializePeerConnection, setConnectionCode, setConnectionStatus, setupDataChannel, setMode]);
+                pc.onicecandidate = (e) => {
+                    if (e.candidate === null) {
+                        sendOffer();
+                    }
+                };
+
+                const offer = await pc.createOffer();
+                await pc.setLocalDescription(offer);
+
+                // Fallback timeout in case ICE gathering takes too long
+                setTimeout(sendOffer, SEND_OFFER_DELAY);
+            } catch (error) {
+                console.error('Failed to start connection', error);
+                setConnectionStatus('error');
+                toast.error('Không thể tạo phiên kết nối mới.');
+            }
+        },
+        [
+            cleanup,
+            initializePeerConnection,
+            setConnectionCode,
+            setConnectionStatus,
+            setupDataChannel,
+            setMode,
+        ],
+    );
 
     const joinConnection = useCallback(
-        async (code: string) => {
+        async (incomingCode: string | unknown) => {
             try {
+                // Ensure we have a string code
+                const code =
+                    typeof incomingCode === 'string' ? incomingCode : '';
+
                 const CODE_REGEX = /^[0-9A-Z]{8}$/;
-                if (!CODE_REGEX.test(code.toUpperCase())) {
-                    toast.error('Mã code không hợp lệ (phải là 8 ký tự chữ và số).');
+                if (!code || !CODE_REGEX.test(code.toUpperCase())) {
+                    toast.error(
+                        'Mã code không hợp lệ (phải là 8 ký tự chữ và số).',
+                    );
                     return;
                 }
 
@@ -229,10 +322,18 @@ export function useWebRTC() {
             } catch (error) {
                 console.error('Failed to join connection', error);
                 setConnectionStatus('error');
-                toast.error('Không thể tham gia kết nối. Vui lòng kiểm tra mã code.');
+                toast.error(
+                    'Không thể tham gia kết nối. Vui lòng kiểm tra mã code.',
+                );
             }
         },
-        [cleanup, initializePeerConnection, setConnectionCode, setConnectionStatus, setMode],
+        [
+            cleanup,
+            initializePeerConnection,
+            setConnectionCode,
+            setConnectionStatus,
+            setMode,
+        ],
     );
 
     const sendFile = useCallback((file: File) => {
@@ -277,9 +378,9 @@ export function useWebRTC() {
                         setTransferState((prev) =>
                             prev
                                 ? {
-                                    ...prev,
-                                    progress,
-                                }
+                                      ...prev,
+                                      progress,
+                                  }
                                 : prev,
                         );
                     }
@@ -298,13 +399,22 @@ export function useWebRTC() {
                     }
                 } catch (error) {
                     console.error('Error sending file', error);
-                    toast.error('Lỗi khi gửi file. Vui lòng kiểm tra lại kết nối.');
+                    toast.error(
+                        'Lỗi khi gửi file. Vui lòng kiểm tra lại kết nối.',
+                    );
                 }
             }
         };
 
         readNextChunk();
     }, []);
+
+    const clearTransfer = useCallback(() => {
+        if (transferState?.objectUrl) {
+            URL.revokeObjectURL(transferState.objectUrl);
+        }
+        setTransferState(null);
+    }, [transferState]);
 
     useEffect(() => {
         return () => cleanup();
@@ -316,12 +426,16 @@ export function useWebRTC() {
         startConnection,
         joinConnection,
         sendFile,
+        clearTransfer,
         disconnect: (stayOnCurrentMode = false) => {
             cleanup();
             setConnectionStatus('disconnected');
+            if (transferState?.objectUrl) {
+                URL.revokeObjectURL(transferState.objectUrl);
+            }
             setTransferState(null);
             setConnectionCode('');
-            if (!stayOnCurrentMode) setMode('sender');
+            if (!stayOnCurrentMode) setMode(null);
         },
     };
 }

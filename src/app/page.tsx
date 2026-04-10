@@ -5,6 +5,15 @@ import { useWebRTC } from '@/hooks/useWebRTC';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 import { Hero } from '@/components/pages/home/Hero';
 import { Footer } from '@/components/pages/home/Footer';
@@ -20,10 +29,20 @@ export default function Home() {
         startConnection,
         joinConnection,
         sendFile,
+        clearTransfer,
         disconnect,
     } = useWebRTC();
 
     const [inputCode, setInputCode] = useState('');
+    const [confirmConfig, setConfirmConfig] = useState<{
+        open: boolean;
+        message: string;
+        onConfirm: () => void;
+    }>({
+        open: false,
+        message: '',
+        onConfirm: () => {},
+    });
 
     const isConnected = connectionStatus === 'connected';
     const isConnecting = connectionStatus === 'connecting';
@@ -39,6 +58,25 @@ export default function Home() {
         sendFile(file);
     };
 
+    const handleDisconnect = (stayOnCurrentMode = false) => {
+        const isTransferring =
+            mode === 'sender' &&
+            transferState &&
+            !transferState.isReceiving &&
+            transferState.progress < 100;
+
+        if (isTransferring) {
+            setConfirmConfig({
+                open: true,
+                message:
+                    'Tệp đang được gửi đi. Ngắt kết nối lúc này sẽ làm hỏng quá trình truyền tải cho người nhận. Bạn vẫn muốn dừng chứ?',
+                onConfirm: () => disconnect(stayOnCurrentMode),
+            });
+            return;
+        }
+        disconnect(stayOnCurrentMode);
+    };
+
     return (
         <main className="flex flex-col items-center justify-center min-h-screen p-4 bg-linear-to-br from-background via-muted/30 to-background">
             <div className="w-full max-w-xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-1000">
@@ -49,50 +87,116 @@ export default function Home() {
                         <ConnectedView
                             transferState={transferState}
                             onFileSelect={handleFileSelect}
-                            onDisconnect={() => disconnect()}
+                            onDisconnect={() => handleDisconnect()}
+                            onClearTransfer={clearTransfer}
                         />
                     ) : (
-                        <Tabs
-                            value={mode || 'sender'}
-                            className="space-y-6"
-                            onValueChange={(v) => {
-                                disconnect(true);
-                                setMode(v as 'sender' | 'receiver');
-                                setInputCode('');
-                            }}
-                        >
-                            <TabsList className="w-full">
-                                <TabsTrigger value="sender">Send</TabsTrigger>
-                                <TabsTrigger value="receiver">
-                                    Receive
-                                </TabsTrigger>
-                            </TabsList>
+                        <div className="space-y-6">
+                            <Tabs
+                                value={mode || 'sender'}
+                                className="w-full"
+                                onValueChange={(v) => {
+                                    const isTransferring =
+                                        mode === 'sender' &&
+                                        transferState &&
+                                        !transferState.isReceiving &&
+                                        transferState.progress < 100;
+                                    if (isTransferring) {
+                                        setConfirmConfig({
+                                            open: true,
+                                            message:
+                                                'Quá trình gửi file sẽ bị hủy khi bạn chuyển chế độ. Bạn vẫn muốn tiếp tục chứ?',
+                                            onConfirm: () => {
+                                                disconnect(true);
+                                                setMode(
+                                                    v as 'sender' | 'receiver',
+                                                );
+                                                setInputCode('');
+                                            },
+                                        });
+                                        return;
+                                    }
+                                    disconnect(true);
+                                    setMode(v as 'sender' | 'receiver');
+                                    setInputCode('');
+                                }}
+                            >
+                                <TabsList className="w-full">
+                                    <TabsTrigger value="sender">
+                                        Send
+                                    </TabsTrigger>
+                                    <TabsTrigger value="receiver">
+                                        Receive
+                                    </TabsTrigger>
+                                </TabsList>
 
-                            <TabsContent value="sender">
-                                <SenderView
-                                    connectionCode={connectionCode}
-                                    isConnecting={isConnecting}
-                                    onStart={startConnection}
-                                    onCopy={handleCopy}
-                                    onCancel={() => disconnect()}
-                                />
-                            </TabsContent>
+                                <TabsContent value="sender">
+                                    <SenderView
+                                        connectionCode={connectionCode}
+                                        isConnecting={isConnecting}
+                                        onStart={startConnection}
+                                        onCopy={handleCopy}
+                                        onCancel={() => handleDisconnect()}
+                                    />
+                                </TabsContent>
 
-                            <TabsContent value="receiver">
-                                <ReceiverView
-                                    inputCode={inputCode}
-                                    isConnecting={isConnecting}
-                                    onInputChange={setInputCode}
-                                    onJoin={() => joinConnection(inputCode)}
-                                    onCancel={() => disconnect()}
-                                />
-                            </TabsContent>
-                        </Tabs>
+                                <TabsContent value="receiver">
+                                    <ReceiverView
+                                        inputCode={inputCode}
+                                        isConnecting={isConnecting}
+                                        onInputChange={setInputCode}
+                                        onJoin={() => joinConnection(inputCode)}
+                                        onCancel={() => handleDisconnect()}
+                                    />
+                                </TabsContent>
+                            </Tabs>
+                        </div>
                     )}
                 </ConnectionCard>
 
                 <Footer />
             </div>
+
+            <Dialog
+                open={confirmConfig.open}
+                onOpenChange={(open) =>
+                    setConfirmConfig((prev) => ({ ...prev, open }))
+                }
+            >
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Xác nhận ngắt kết nối</DialogTitle>
+                        <DialogDescription>
+                            {confirmConfig.message}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button
+                            variant="ghost"
+                            onClick={() =>
+                                setConfirmConfig((prev) => ({
+                                    ...prev,
+                                    open: false,
+                                }))
+                            }
+                        >
+                            Quay lại
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            onClick={() => {
+                                confirmConfig.onConfirm();
+                                setConfirmConfig((prev) => ({
+                                    ...prev,
+                                    open: false,
+                                }));
+                            }}
+                        >
+                            Xác nhận dừng
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
 
             <style jsx global>{`
                 .glass-card {

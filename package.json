@@ -8,7 +8,7 @@
         "start": "next start",
         "lint": "eslint",
         "format:check": "prettier --check .",
-        "format:write": "prettier --write ."
+        "format:write": "eslint --fix . && prettier --write ."
     },
     "dependencies": {
         "@tanstack/react-query": "^5.97.0",

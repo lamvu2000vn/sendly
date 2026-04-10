@@ -50,7 +50,7 @@ export const SenderView = ({
                             {connectionCode.split('').map((char, i) => (
                                 <span
                                     key={i}
-                                    className="w-10 h-14 flex items-center justify-center bg-card border-2 border-primary/20 rounded-xl text-3xl font-black text-primary shadow-sm"
+                                    className="size-12 flex items-center justify-center bg-card border-2 border-primary/20 rounded-full text-3xl font-black text-primary shadow-sm"
                                 >
                                     {char}
                                 </span>

@@ -8,17 +8,24 @@ interface ConnectedViewProps {
     transferState: TransferState | null;
     onFileSelect: (file: File) => void;
     onDisconnect: () => void;
+    onClearTransfer: () => void;
 }
 
 export const ConnectedView = ({
     transferState,
     onFileSelect,
     onDisconnect,
+    onClearTransfer,
 }: ConnectedViewProps) => (
     <div className="space-y-6 py-4 animate-in zoom-in-95 duration-500">
         <FileDropZone onFileSelect={onFileSelect} />
 
-        {transferState && <TransferProgress transferState={transferState} />}
+        {transferState && (
+            <TransferProgress
+                transferState={transferState}
+                onClear={onClearTransfer}
+            />
+        )}
 
         <div className="flex justify-center pt-2">
             <Button

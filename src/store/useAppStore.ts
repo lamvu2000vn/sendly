@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export type ConnectionStatus =
     | 'disconnected'
@@ -15,11 +16,21 @@ interface AppState {
     setConnectionCode: (code: string) => void;
 }
 
-export const useAppStore = create<AppState>((set) => ({
-    mode: null,
-    setMode: (mode) => set({ mode }),
-    connectionStatus: 'disconnected',
-    setConnectionStatus: (status) => set({ connectionStatus: status }),
-    connectionCode: '',
-    setConnectionCode: (code) => set({ connectionCode: code }),
-}));
+export const useAppStore = create<AppState>()(
+    persist(
+        (set) => ({
+            mode: null,
+            setMode: (mode) => set({ mode }),
+            connectionStatus: 'disconnected',
+            setConnectionStatus: (status) => set({ connectionStatus: status }),
+            connectionCode: '',
+            setConnectionCode: (code) => set({ connectionCode: code }),
+        }),
+        {
+            name: 'sendly-app-storage',
+            partialize: (state) => ({
+                mode: state.mode,
+            }),
+        },
+    ),
+);
