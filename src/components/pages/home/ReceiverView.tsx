@@ -18,7 +18,7 @@ export const ReceiverView = ({
     onJoin,
     onCancel,
 }: ReceiverViewProps) => (
-    <div className="space-y-6 animate-in slide-in-from-right-4 duration-500">
+    <div className="space-y-6">
         <div className="space-y-4 py-4">
             <div className="space-y-2">
                 <Label

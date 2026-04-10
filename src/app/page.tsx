@@ -17,7 +17,6 @@ export default function Home() {
     const { mode, setMode, connectionStatus, connectionCode } = useAppStore();
     const {
         transferState,
-        expiryCountdown,
         startConnection,
         joinConnection,
         sendFile,
@@ -32,7 +31,7 @@ export default function Home() {
     const handleCopy = () => {
         if (connectionCode) {
             navigator.clipboard.writeText(connectionCode);
-            toast.success('Code copied to clipboard');
+            toast.success('Đã sao chép mã code vào bộ nhớ tạm');
         }
     };
 
@@ -73,7 +72,6 @@ export default function Home() {
                                 <SenderView
                                     connectionCode={connectionCode}
                                     isConnecting={isConnecting}
-                                    expiryCountdown={expiryCountdown}
                                     onStart={startConnection}
                                     onCopy={handleCopy}
                                     onCancel={() => disconnect()}

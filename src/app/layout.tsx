@@ -29,6 +29,7 @@ export const metadata: Metadata = {
 };
 
 import { Toaster } from 'sonner';
+import QueryProvider from '@/components/providers/QueryProvider';
 
 export default function RootLayout({
     children,
@@ -49,7 +50,9 @@ export default function RootLayout({
             )}
         >
             <body className="min-h-full flex flex-col" suppressHydrationWarning>
-                {children}
+                <QueryProvider>
+                    {children}
+                </QueryProvider>
                 <Toaster position="top-center" richColors />
             </body>
         </html>

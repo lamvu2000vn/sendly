@@ -5,7 +5,6 @@ import { CopyIcon, ZapIcon } from 'lucide-react';
 interface SenderViewProps {
     connectionCode: string;
     isConnecting: boolean;
-    expiryCountdown: number;
     onStart: () => void;
     onCopy: () => void;
     onCancel: () => void;
@@ -14,7 +13,6 @@ interface SenderViewProps {
 export const SenderView = ({
     connectionCode,
     isConnecting,
-    expiryCountdown,
     onStart,
     onCopy,
     onCancel,
@@ -41,7 +39,7 @@ export const SenderView = ({
     }
 
     return (
-        <div className="space-y-8 animate-in slide-in-from-left-4 duration-500 py-4">
+        <div className="space-y-8 py-4">
             <div className="text-center space-y-4">
                 <Label className="text-sm text-muted-foreground uppercase tracking-widest font-bold">
                     Your Connection Code
@@ -83,27 +81,6 @@ export const SenderView = ({
                         : 'Share this code with the receiver.'}
                 </p>
 
-                {connectionCode && (
-                    <div className="w-full max-w-50 space-y-1.5">
-                        <div className="flex justify-between text-[10px] text-muted-foreground px-1">
-                            <span>Mã sẽ hết hạn sau</span>
-                            <span className="font-mono font-medium">
-                                {Math.floor(expiryCountdown / 60)}:
-                                {(expiryCountdown % 60)
-                                    .toString()
-                                    .padStart(2, '0')}
-                            </span>
-                        </div>
-                        <div className="h-1 w-full bg-muted rounded-full overflow-hidden">
-                            <div
-                                className="h-full bg-primary/40 transition-all duration-1000 ease-linear"
-                                style={{
-                                    width: `${(expiryCountdown / 300) * 100}%`,
-                                }}
-                            />
-                        </div>
-                    </div>
-                )}
                 <Button
                     variant="ghost"
                     size="sm"
