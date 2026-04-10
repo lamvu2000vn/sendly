@@ -10,26 +10,26 @@
     --font-sans: var(--font-sans);
     --font-mono: var(--font-geist-mono);
     --font-heading: var(--font-heading);
-    
+
     --color-primary: var(--primary);
     --color-primary-foreground: var(--primary-foreground);
-    
+
     --color-secondary: var(--secondary);
     --color-secondary-foreground: var(--secondary-foreground);
-    
+
     --color-accent: var(--accent);
     --color-accent-foreground: var(--accent-foreground);
-    
+
     --color-muted: var(--muted);
     --color-muted-foreground: var(--muted-foreground);
-    
+
     --color-card: var(--card);
     --color-card-foreground: var(--card-foreground);
-    
+
     --color-border: var(--border);
     --color-input: var(--input);
     --color-ring: var(--ring);
-    
+
     --radius-xl: 1.5rem;
     --radius-2xl: 2rem;
 }
@@ -38,26 +38,26 @@
     /* 2026 Modern Light Theme - Clean, Airy, Premium */
     --background: oklch(0.99 0.005 240);
     --foreground: oklch(0.2 0.02 240);
-    
+
     --card: oklch(1 0 0 / 0.8);
     --card-foreground: oklch(0.2 0.02 240);
-    
+
     --primary: oklch(0.6 0.18 250); /* Royal Blue */
     --primary-foreground: oklch(0.99 0.01 250);
-    
+
     --secondary: oklch(0.92 0.02 240);
     --secondary-foreground: oklch(0.3 0.03 240);
-    
+
     --accent: oklch(0.7 0.25 330); /* Orchid Pink */
     --accent-foreground: oklch(0.99 0.01 330);
-    
+
     --muted: oklch(0.95 0.01 240);
     --muted-foreground: oklch(0.5 0.03 240);
-    
+
     --border: oklch(0.9 0.02 240);
     --input: oklch(0.9 0.02 240);
     --ring: oklch(0.6 0.18 250 / 0.4);
-    
+
     --radius: 1rem;
 }
 
@@ -65,22 +65,22 @@
     /* 2026 Modern Dark Theme - Deep, Glowing, Cyberpunk-Lite */
     --background: oklch(0.12 0.015 250);
     --foreground: oklch(0.95 0.01 250);
-    
+
     --card: oklch(0.16 0.02 250 / 0.7);
     --card-foreground: oklch(0.95 0.01 250);
-    
+
     --primary: oklch(0.65 0.2 260); /* Electric Blue */
     --primary-foreground: oklch(0.98 0.01 260);
-    
+
     --secondary: oklch(0.22 0.03 250);
     --secondary-foreground: oklch(0.9 0.02 250);
-    
+
     --accent: oklch(0.75 0.25 320); /* Magenta Glow */
     --accent-foreground: oklch(0.98 0.01 320);
-    
+
     --muted: oklch(0.2 0.02 250);
     --muted-foreground: oklch(0.6 0.03 250);
-    
+
     --border: oklch(0.25 0.03 250 / 0.5);
     --input: oklch(0.25 0.03 250 / 0.5);
     --ring: oklch(0.65 0.2 260 / 0.5);
@@ -101,9 +101,13 @@
 @layer utilities {
     .glass {
         @apply backdrop-blur-xl border border-white/10 dark:border-white/5;
-        background: radial-gradient(circle at top left, var(--card), transparent);
+        background: radial-gradient(
+            circle at top left,
+            var(--card),
+            transparent
+        );
     }
-    
+
     .glass-morphism {
         @apply backdrop-blur-2xl bg-white/5 border border-white/10 shadow-2xl;
     }
@@ -121,9 +125,15 @@
     }
 
     @keyframes gradient {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
     }
 
     .glow-primary {
@@ -153,6 +163,7 @@
 .page-enter-active {
     opacity: 1;
     transform: translateY(0);
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    transition:
+        opacity 0.5s ease-out,
+        transform 0.5s ease-out;
 }
-

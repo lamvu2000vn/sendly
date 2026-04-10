@@ -118,8 +118,12 @@ export default function Home() {
                                             mode === 'sender' &&
                                             transferState &&
                                             !transferState.isReceiving &&
-                                            transferState.files.some(f => f.progress > 0 && f.progress < 100);
-                                        
+                                            transferState.files.some(
+                                                (f) =>
+                                                    f.progress > 0 &&
+                                                    f.progress < 100,
+                                            );
+
                                         if (isTransferring) {
                                             setConfirmConfig({
                                                 open: true,
@@ -127,7 +131,11 @@ export default function Home() {
                                                     'Switching modes will terminate current transfers. Continue?',
                                                 onConfirm: () => {
                                                     disconnect(true);
-                                                    setMode(v as 'sender' | 'receiver');
+                                                    setMode(
+                                                        v as
+                                                            | 'sender'
+                                                            | 'receiver',
+                                                    );
                                                     setInputCode('');
                                                 },
                                             });
@@ -139,13 +147,13 @@ export default function Home() {
                                     }}
                                 >
                                     <TabsList className="grid grid-cols-2 h-14 p-1 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 mb-8">
-                                        <TabsTrigger 
-                                            value="sender" 
+                                        <TabsTrigger
+                                            value="sender"
                                             className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-lg transition-all font-bold uppercase tracking-widest text-[10px]"
                                         >
                                             Originate
                                         </TabsTrigger>
-                                        <TabsTrigger 
+                                        <TabsTrigger
                                             value="receiver"
                                             className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-lg transition-all font-bold uppercase tracking-widest text-[10px]"
                                         >
@@ -153,7 +161,10 @@ export default function Home() {
                                         </TabsTrigger>
                                     </TabsList>
 
-                                    <TabsContent value="sender" className="mt-0 outline-none">
+                                    <TabsContent
+                                        value="sender"
+                                        className="mt-0 outline-none"
+                                    >
                                         <SenderView
                                             connectionCode={connectionCode}
                                             isConnecting={isConnecting}
@@ -163,12 +174,17 @@ export default function Home() {
                                         />
                                     </TabsContent>
 
-                                    <TabsContent value="receiver" className="mt-0 outline-none">
+                                    <TabsContent
+                                        value="receiver"
+                                        className="mt-0 outline-none"
+                                    >
                                         <ReceiverView
                                             inputCode={inputCode}
                                             isConnecting={isConnecting}
                                             onInputChange={setInputCode}
-                                            onJoin={() => joinConnection(inputCode)}
+                                            onJoin={() =>
+                                                joinConnection(inputCode)
+                                            }
                                             onCancel={() => handleDisconnect()}
                                         />
                                     </TabsContent>
@@ -189,7 +205,9 @@ export default function Home() {
             >
                 <DialogContent className="glass border-white/10 rounded-3xl sm:max-w-md">
                     <DialogHeader>
-                        <DialogTitle className="text-xl font-heading">Terminate Connection?</DialogTitle>
+                        <DialogTitle className="text-xl font-heading">
+                            Terminate Connection?
+                        </DialogTitle>
                         <DialogDescription className="text-muted-foreground">
                             {confirmConfig.message}
                         </DialogDescription>

@@ -26,7 +26,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
     title: 'Sendly | Futuristic P2P File Transfer',
-    description: 'Fast, secure, and beautiful peer-to-peer file sharing directly in your browser. No servers, no storage, just direct connection.',
+    description:
+        'Fast, secure, and beautiful peer-to-peer file sharing directly in your browser. No servers, no storage, just direct connection.',
     keywords: ['file transfer', 'webrtc', 'p2p', 'secure sharing', 'sendly'],
     authors: [{ name: 'Sendly Team' }],
     viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
@@ -56,7 +57,12 @@ export default function RootLayout({
                         {children}
                     </div>
                 </QueryProvider>
-                <Toaster position="top-center" richColors closeButton theme="system" />
+                <Toaster
+                    position="top-center"
+                    richColors
+                    closeButton
+                    theme="system"
+                />
             </body>
         </html>
     );

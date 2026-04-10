@@ -36,14 +36,15 @@ export async function clearStorage(fileId?: string) {
     return new Promise<void>((resolve, reject) => {
         const transaction = db.transaction(STORE_NAME, 'readwrite');
         const store = transaction.objectStore(STORE_NAME);
-        
+
         let request: IDBRequest;
         if (fileId) {
             const index = store.index('fileId');
             const range = IDBKeyRange.only(fileId);
             request = index.openCursor(range);
             request.onsuccess = () => {
-                const cursor = (request as IDBRequest<IDBCursorWithValue>).result;
+                const cursor = (request as IDBRequest<IDBCursorWithValue>)
+                    .result;
                 if (cursor) {
                     cursor.delete();
                     cursor.continue();
@@ -79,13 +80,16 @@ export async function getAllChunks(fileId: string): Promise<ArrayBuffer[]> {
         const request = index.getAll(IDBKeyRange.only(fileId));
         request.onsuccess = () => {
             const results = request.result as { data: ArrayBuffer }[];
-            resolve(results.map(r => r.data));
+            resolve(results.map((r) => r.data));
         };
         request.onerror = () => reject(request.error);
     });
 }
 
-export async function getBlobFromStorage(fileId: string, type: string = ''): Promise<Blob> {
+export async function getBlobFromStorage(
+    fileId: string,
+    type: string = '',
+): Promise<Blob> {
     const chunks = await getAllChunks(fileId);
     return new Blob(chunks, { type });
 }

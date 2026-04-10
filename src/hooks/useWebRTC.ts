@@ -109,12 +109,16 @@ export function useWebRTC() {
                                 return {
                                     isReceiving: true,
                                     files: msg.files.map((f: any) => {
-                                        const existing = existingFiles.find(ef => ef.id === f.id);
-                                        return existing || {
-                                            ...f,
-                                            progress: 0,
-                                            status: 'pending',
-                                        };
+                                        const existing = existingFiles.find(
+                                            (ef) => ef.id === f.id,
+                                        );
+                                        return (
+                                            existing || {
+                                                ...f,
+                                                progress: 0,
+                                                status: 'pending',
+                                            }
+                                        );
                                     }),
                                 };
                             });
@@ -182,7 +186,8 @@ export function useWebRTC() {
 
                         if (isComplete) {
                             const completedFileId = file.id;
-                            const blob = await getBlobFromStorage(completedFileId);
+                            const blob =
+                                await getBlobFromStorage(completedFileId);
                             const url = URL.createObjectURL(blob);
                             setTransferState((prev) => {
                                 if (!prev) return prev;
@@ -196,7 +201,9 @@ export function useWebRTC() {
                                 };
                             });
                             toast.success(`Đã nhận: ${file.name}`);
-                            if (currentFileRef.current?.id === completedFileId) {
+                            if (
+                                currentFileRef.current?.id === completedFileId
+                            ) {
                                 currentFileRef.current = null;
                             }
                         }
@@ -472,7 +479,9 @@ export function useWebRTC() {
                 return {
                     isReceiving: false,
                     files: files.map((f) =>
-                        f.id === transfer.id ? { ...f, status: 'transferring' } : f
+                        f.id === transfer.id
+                            ? { ...f, status: 'transferring' }
+                            : f,
                     ),
                 };
             });

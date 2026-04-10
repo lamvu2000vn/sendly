@@ -31,16 +31,20 @@ export const TransferProgress = ({
     };
 
     const completedFilesCount = transferState.files.filter(
-        (f) => f.status === 'completed'
+        (f) => f.status === 'completed',
     ).length;
 
-    const allCompleted = transferState.files.length > 0 && transferState.files.every((f) => f.status === 'completed');
+    const allCompleted =
+        transferState.files.length > 0 &&
+        transferState.files.every((f) => f.status === 'completed');
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center px-1">
                 <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground opacity-60">
-                    {transferState.isReceiving ? 'Incoming Stream' : 'Outgoing Stream'}
+                    {transferState.isReceiving
+                        ? 'Incoming Stream'
+                        : 'Outgoing Stream'}
                 </h3>
                 <div className="flex items-center gap-2">
                     {transferState.isReceiving && completedFilesCount > 1 && (
@@ -67,7 +71,7 @@ export const TransferProgress = ({
                     )}
                 </div>
             </div>
-            
+
             <div className="max-h-[400px] overflow-y-auto pr-2 space-y-4 custom-scrollbar px-1">
                 <AnimatePresence mode="popLayout">
                     {transferState.files.map((file, i) => {
@@ -91,51 +95,81 @@ export const TransferProgress = ({
                                             <File className="w-5 h-5 text-muted-foreground" />
                                         )}
                                     </div>
-                                    
+
                                     <div className="flex-1 min-w-0 space-y-3">
                                         <div className="flex justify-between items-start gap-4">
                                             <div className="space-y-0.5 min-w-0">
-                                                <p className="text-sm font-bold truncate pr-2" title={file.fileName}>
+                                                <p
+                                                    className="text-sm font-bold truncate pr-2"
+                                                    title={file.fileName}
+                                                >
                                                     {file.fileName}
                                                 </p>
                                                 <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
-                                                    {(file.fileSize / 1024 / 1024).toFixed(2)} MB
+                                                    {(
+                                                        file.fileSize /
+                                                        1024 /
+                                                        1024
+                                                    ).toFixed(2)}{' '}
+                                                    MB
                                                 </p>
                                             </div>
-                                            
-                                            {isSuccess && transferState.isReceiving && (
-                                                <div className="flex gap-1">
-                                                    {file.objectUrl && (
+
+                                            {isSuccess &&
+                                                transferState.isReceiving && (
+                                                    <div className="flex gap-1">
+                                                        {file.objectUrl && (
+                                                            <Button
+                                                                size="icon"
+                                                                variant="secondary"
+                                                                asChild
+                                                                className="size-8 rounded-lg shadow-sm"
+                                                            >
+                                                                <a
+                                                                    href={
+                                                                        file.objectUrl
+                                                                    }
+                                                                    download={
+                                                                        file.fileName
+                                                                    }
+                                                                >
+                                                                    <Download className="w-3.5 h-3.5" />
+                                                                </a>
+                                                            </Button>
+                                                        )}
                                                         <Button
                                                             size="icon"
-                                                            variant="secondary"
-                                                            asChild
-                                                            className="size-8 rounded-lg shadow-sm"
+                                                            variant="ghost"
+                                                            className="size-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                                                            onClick={() =>
+                                                                onDeleteFile(
+                                                                    file.id,
+                                                                )
+                                                            }
                                                         >
-                                                            <a href={file.objectUrl} download={file.fileName}>
-                                                                <Download className="w-3.5 h-3.5" />
-                                                            </a>
+                                                            <Trash2 className="w-3.5 h-3.5" />
                                                         </Button>
-                                                    )}
-                                                    <Button
-                                                        size="icon"
-                                                        variant="ghost"
-                                                        className="size-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                                                        onClick={() => onDeleteFile(file.id)}
-                                                    >
-                                                        <Trash2 className="w-3.5 h-3.5" />
-                                                    </Button>
-                                                </div>
-                                            )}
+                                                    </div>
+                                                )}
                                         </div>
 
                                         <div className="space-y-1.5">
                                             <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
-                                                <span className={isSuccess ? 'text-primary' : 'text-muted-foreground'}>
-                                                    {isTransferring && <RefreshCw className="w-2.5 h-2.5 animate-spin inline mr-1" />}
+                                                <span
+                                                    className={
+                                                        isSuccess
+                                                            ? 'text-primary'
+                                                            : 'text-muted-foreground'
+                                                    }
+                                                >
+                                                    {isTransferring && (
+                                                        <RefreshCw className="w-2.5 h-2.5 animate-spin inline mr-1" />
+                                                    )}
                                                     {file.status}
                                                 </span>
-                                                <span className="text-primary">{Math.round(file.progress)}%</span>
+                                                <span className="text-primary">
+                                                    {Math.round(file.progress)}%
+                                                </span>
                                             </div>
                                             <Progress
                                                 value={file.progress}
@@ -148,11 +182,13 @@ export const TransferProgress = ({
                         );
                     })}
                 </AnimatePresence>
-                
+
                 {transferState.files.length === 0 && (
                     <div className="py-12 text-center space-y-3 opacity-30">
                         <File className="w-12 h-12 mx-auto text-muted-foreground" />
-                        <p className="text-xs font-bold uppercase tracking-widest">Ready for data</p>
+                        <p className="text-xs font-bold uppercase tracking-widest">
+                            Ready for data
+                        </p>
                     </div>
                 )}
             </div>

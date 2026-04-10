@@ -22,7 +22,7 @@ export const SenderView = ({
 }: SenderViewProps) => {
     if (!connectionCode && !isConnecting) {
         return (
-            <motion.div 
+            <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="text-center py-8 space-y-8"
@@ -35,9 +35,12 @@ export const SenderView = ({
                 </div>
                 <div className="space-y-6">
                     <div className="space-y-2">
-                        <h3 className="text-xl font-bold font-heading">Ready to Send?</h3>
+                        <h3 className="text-xl font-bold font-heading">
+                            Ready to Send?
+                        </h3>
                         <p className="text-muted-foreground text-sm max-w-[240px] mx-auto leading-relaxed">
-                            Generate a secure, single-use link for instant P2P transfer.
+                            Generate a secure, single-use link for instant P2P
+                            transfer.
                         </p>
                     </div>
                     <Button
@@ -52,7 +55,7 @@ export const SenderView = ({
     }
 
     return (
-        <motion.div 
+        <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="space-y-10 py-2"
@@ -68,7 +71,10 @@ export const SenderView = ({
                                 <motion.span
                                     initial={{ y: 10, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
-                                    transition={{ delay: i * 0.05, type: "spring" }}
+                                    transition={{
+                                        delay: i * 0.05,
+                                        type: 'spring',
+                                    }}
                                     key={i}
                                     className="size-12 sm:size-14 flex items-center justify-center bg-white/5 border border-white/20 rounded-2xl text-3xl font-black text-primary shadow-lg backdrop-blur-md"
                                 >
@@ -79,7 +85,9 @@ export const SenderView = ({
                     ) : (
                         <div className="h-14 flex items-center justify-center gap-3 text-primary/70 font-medium">
                             <Loader2 className="w-6 h-6 animate-spin" />
-                            <span className="animate-pulse">Building secure tunnel...</span>
+                            <span className="animate-pulse">
+                                Building secure tunnel...
+                            </span>
                         </div>
                     )}
                 </div>
@@ -102,7 +110,7 @@ export const SenderView = ({
                         </Button>
                     </motion.div>
                 )}
-                
+
                 <div className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 max-w-[280px] text-center">
                     <p className="text-xs font-medium text-muted-foreground leading-relaxed">
                         {isConnecting

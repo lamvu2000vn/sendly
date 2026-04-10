@@ -5,10 +5,10 @@ import { Share2 } from 'lucide-react';
 
 export const Hero = () => (
     <div className="text-center space-y-6 flex flex-col items-center">
-        <motion.div 
+        <motion.div
             initial={{ scale: 0.8, opacity: 0, rotate: -10 }}
             animate={{ scale: 1, opacity: 1, rotate: 0 }}
-            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 20 }}
             whileHover={{ scale: 1.05, rotate: 5 }}
             className="relative flex items-center justify-center w-20 h-20"
         >
@@ -17,9 +17,9 @@ export const Hero = () => (
                 <Share2 className="w-10 h-10 text-white" />
             </div>
         </motion.div>
-        
+
         <div className="space-y-2">
-            <motion.h1 
+            <motion.h1
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
@@ -27,14 +27,16 @@ export const Hero = () => (
             >
                 <span className="text-gradient">Sendly</span>
             </motion.h1>
-            <motion.p 
+            <motion.p
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3 }}
                 className="text-muted-foreground text-xl font-medium max-w-sm mx-auto leading-relaxed"
             >
-                Stream files between devices. 
-                <span className="block text-sm font-normal opacity-70 mt-1 uppercase tracking-widest">End-to-End P2P</span>
+                Stream files between devices.
+                <span className="block text-sm font-normal opacity-70 mt-1 uppercase tracking-widest">
+                    End-to-End P2P
+                </span>
             </motion.p>
         </div>
     </div>
