@@ -215,7 +215,7 @@ export function useWebRTC() {
             };
             dcRef.current = channel;
         },
-        [setConnectionStatus, setConnectionCode],
+        [setConnectionStatus, setConnectionCode, checkIsReceiveComplete],
     );
 
     const initializePeerConnection = useCallback(() => {
@@ -245,7 +245,7 @@ export function useWebRTC() {
 
         pcRef.current = pc;
         return pc;
-    }, [setConnectionStatus, setupDataChannel]);
+    }, [setConnectionStatus, setupDataChannel, checkIsReceiveComplete]);
 
     // TanStack Query for Signaling
     const targetSignalType = mode === 'sender' ? 'answer' : 'offer';

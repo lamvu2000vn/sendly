@@ -32,6 +32,20 @@
 
     --radius-xl: 1.5rem;
     --radius-2xl: 2rem;
+
+    --animate-gradient: gradient 8s linear infinite;
+
+    @keyframes gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
 }
 
 :root {
@@ -118,22 +132,6 @@
 
     .text-gradient {
         @apply bg-clip-text text-transparent bg-linear-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-gradient;
-    }
-
-    .animate-gradient {
-        animation: gradient 8s linear infinite;
-    }
-
-    @keyframes gradient {
-        0% {
-            background-position: 0% 50%;
-        }
-        50% {
-            background-position: 100% 50%;
-        }
-        100% {
-            background-position: 0% 50%;
-        }
     }
 
     .glow-primary {
