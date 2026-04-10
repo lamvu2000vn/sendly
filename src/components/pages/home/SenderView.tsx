@@ -1,6 +1,9 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { CopyIcon, ZapIcon } from 'lucide-react';
+import { CopyIcon, ZapIcon, Loader2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 interface SenderViewProps {
     connectionCode: string;
@@ -19,77 +22,104 @@ export const SenderView = ({
 }: SenderViewProps) => {
     if (!connectionCode && !isConnecting) {
         return (
-            <div className="text-center py-8 space-y-6">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-                    <ZapIcon className="w-8 h-8 text-primary" />
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-center py-8 space-y-8"
+            >
+                <div className="relative w-20 h-20 mx-auto">
+                    <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
+                    <div className="relative z-10 w-full h-full bg-primary/10 rounded-full flex items-center justify-center">
+                        <ZapIcon className="w-10 h-10 text-primary" />
+                    </div>
                 </div>
-                <div className="space-y-4">
-                    <p className="text-muted-foreground text-sm">
-                        Start a new session to get a 8-digit connection code.
-                    </p>
+                <div className="space-y-6">
+                    <div className="space-y-2">
+                        <h3 className="text-xl font-bold font-heading">Ready to Send?</h3>
+                        <p className="text-muted-foreground text-sm max-w-[240px] mx-auto leading-relaxed">
+                            Generate a secure, single-use link for instant P2P transfer.
+                        </p>
+                    </div>
                     <Button
-                        className="w-full h-12 text-lg rounded-xl shadow-lg shadow-primary/20"
+                        className="w-full h-14 text-lg font-bold rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                         onClick={onStart}
                     >
-                        Start Sending
+                        Initialize Link
                     </Button>
                 </div>
-            </div>
+            </motion.div>
         );
     }
 
     return (
-        <div className="space-y-8 py-4">
-            <div className="text-center space-y-4">
-                <Label className="text-sm text-muted-foreground uppercase tracking-widest font-bold">
-                    Your Connection Code
+        <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="space-y-10 py-2"
+        >
+            <div className="text-center space-y-6">
+                <Label className="text-xs text-muted-foreground uppercase tracking-[0.3em] font-black opacity-60">
+                    Active Channel Code
                 </Label>
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center justify-center gap-3">
                     {connectionCode ? (
                         <div className="flex gap-2">
                             {connectionCode.split('').map((char, i) => (
-                                <span
+                                <motion.span
+                                    initial={{ y: 10, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ delay: i * 0.05, type: "spring" }}
                                     key={i}
-                                    className="size-12 flex items-center justify-center bg-card border-2 border-primary/20 rounded-full text-3xl font-black text-primary shadow-sm"
+                                    className="size-12 sm:size-14 flex items-center justify-center bg-white/5 border border-white/20 rounded-2xl text-3xl font-black text-primary shadow-lg backdrop-blur-md"
                                 >
                                     {char}
-                                </span>
+                                </motion.span>
                             ))}
                         </div>
                     ) : (
-                        <div className="h-14 flex items-center justify-center gap-2 italic text-muted-foreground">
-                            Generating your code...
+                        <div className="h-14 flex items-center justify-center gap-3 text-primary/70 font-medium">
+                            <Loader2 className="w-6 h-6 animate-spin" />
+                            <span className="animate-pulse">Building secure tunnel...</span>
                         </div>
                     )}
                 </div>
             </div>
 
-            <div className="flex flex-col items-center gap-4 pt-4">
+            <div className="flex flex-col items-center gap-6">
                 {connectionCode && (
-                    <Button
-                        variant="outline"
-                        className="rounded-full px-6"
-                        onClick={onCopy}
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 }}
                     >
-                        <CopyIcon className="w-4 h-4 mr-2" />
-                        Copy Code
-                    </Button>
+                        <Button
+                            variant="secondary"
+                            className="rounded-2xl px-8 h-12 font-bold shadow-lg border border-white/5 hover:bg-white/10"
+                            onClick={onCopy}
+                        >
+                            <CopyIcon className="w-4 h-4 mr-3" />
+                            Copy Access Key
+                        </Button>
+                    </motion.div>
                 )}
-                <p className="text-[10px] text-muted-foreground bg-muted p-2 rounded-lg text-center max-w-50">
-                    {isConnecting
-                        ? 'Waiting for receiver to join...'
-                        : 'Share this code with the receiver.'}
-                </p>
+                
+                <div className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 max-w-[280px] text-center">
+                    <p className="text-xs font-medium text-muted-foreground leading-relaxed">
+                        {isConnecting
+                            ? 'Receiver is connecting. Maintain this window open for the duration of the transfer.'
+                            : 'Waiting for a partner to enter the access key.'}
+                    </p>
+                </div>
 
                 <Button
                     variant="ghost"
                     size="sm"
                     onClick={onCancel}
-                    className="text-muted-foreground"
+                    className="text-muted-foreground hover:text-destructive transition-colors mt-2"
                 >
-                    Cancel
+                    Terminate Session
                 </Button>
             </div>
-        </div>
+        </motion.div>
     );
 };
