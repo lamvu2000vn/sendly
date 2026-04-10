@@ -5,21 +5,29 @@ import { toast } from 'sonner';
 import { useQuery } from '@tanstack/react-query';
 import { saveChunk, clearStorage, getBlobFromStorage } from '@/lib/fileStorage';
 
-const CHUNK_SIZE = 16 * 1024; // 16 KB
+const DEFAULT_CHUNK_SIZE = 16 * 1024; // 16 KB
+const MAX_CHUNK_SIZE = 64 * 1024; // 64 KB
 const SEND_OFFER_DELAY = 3000;
 const POLL_INTERVAL = 2000;
 
-export interface TransferState {
+export interface FileTransfer {
+    id: string;
     fileName: string;
     fileSize: number;
     progress: number;
-    isReceiving: boolean;
+    status: 'pending' | 'transferring' | 'completed' | 'error';
     objectUrl?: string;
+}
+
+export interface TransferState {
+    files: FileTransfer[];
+    isReceiving: boolean;
 }
 
 export function useWebRTC() {
     const pcRef = useRef<RTCPeerConnection | null>(null);
     const dcRef = useRef<RTCDataChannel | null>(null);
+    const resumeRef = useRef<(() => void) | null>(null);
     const {
         connectionStatus,
         setConnectionStatus,
@@ -31,10 +39,18 @@ export function useWebRTC() {
     const [transferState, setTransferState] = useState<TransferState | null>(
         null,
     );
+    const transferFilesRef = useRef<FileTransfer[]>([]);
 
-    const receivedSize = useRef<number>(0);
-    const expectedSize = useRef<number>(0);
-    const fileNameRef = useRef<string>('');
+    useEffect(() => {
+        transferFilesRef.current = transferState?.files || [];
+    }, [transferState]);
+
+    const currentFileRef = useRef<{
+        id: string;
+        name: string;
+        size: number;
+        received: number;
+    } | null>(null);
     const lastUpdateRef = useRef<number>(0);
 
     const cleanup = useCallback(() => {
@@ -44,6 +60,15 @@ export function useWebRTC() {
         clearStorage().catch(console.error);
     }, []);
 
+    const checkIsReceiveComplete = useCallback(() => {
+        const currentMode = useAppStore.getState().mode;
+        return (
+            currentMode === 'receiver' &&
+            transferFilesRef.current.length > 0 &&
+            transferFilesRef.current.every((f) => f.status === 'completed')
+        );
+    }, []);
+
     const setupDataChannel = useCallback(
         (channel: RTCDataChannel) => {
             channel.onopen = () => {
@@ -51,15 +76,9 @@ export function useWebRTC() {
                 toast.success('Đã kết nối thành công!');
             };
             channel.onclose = () => {
-                const currentMode = useAppStore.getState().mode;
-                const isReceiveComplete =
-                    currentMode === 'receiver' &&
-                    expectedSize.current > 0 &&
-                    receivedSize.current === expectedSize.current;
-
-                if (isReceiveComplete) {
+                if (checkIsReceiveComplete()) {
                     toast.info(
-                        'Người gửi đã ngắt kết nối. Bạn vẫn có thể truy cập file đã nhận.',
+                        'Người gửi đã ngắt kết nối. Bạn vẫn có thể truy cập các file đã nhận.',
                     );
                 } else {
                     setConnectionStatus('disconnected');
@@ -70,29 +89,72 @@ export function useWebRTC() {
                 }
             };
             channel.binaryType = 'arraybuffer';
+            channel.bufferedAmountLowThreshold = 1024 * 1024; // 1 MB
+            channel.onbufferedamountlow = () => {
+                if (resumeRef.current) {
+                    const resume = resumeRef.current;
+                    resumeRef.current = null;
+                    resume();
+                }
+            };
             channel.onmessage = async (event) => {
                 try {
                     if (typeof event.data === 'string') {
                         const msg = JSON.parse(event.data);
-                        if (msg.type === 'file-start') {
-                            fileNameRef.current = msg.fileName;
-                            expectedSize.current = msg.fileSize;
-                            receivedSize.current = 0;
-                            await clearStorage();
-                            setTransferState({
-                                fileName: msg.fileName,
-                                fileSize: msg.fileSize,
-                                progress: 0,
-                                isReceiving: true,
+                        if (msg.type === 'manifest') {
+                            setTransferState((prev) => {
+                                // If we already have some files (from file-start arriving first),
+                                // preserve their status/progress if they match IDs.
+                                const existingFiles = prev?.files || [];
+                                return {
+                                    isReceiving: true,
+                                    files: msg.files.map((f: any) => {
+                                        const existing = existingFiles.find(ef => ef.id === f.id);
+                                        return existing || {
+                                            ...f,
+                                            progress: 0,
+                                            status: 'pending',
+                                        };
+                                    }),
+                                };
+                            });
+                        } else if (msg.type === 'file-start') {
+                            currentFileRef.current = {
+                                id: msg.fileId,
+                                name: msg.fileName,
+                                size: msg.fileSize,
+                                received: 0,
+                            };
+                            await clearStorage(msg.fileId);
+                            setTransferState((prev) => {
+                                const files = prev?.files || [
+                                    {
+                                        id: msg.fileId,
+                                        fileName: msg.fileName,
+                                        fileSize: msg.fileSize,
+                                        progress: 0,
+                                        status: 'pending',
+                                    },
+                                ];
+                                return {
+                                    isReceiving: true,
+                                    files: files.map((f) =>
+                                        f.id === msg.fileId
+                                            ? { ...f, status: 'transferring' }
+                                            : f,
+                                    ),
+                                };
                             });
                         }
                     } else if (event.data instanceof ArrayBuffer) {
-                        await saveChunk(event.data);
-                        receivedSize.current += event.data.byteLength;
+                        const file = currentFileRef.current;
+                        if (!file) return;
+
+                        await saveChunk(file.id, event.data);
+                        file.received += event.data.byteLength;
 
                         const now = Date.now();
-                        const isComplete =
-                            receivedSize.current === expectedSize.current;
+                        const isComplete = file.received === file.size;
 
                         if (isComplete || now - lastUpdateRef.current > 100) {
                             lastUpdateRef.current = now;
@@ -100,26 +162,43 @@ export function useWebRTC() {
                                 if (!prev) return prev;
                                 return {
                                     ...prev,
-                                    progress:
-                                        (receivedSize.current /
-                                            expectedSize.current) *
-                                        100,
+                                    files: prev.files.map((f) =>
+                                        f.id === file.id
+                                            ? {
+                                                  ...f,
+                                                  progress:
+                                                      (file.received /
+                                                          file.size) *
+                                                      100,
+                                                  status: isComplete
+                                                      ? 'completed'
+                                                      : 'transferring',
+                                              }
+                                            : f,
+                                    ),
                                 };
                             });
                         }
 
-                        if (receivedSize.current === expectedSize.current) {
-                            const blob = await getBlobFromStorage();
+                        if (isComplete) {
+                            const completedFileId = file.id;
+                            const blob = await getBlobFromStorage(completedFileId);
                             const url = URL.createObjectURL(blob);
                             setTransferState((prev) => {
                                 if (!prev) return prev;
                                 return {
                                     ...prev,
-                                    progress: 100,
-                                    objectUrl: url,
+                                    files: prev.files.map((f) =>
+                                        f.id === completedFileId
+                                            ? { ...f, objectUrl: url }
+                                            : f,
+                                    ),
                                 };
                             });
-                            toast.success(`Đã nhận: ${fileNameRef.current}`);
+                            toast.success(`Đã nhận: ${file.name}`);
+                            if (currentFileRef.current?.id === completedFileId) {
+                                currentFileRef.current = null;
+                            }
                         }
                     }
                 } catch (error) {
@@ -146,6 +225,8 @@ export function useWebRTC() {
                 pc.iceConnectionState === 'disconnected' ||
                 pc.iceConnectionState === 'failed'
             ) {
+                if (checkIsReceiveComplete()) return;
+
                 setConnectionStatus('error');
                 toast.error('Kết nối gặp sự cố. Vui lòng thử lại.');
             }
@@ -248,8 +329,6 @@ export function useWebRTC() {
             try {
                 cleanup();
                 setMode('sender');
-                // If predefinedCode is not a string (e.g. it's a MouseEvent from a button click),
-                // generate a new random code instead.
                 const code =
                     typeof predefinedCode === 'string'
                         ? predefinedCode
@@ -280,7 +359,6 @@ export function useWebRTC() {
                 const offer = await pc.createOffer();
                 await pc.setLocalDescription(offer);
 
-                // Fallback timeout in case ICE gathering takes too long
                 setTimeout(sendOffer, SEND_OFFER_DELAY);
             } catch (error) {
                 console.error('Failed to start connection', error);
@@ -301,7 +379,6 @@ export function useWebRTC() {
     const joinConnection = useCallback(
         async (incomingCode: string | unknown) => {
             try {
-                // Ensure we have a string code
                 const code =
                     typeof incomingCode === 'string' ? incomingCode : '';
 
@@ -336,85 +413,172 @@ export function useWebRTC() {
         ],
     );
 
-    const sendFile = useCallback((file: File) => {
+    const sendFiles = useCallback(async (files: File[]) => {
         if (!dcRef.current || dcRef.current.readyState !== 'open') return;
 
-        setTransferState({
+        const fileTransfers: FileTransfer[] = files.map((file) => ({
+            id: `${file.name}-${file.size}-${Date.now()}-${Math.random()}`,
             fileName: file.name,
             fileSize: file.size,
             progress: 0,
+            status: 'pending',
+        }));
+
+        setTransferState({
+            files: fileTransfers,
             isReceiving: false,
         });
 
+        // Send manifest
         dcRef.current.send(
             JSON.stringify({
-                type: 'file-start',
-                fileName: file.name,
-                fileSize: file.size,
+                type: 'manifest',
+                files: fileTransfers.map((f) => ({
+                    id: f.id,
+                    fileName: f.fileName,
+                    fileSize: f.fileSize,
+                })),
             }),
         );
 
-        const reader = new FileReader();
-        let offset = 0;
+        // Process files sequentially
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const transfer = fileTransfers[i];
 
-        const readNextChunk = () => {
-            const slice = file.slice(offset, offset + CHUNK_SIZE);
-            reader.readAsArrayBuffer(slice);
-        };
+            if (dcRef.current.readyState !== 'open') break;
 
-        reader.onload = (e) => {
-            if (!dcRef.current || dcRef.current.readyState !== 'open') return;
-            if (e.target && e.target.result) {
-                try {
-                    dcRef.current.send(e.target.result as ArrayBuffer);
-                    offset += CHUNK_SIZE;
-
-                    const now = Date.now();
-                    const progress = Math.min((offset / file.size) * 100, 100);
-                    const isComplete = progress === 100;
-
-                    if (isComplete || now - lastUpdateRef.current > 100) {
-                        lastUpdateRef.current = now;
-                        setTransferState((prev) =>
-                            prev
-                                ? {
-                                      ...prev,
-                                      progress,
-                                  }
-                                : prev,
-                        );
-                    }
-
-                    if (offset < file.size) {
-                        if (dcRef.current.bufferedAmount > 1024 * 1024 * 5) {
-                            setTimeout(readNextChunk, 50);
-                        } else {
-                            readNextChunk();
-                        }
-                    } else {
-                        setTransferState((prev) =>
-                            prev ? { ...prev, progress: 100 } : prev,
-                        );
-                        toast.success(`Đã gửi: ${file.name}`);
-                    }
-                } catch (error) {
-                    console.error('Error sending file', error);
-                    toast.error(
-                        'Lỗi khi gửi file. Vui lòng kiểm tra lại kết nối.',
-                    );
-                }
+            let currentChunkSize = DEFAULT_CHUNK_SIZE;
+            if (file.size > 1024 * 1024 * 1024) {
+                currentChunkSize = 256 * 1024;
+            } else if (file.size > 50 * 1024 * 1024) {
+                currentChunkSize = MAX_CHUNK_SIZE;
+            } else if (file.size > 1024 * 1024) {
+                currentChunkSize = 32 * 1024;
             }
-        };
 
-        readNextChunk();
+            dcRef.current.send(
+                JSON.stringify({
+                    type: 'file-start',
+                    fileId: transfer.id,
+                    fileName: file.name,
+                    fileSize: file.size,
+                    chunkSize: currentChunkSize,
+                }),
+            );
+
+            setTransferState((prev) => {
+                const files = prev?.files || fileTransfers;
+                return {
+                    isReceiving: false,
+                    files: files.map((f) =>
+                        f.id === transfer.id ? { ...f, status: 'transferring' } : f
+                    ),
+                };
+            });
+
+            await new Promise<void>((resolve, reject) => {
+                const reader = new FileReader();
+                let offset = 0;
+
+                const readNextChunk = () => {
+                    const slice = file.slice(offset, offset + currentChunkSize);
+                    reader.readAsArrayBuffer(slice);
+                };
+
+                reader.onload = (e) => {
+                    if (!dcRef.current || dcRef.current.readyState !== 'open') {
+                        reject(new Error('Data channel closed'));
+                        return;
+                    }
+
+                    if (e.target && e.target.result) {
+                        try {
+                            const buffer = e.target.result as ArrayBuffer;
+                            dcRef.current.send(buffer);
+                            offset += buffer.byteLength;
+
+                            const now = Date.now();
+                            const progress = Math.min(
+                                (offset / file.size) * 100,
+                                100,
+                            );
+                            const isComplete = progress === 100;
+
+                            if (
+                                isComplete ||
+                                now - lastUpdateRef.current > 100
+                            ) {
+                                lastUpdateRef.current = now;
+                                setTransferState((prev) => {
+                                    if (!prev) return prev;
+                                    return {
+                                        ...prev,
+                                        files: prev.files.map((f) =>
+                                            f.id === transfer.id
+                                                ? {
+                                                      ...f,
+                                                      progress,
+                                                      status: isComplete
+                                                          ? 'completed'
+                                                          : 'transferring',
+                                                  }
+                                                : f,
+                                        ),
+                                    };
+                                });
+                            }
+
+                            if (offset < file.size) {
+                                if (
+                                    dcRef.current.bufferedAmount >
+                                    dcRef.current.bufferedAmountLowThreshold
+                                ) {
+                                    resumeRef.current = readNextChunk;
+                                } else {
+                                    readNextChunk();
+                                }
+                            } else {
+                                toast.success(`Đã gửi: ${file.name}`);
+                                resolve();
+                            }
+                        } catch (error) {
+                            reject(error);
+                        }
+                    }
+                };
+
+                reader.onerror = () => reject(new Error('FileReader error'));
+                readNextChunk();
+            });
+        }
     }, []);
 
     const clearTransfer = useCallback(() => {
-        if (transferState?.objectUrl) {
-            URL.revokeObjectURL(transferState.objectUrl);
+        if (transferState?.files) {
+            transferState.files.forEach((f) => {
+                if (f.objectUrl) URL.revokeObjectURL(f.objectUrl);
+            });
         }
         setTransferState(null);
     }, [transferState]);
+
+    const deleteFile = useCallback((fileId: string) => {
+        setTransferState((prev) => {
+            if (!prev) return null;
+            const file = prev.files.find((f) => f.id === fileId);
+            if (file?.objectUrl) {
+                URL.revokeObjectURL(file.objectUrl);
+            }
+            const updatedFiles = prev.files.filter((f) => f.id !== fileId);
+            if (updatedFiles.length === 0) return null;
+            return {
+                ...prev,
+                files: updatedFiles,
+            };
+        });
+        clearStorage(fileId).catch(console.error);
+    }, []);
 
     useEffect(() => {
         return () => cleanup();
@@ -425,13 +589,16 @@ export function useWebRTC() {
         transferState,
         startConnection,
         joinConnection,
-        sendFile,
+        sendFiles,
         clearTransfer,
+        deleteFile,
         disconnect: (stayOnCurrentMode = false) => {
             cleanup();
             setConnectionStatus('disconnected');
-            if (transferState?.objectUrl) {
-                URL.revokeObjectURL(transferState.objectUrl);
+            if (transferState?.files) {
+                transferState.files.forEach((f) => {
+                    if (f.objectUrl) URL.revokeObjectURL(f.objectUrl);
+                });
             }
             setTransferState(null);
             setConnectionCode('');

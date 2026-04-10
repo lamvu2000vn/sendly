@@ -6,9 +6,10 @@ import { TransferProgress } from './TransferProgress';
 
 interface ConnectedViewProps {
     transferState: TransferState | null;
-    onFileSelect: (file: File) => void;
+    onFileSelect: (files: File[]) => void;
     onDisconnect: () => void;
     onClearTransfer: () => void;
+    onDeleteFile: (id: string) => void;
 }
 
 export const ConnectedView = ({
@@ -16,6 +17,7 @@ export const ConnectedView = ({
     onFileSelect,
     onDisconnect,
     onClearTransfer,
+    onDeleteFile,
 }: ConnectedViewProps) => (
     <div className="space-y-6 py-4 animate-in zoom-in-95 duration-500">
         <FileDropZone onFileSelect={onFileSelect} />
@@ -24,6 +26,7 @@ export const ConnectedView = ({
             <TransferProgress
                 transferState={transferState}
                 onClear={onClearTransfer}
+                onDeleteFile={onDeleteFile}
             />
         )}
 

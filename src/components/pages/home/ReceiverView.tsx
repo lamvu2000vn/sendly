@@ -36,7 +36,7 @@ export const ReceiverView = ({
                             onInputChange(e.target.value.toUpperCase())
                         }
                         maxLength={8}
-                        className="h-16 text-3xl font-bold text-center tracking-[0.5em] rounded-2xl border-2 focus:border-primary uppercase placeholder:tracking-normal placeholder:text-lg"
+                        className="sm:text-3xl md:text-3xl h-16 text-3xl font-bold text-center tracking-[0.5em] rounded-2xl border-2 focus:border-primary uppercase placeholder:tracking-normal placeholder:text-lg"
                         disabled={isConnecting}
                     />
                 </div>

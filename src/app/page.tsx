@@ -28,8 +28,9 @@ export default function Home() {
         transferState,
         startConnection,
         joinConnection,
-        sendFile,
+        sendFiles,
         clearTransfer,
+        deleteFile,
         disconnect,
     } = useWebRTC();
 
@@ -54,8 +55,8 @@ export default function Home() {
         }
     };
 
-    const handleFileSelect = (file: File) => {
-        sendFile(file);
+    const handleFileSelect = (files: File[]) => {
+        sendFiles(files);
     };
 
     const handleDisconnect = (stayOnCurrentMode = false) => {
@@ -63,13 +64,13 @@ export default function Home() {
             mode === 'sender' &&
             transferState &&
             !transferState.isReceiving &&
-            transferState.progress < 100;
+            transferState.files.some((f) => f.progress > 0 && f.progress < 100);
 
         if (isTransferring) {
             setConfirmConfig({
                 open: true,
                 message:
-                    'Tệp đang được gửi đi. Ngắt kết nối lúc này sẽ làm hỏng quá trình truyền tải cho người nhận. Bạn vẫn muốn dừng chứ?',
+                    'Một số tệp đang được gửi đi. Ngắt kết nối lúc này sẽ làm hỏng quá trình truyền tải. Bạn vẫn muốn dừng chứ?',
                 onConfirm: () => disconnect(stayOnCurrentMode),
             });
             return;
@@ -89,6 +90,7 @@ export default function Home() {
                             onFileSelect={handleFileSelect}
                             onDisconnect={() => handleDisconnect()}
                             onClearTransfer={clearTransfer}
+                            onDeleteFile={deleteFile}
                         />
                     ) : (
                         <div className="space-y-6">
@@ -96,11 +98,11 @@ export default function Home() {
                                 value={mode || 'sender'}
                                 className="w-full"
                                 onValueChange={(v) => {
-                                    const isTransferring =
-                                        mode === 'sender' &&
-                                        transferState &&
-                                        !transferState.isReceiving &&
-                                        transferState.progress < 100;
+                                        const isTransferring =
+                                            mode === 'sender' &&
+                                            transferState &&
+                                            !transferState.isReceiving &&
+                                            transferState.files.some(f => f.progress > 0 && f.progress < 100);
                                     if (isTransferring) {
                                         setConfirmConfig({
                                             open: true,
