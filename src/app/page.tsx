@@ -80,8 +80,8 @@ export default function Home() {
     };
 
     return (
-        <main className="flex flex-col items-center justify-center flex-1 p-6 relative overflow-hidden">
-            <div className="w-full max-w-xl space-y-12 relative z-20">
+        <main className="flex flex-col items-center justify-center flex-1 p-4 sm:p-10 md:p-16 relative overflow-hidden">
+            <div className="w-full max-w-2xl space-y-8 sm:space-y-12 relative z-20">
                 <Hero />
 
                 <ConnectionCard status={connectionStatus}>
@@ -148,17 +148,17 @@ export default function Home() {
                                 >
                                     <TabsList
                                         variant="default"
-                                        className="w-full mb-12 h-auto"
+                                        className="w-full mb-10 h-14 sm:h-16 p-1.5 bg-muted/50 rounded-2xl sm:rounded-3xl"
                                     >
                                         <TabsTrigger
                                             value="sender"
-                                            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                                            className="h-full text-base sm:text-lg font-bold rounded-xl sm:rounded-2xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg transition-all"
                                         >
                                             Send
                                         </TabsTrigger>
                                         <TabsTrigger
                                             value="receiver"
-                                            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                                            className="h-full text-base sm:text-lg font-bold rounded-xl sm:rounded-2xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg transition-all"
                                         >
                                             Receive
                                         </TabsTrigger>

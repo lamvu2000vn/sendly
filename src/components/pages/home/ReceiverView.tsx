@@ -26,9 +26,9 @@ export const ReceiverView = ({
     <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="space-y-10"
+        className="space-y-12"
     >
-        <div className="space-y-6 py-2">
+        <div className="space-y-8">
             <div className="space-y-4 text-center">
                 <Label
                     htmlFor="code-input"
@@ -39,13 +39,13 @@ export const ReceiverView = ({
                 <div className="relative group">
                     <Input
                         id="code-input"
-                        placeholder="ENTER 8-DIGIT KEY"
+                        placeholder="ENTER CODE"
                         value={inputCode}
                         onChange={(e) =>
                             onInputChange(e.target.value.toUpperCase())
                         }
                         maxLength={CODE_LENGTH}
-                        className="relative h-20 text-xl md:text-3xl font-bold text-center tracking-[0.3em] rounded-xl border-white/10 bg-muted backdrop-blur-md uppercase placeholder:tracking-widest placeholder:text-base md:placeholder:text-xl placeholder:font-bold focus-visible:ring-primary/50 focus-visible:border-primary/50 transition-all"
+                        className="relative h-16 sm:h-20 md:h-24 text-lg sm:text-2xl md:text-3xl font-bold text-center tracking-[0.2em] sm:tracking-[0.3em] rounded-xl sm:rounded-2xl border-white/10 bg-muted backdrop-blur-md uppercase placeholder:tracking-widest placeholder:text-sm sm:placeholder:text-lg md:placeholder:text-xl placeholder:font-black focus-visible:ring-primary/50 focus-visible:border-primary/50 transition-all"
                         disabled={isConnecting}
                     />
                 </div>
@@ -53,20 +53,20 @@ export const ReceiverView = ({
 
             <div className="space-y-4">
                 <Button
-                    className="w-full h-16 sm:h-18 text-lg font-bold rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full h-14 sm:h-16 md:h-18 text-base sm:text-lg font-bold rounded-xl sm:rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                     disabled={inputCode.length !== 8 || isConnecting}
                     onClick={onJoin}
                 >
-                    <span className="flex items-center justify-center gap-3">
+                    <span className="flex items-center justify-center gap-2 sm:gap-3">
                         {isConnecting ? (
                             <>
-                                <Loader2 className="w-6 h-6 animate-spin" />
+                                <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
                                 Opening Tunnel...
                             </>
                         ) : (
                             <>
                                 Establish Connection
-                                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                                <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
                             </>
                         )}
                     </span>

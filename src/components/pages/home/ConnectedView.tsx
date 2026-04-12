@@ -19,7 +19,7 @@ export const ConnectedView = ({
     onClearTransfer,
     onDeleteFile,
 }: ConnectedViewProps) => (
-    <div className="space-y-6 py-4 animate-in zoom-in-95 duration-500">
+    <div className="space-y-10 animate-in zoom-in-95 duration-500">
         <FileDropZone onFileSelect={onFileSelect} />
 
         {transferState && (

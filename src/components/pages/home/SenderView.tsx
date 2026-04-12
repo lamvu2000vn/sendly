@@ -26,7 +26,7 @@ export const SenderView = ({
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-8 space-y-8"
+                className="text-center space-y-8"
             >
                 <div className="relative w-20 h-20 mx-auto">
                     <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
@@ -59,7 +59,7 @@ export const SenderView = ({
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="space-y-10 py-2"
+            className="space-y-10"
         >
             <div className="text-center space-y-6">
                 <Label className="text-xs text-muted-foreground uppercase tracking-[0.3em] font-black opacity-60">
