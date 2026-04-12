@@ -17,6 +17,8 @@ i18n.use(LanguageDetector)
             },
         },
         fallbackLng: 'en',
+        supportedLngs: ['en', 'vi'],
+        load: 'languageOnly',
         ns: ['common'],
         defaultNS: 'common',
         interpolation: {

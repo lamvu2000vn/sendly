@@ -29,7 +29,11 @@ export const LanguageToggle = () => {
     };
 
     const currentLang =
-        LANGUAGES.find((l) => l.code === i18n.language) || LANGUAGES[0];
+        LANGUAGES.find(
+            (l) =>
+                l.code === i18n.language ||
+                l.code === i18n.language?.split('-')[0],
+        ) || LANGUAGES[0];
 
     return (
         <motion.div
@@ -58,13 +62,13 @@ export const LanguageToggle = () => {
 
                         <AnimatePresence mode="wait">
                             <motion.span
-                                key={i18n.language}
+                                key={currentLang.code}
                                 initial={{ y: 10, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 exit={{ y: -10, opacity: 0 }}
                                 className="text-xs font-black tracking-widest"
                             >
-                                {i18n.language.toUpperCase()}
+                                {currentLang.code.toUpperCase()}
                             </motion.span>
                         </AnimatePresence>
                     </Button>
@@ -77,7 +81,7 @@ export const LanguageToggle = () => {
                 >
                     <div className="grid gap-1.5">
                         {LANGUAGES.map((lang) => {
-                            const isActive = i18n.language === lang.code;
+                            const isActive = currentLang.code === lang.code;
                             return (
                                 <button
                                     key={lang.code}
