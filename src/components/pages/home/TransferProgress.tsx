@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Download, RefreshCw, Trash2, CheckCircle2, File } from 'lucide-react';
 import { TransferState } from '@/hooks/useWebRTC';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 interface TransferProgressProps {
     transferState: TransferState;
@@ -17,6 +18,7 @@ export const TransferProgress = ({
     onClear,
     onDeleteFile,
 }: TransferProgressProps) => {
+    const { t } = useTranslation();
     const handleDownloadAll = () => {
         transferState.files.forEach((file) => {
             if (file.status === 'completed' && file.objectUrl) {
@@ -43,8 +45,8 @@ export const TransferProgress = ({
             <div className="flex justify-between items-center px-1">
                 <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground opacity-60">
                     {transferState.isReceiving
-                        ? 'Incoming Stream'
-                        : 'Outgoing Stream'}
+                        ? t('connected.incoming')
+                        : t('connected.outgoing')}
                 </h3>
                 <div className="flex items-center gap-2">
                     {transferState.isReceiving && completedFilesCount > 1 && (
@@ -55,7 +57,7 @@ export const TransferProgress = ({
                             onClick={handleDownloadAll}
                         >
                             <Download className="w-3 h-3 mr-2" />
-                            Download All
+                            {t('connected.download_all')}
                         </Button>
                     )}
                     {allCompleted && (
@@ -66,7 +68,7 @@ export const TransferProgress = ({
                             onClick={onClear}
                         >
                             <Trash2 className="w-3 h-3 mr-2" />
-                            Clear
+                            {t('connected.clear')}
                         </Button>
                     )}
                 </div>
@@ -165,7 +167,9 @@ export const TransferProgress = ({
                                                     {isTransferring && (
                                                         <RefreshCw className="w-2.5 h-2.5 animate-spin inline mr-1" />
                                                     )}
-                                                    {file.status}
+                                                    {t(
+                                                        `connected.status.${file.status}` as any,
+                                                    )}
                                                 </span>
                                                 <span className="text-primary">
                                                     {Math.round(file.progress)}%
@@ -187,7 +191,7 @@ export const TransferProgress = ({
                     <div className="py-12 text-center space-y-3 opacity-30">
                         <File className="w-12 h-12 mx-auto text-muted-foreground" />
                         <p className="text-xs font-bold uppercase tracking-widest">
-                            Ready for data
+                            {t('connected.ready_for_data')}
                         </p>
                     </div>
                 )}

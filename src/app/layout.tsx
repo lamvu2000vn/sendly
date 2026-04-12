@@ -4,6 +4,8 @@ import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from 'sonner';
 import QueryProvider from '@/components/providers/QueryProvider';
+import I18nProvider from '@/components/providers/I18nProvider';
+import { LanguageToggle } from '@/components/ui/LanguageToggle';
 import { BackgroundGradient } from '@/components/ui/BackgroundGradient';
 
 const outfit = Outfit({
@@ -53,14 +55,19 @@ export default function RootLayout({
                 inter.variable,
                 jetbrainsMono.variable,
             )}
-            suppressHydrationWarning
         >
-            <body className="min-h-full flex flex-col font-sans selection:bg-primary/30 selection:text-primary">
+            <body
+                className="min-h-full flex flex-col font-sans selection:bg-primary/30 selection:text-primary"
+                suppressHydrationWarning
+            >
                 <BackgroundGradient />
                 <QueryProvider>
-                    <div className="relative z-10 flex flex-col min-h-screen">
-                        {children}
-                    </div>
+                    <I18nProvider>
+                        <div className="relative z-10 flex flex-col min-h-screen">
+                            {children}
+                        </div>
+                        <LanguageToggle />
+                    </I18nProvider>
                 </QueryProvider>
                 <Toaster
                     position="top-center"

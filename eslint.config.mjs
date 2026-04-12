@@ -25,6 +25,7 @@ const eslintConfig = defineConfig([
                 },
             ],
             '@typescript-eslint/no-explicit-any': 'off',
+            'react-hooks/set-state-in-effect': 'off',
         },
     },
     // Keep prettier config last to override others.

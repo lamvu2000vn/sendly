@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { CopyIcon, ZapIcon, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface SenderViewProps {
     connectionCode: string;
@@ -21,6 +22,7 @@ export const SenderView = ({
     onCopy,
     onCancel,
 }: SenderViewProps) => {
+    const { t } = useTranslation();
     if (!connectionCode && !isConnecting) {
         return (
             <motion.div
@@ -37,18 +39,17 @@ export const SenderView = ({
                 <div className="space-y-6">
                     <div className="space-y-2">
                         <h3 className="text-xl font-bold font-heading">
-                            Ready to Send?
+                            {t('sender.ready_title')}
                         </h3>
                         <p className="text-muted-foreground text-sm max-w-[240px] mx-auto leading-relaxed">
-                            Generate a secure, single-use code for instant P2P
-                            transfer.
+                            {t('sender.ready_desc')}
                         </p>
                     </div>
                     <Button
                         className="w-full h-14 sm:h-18 text-lg font-bold rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                         onClick={onStart}
                     >
-                        Generate access key
+                        {t('sender.generate_btn')}
                     </Button>
                 </div>
             </motion.div>
@@ -63,7 +64,7 @@ export const SenderView = ({
         >
             <div className="text-center space-y-6">
                 <Label className="text-xs text-muted-foreground uppercase tracking-[0.3em] font-black opacity-60">
-                    Active Channel Code
+                    {t('sender.active_code')}
                 </Label>
                 <div className="flex-center gap-3">
                     {connectionCode ? (
@@ -93,7 +94,7 @@ export const SenderView = ({
                         <div className="h-14 flex-center gap-3 text-primary/70 font-medium">
                             <Loader2 className="w-6 h-6 animate-spin" />
                             <span className="animate-pulse">
-                                Building secure tunnel...
+                                {t('sender.building')}
                             </span>
                         </div>
                     )}
@@ -113,14 +114,14 @@ export const SenderView = ({
                             onClick={onCopy}
                         >
                             <CopyIcon className="w-4 h-4 mr-3" />
-                            Copy Access Key
+                            {t('sender.copy_btn')}
                         </Button>
                     </motion.div>
                 )}
 
                 <div className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 max-w-[280px] text-center">
                     <p className="text-xs font-medium text-muted-foreground leading-relaxed">
-                        Waiting for a partner to enter the access key.
+                        {t('sender.waiting')}
                     </p>
                 </div>
 
@@ -130,7 +131,7 @@ export const SenderView = ({
                     size="sm"
                     onClick={onCancel}
                 >
-                    Terminate Session
+                    {t('sender.terminate')}
                 </Button>
             </div>
         </motion.div>

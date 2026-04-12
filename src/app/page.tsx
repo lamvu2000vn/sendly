@@ -5,6 +5,7 @@ import { useWebRTC } from '@/hooks/useWebRTC';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Dialog,
@@ -35,6 +36,7 @@ export default function Home() {
         disconnect,
     } = useWebRTC();
 
+    const { t } = useTranslation();
     const [inputCode, setInputCode] = useState('');
     const [confirmConfig, setConfirmConfig] = useState<{
         open: boolean;
@@ -52,7 +54,7 @@ export default function Home() {
     const handleCopy = () => {
         if (connectionCode) {
             navigator.clipboard.writeText(connectionCode);
-            toast.success('Access Key copied to clipboard');
+            toast.success(t('toast.copy_success'));
         }
     };
 
@@ -70,8 +72,7 @@ export default function Home() {
         if (isTransferring) {
             setConfirmConfig({
                 open: true,
-                message:
-                    'Active transfers in progress. Severing connection will abort all ongoing data streams. Proceed?',
+                message: t('dialog.transfer_active'),
                 onConfirm: () => disconnect(stayOnCurrentMode),
             });
             return;
@@ -128,7 +129,7 @@ export default function Home() {
                                             setConfirmConfig({
                                                 open: true,
                                                 message:
-                                                    'Switching modes will terminate current transfers. Continue?',
+                                                    t('dialog.switch_mode'),
                                                 onConfirm: () => {
                                                     disconnect(true);
                                                     setMode(
@@ -154,13 +155,13 @@ export default function Home() {
                                             value="sender"
                                             className="h-full text-base sm:text-lg font-bold rounded-xl sm:rounded-2xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg transition-all"
                                         >
-                                            Send
+                                            {t('tabs.send')}
                                         </TabsTrigger>
                                         <TabsTrigger
                                             value="receiver"
                                             className="h-full text-base sm:text-lg font-bold rounded-xl sm:rounded-2xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg transition-all"
                                         >
-                                            Receive
+                                            {t('tabs.receive')}
                                         </TabsTrigger>
                                     </TabsList>
 
@@ -209,7 +210,7 @@ export default function Home() {
                 <DialogContent className="glass border-white/10 rounded-3xl sm:max-w-md">
                     <DialogHeader>
                         <DialogTitle className="text-xl font-heading">
-                            Terminate Connection?
+                            {t('dialog.terminate_title')}
                         </DialogTitle>
                         <DialogDescription className="text-muted-foreground">
                             {confirmConfig.message}
@@ -226,7 +227,7 @@ export default function Home() {
                                 }))
                             }
                         >
-                            Abort
+                            {t('dialog.abort')}
                         </Button>
                         <Button
                             variant="destructive"
@@ -239,7 +240,7 @@ export default function Home() {
                                 }));
                             }}
                         >
-                            Confirm Termination
+                            {t('dialog.confirm')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

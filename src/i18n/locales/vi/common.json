@@ -1,0 +1,67 @@
+{
+    "hero": {
+        "tagline": "Truyền nhận tệp tin giữa các thiết bị.",
+        "p2p": "Kết nối P2P đầu-cuối"
+    },
+    "tabs": {
+        "send": "Gửi",
+        "receive": "Nhận"
+    },
+    "drop_zone": {
+        "title": "Thả hoặc chọn tệp tin",
+        "subtitle": "Hỗ trợ nhiều tệp, truyền trực tiếp tới thiết bị nhận."
+    },
+    "sender": {
+        "ready_title": "Sẵn sàng gửi?",
+        "ready_desc": "Tạo mã bảo mật dùng một lần để truyền tệp P2P tức thì.",
+        "generate_btn": "Tạo mã truy cập",
+        "active_code": "Mã kênh đang hoạt động",
+        "building": "Đang thiết lập đường truyền bảo mật...",
+        "copy_btn": "Sao chép mã truy cập",
+        "waiting": "Đang chờ đối phương nhập mã truy cập.",
+        "terminate": "Chấm dứt phiên"
+    },
+    "receiver": {
+        "target_label": "Mã truy cập đích",
+        "placeholder": "NHẬP MÃ",
+        "opening": "Đang mở đường truyền...",
+        "establish_btn": "Thiết lập kết nối",
+        "hint": "Mã được tạo bởi người gửi và hết hạn sau khi sử dụng.",
+        "abort": "Hủy kết nối"
+    },
+    "connected": {
+        "end_session": "Kết thúc phiên",
+        "incoming": "Luồng dữ liệu đến",
+        "outgoing": "Luồng dữ liệu đi",
+        "download_all": "Tải xuống tất cả",
+        "clear": "Xóa danh sách",
+        "ready_for_data": "Sẵn sàng nhận dữ liệu",
+        "status": {
+            "pending": "đang chờ",
+            "transferring": "đang truyền",
+            "completed": "hoàn tất",
+            "error": "lỗi"
+        }
+    },
+    "dialog": {
+        "terminate_title": "Chấm dứt kết nối?",
+        "abort": "Hủy bỏ",
+        "confirm": "Xác nhận chấm dứt",
+        "transfer_active": "Quá trình truyền tải đang diễn ra. Ngắt kết nối sẽ hủy bỏ tất cả luồng dữ liệu. Tiếp tục?",
+        "switch_mode": "Chuyển chế độ sẽ chấm dứt các lượt truyền tải hiện tại. Tiếp tục?"
+    },
+    "toast": {
+        "copy_success": "Mã truy cập đã được sao chép vào bộ nhớ tạm"
+    },
+    "status": {
+        "connected": "đã kết nối",
+        "connecting": "đang kết nối",
+        "error": "lỗi",
+        "disconnected": "đã ngắt kết nối"
+    },
+    "language": {
+        "en": "English",
+        "vi": "Tiếng Việt",
+        "toggle": "Chuyển đổi ngôn ngữ"
+    }
+}

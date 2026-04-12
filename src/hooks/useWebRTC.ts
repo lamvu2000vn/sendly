@@ -107,7 +107,9 @@ export function useWebRTC() {
                                 const newManifestFiles = msg.files;
 
                                 // Chuyển existingFiles thành một map để tra cứu nhanh hơn và cập nhật thông tin
-                                const updatedFiles = [...existingFiles];
+                                const updatedFiles: FileTransfer[] = [
+                                    ...existingFiles,
+                                ];
 
                                 newManifestFiles.forEach((newFile: any) => {
                                     const index = updatedFiles.findIndex(
@@ -124,7 +126,7 @@ export function useWebRTC() {
                                         updatedFiles.push({
                                             ...newFile,
                                             progress: 0,
-                                            status: 'pending',
+                                            status: 'pending' as const,
                                         });
                                     }
                                 });
@@ -148,11 +150,14 @@ export function useWebRTC() {
                                     (f) => f.id === msg.fileId,
                                 );
 
-                                let updatedFiles;
+                                let updatedFiles: FileTransfer[];
                                 if (index > -1) {
                                     updatedFiles = existingFiles.map((f) =>
                                         f.id === msg.fileId
-                                            ? { ...f, status: 'transferring' }
+                                            ? {
+                                                  ...f,
+                                                  status: 'transferring' as const,
+                                              }
                                             : f,
                                     );
                                 } else {
@@ -164,7 +169,7 @@ export function useWebRTC() {
                                             fileName: msg.fileName,
                                             fileSize: msg.fileSize,
                                             progress: 0,
-                                            status: 'transferring',
+                                            status: 'transferring' as const,
                                         },
                                     ];
                                 }

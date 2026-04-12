@@ -12,33 +12,38 @@ interface ConnectedViewProps {
     onDeleteFile: (id: string) => void;
 }
 
+import { useTranslation } from 'react-i18next';
+
 export const ConnectedView = ({
     transferState,
     onFileSelect,
     onDisconnect,
     onClearTransfer,
     onDeleteFile,
-}: ConnectedViewProps) => (
-    <div className="space-y-10 animate-in zoom-in-95 duration-500">
-        <FileDropZone onFileSelect={onFileSelect} />
+}: ConnectedViewProps) => {
+    const { t } = useTranslation();
+    return (
+        <div className="space-y-10 animate-in zoom-in-95 duration-500">
+            <FileDropZone onFileSelect={onFileSelect} />
 
-        {transferState && (
-            <TransferProgress
-                transferState={transferState}
-                onClear={onClearTransfer}
-                onDeleteFile={onDeleteFile}
-            />
-        )}
+            {transferState && (
+                <TransferProgress
+                    transferState={transferState}
+                    onClear={onClearTransfer}
+                    onDeleteFile={onDeleteFile}
+                />
+            )}
 
-        <div className="flex justify-center pt-2">
-            <Button
-                variant="destructive"
-                level="secondary"
-                onClick={onDisconnect}
-            >
-                <XCircle className="w-4 h-4 mr-2" />
-                End Session
-            </Button>
+            <div className="flex justify-center pt-2">
+                <Button
+                    variant="destructive"
+                    level="secondary"
+                    onClick={onDisconnect}
+                >
+                    <XCircle className="w-4 h-4 mr-2" />
+                    {t('connected.end_session')}
+                </Button>
+            </div>
         </div>
-    </div>
-);
+    );
+};

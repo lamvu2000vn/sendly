@@ -1,11 +1,13 @@
 import { FileIcon } from 'lucide-react';
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface FileDropZoneProps {
     onFileSelect: (files: File[]) => void;
 }
 
 export const FileDropZone = ({ onFileSelect }: FileDropZoneProps) => {
+    const { t } = useTranslation();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,9 +34,11 @@ export const FileDropZone = ({ onFileSelect }: FileDropZoneProps) => {
                 <FileIcon className="w-10 h-10 text-primary" />
             </div>
             <div className="space-y-2">
-                <h3 className="text-xl font-semibold">Drop or Select Files</h3>
+                <h3 className="text-xl font-semibold">
+                    {t('drop_zone.title')}
+                </h3>
                 <p className="text-sm text-muted-foreground">
-                    Multiple files supported, direct to peer.
+                    {t('drop_zone.subtitle')}
                 </p>
             </div>
             <input
