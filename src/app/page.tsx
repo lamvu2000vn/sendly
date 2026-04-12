@@ -146,16 +146,19 @@ export default function Home() {
                                         setInputCode('');
                                     }}
                                 >
-                                    <TabsList className="grid grid-cols-2 h-14 p-1 bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 mb-8">
+                                    <TabsList
+                                        variant="default"
+                                        className="w-full mb-12 h-auto"
+                                    >
                                         <TabsTrigger
                                             value="sender"
-                                            className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-lg transition-all font-bold uppercase tracking-widest text-[10px]"
+                                            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                                         >
-                                            Originate
+                                            Send
                                         </TabsTrigger>
                                         <TabsTrigger
                                             value="receiver"
-                                            className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-white data-[state=active]:shadow-lg transition-all font-bold uppercase tracking-widest text-[10px]"
+                                            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
                                         >
                                             Receive
                                         </TabsTrigger>

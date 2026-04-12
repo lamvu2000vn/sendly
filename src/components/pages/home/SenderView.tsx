@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { CopyIcon, ZapIcon, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface SenderViewProps {
     connectionCode: string;
@@ -39,15 +40,15 @@ export const SenderView = ({
                             Ready to Send?
                         </h3>
                         <p className="text-muted-foreground text-sm max-w-[240px] mx-auto leading-relaxed">
-                            Generate a secure, single-use link for instant P2P
+                            Generate a secure, single-use code for instant P2P
                             transfer.
                         </p>
                     </div>
                     <Button
-                        className="w-full h-14 text-lg font-bold rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                        className="w-full h-14 sm:h-18 text-lg font-bold rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                         onClick={onStart}
                     >
-                        Initialize Link
+                        Generate access key
                     </Button>
                 </div>
             </motion.div>
@@ -64,26 +65,32 @@ export const SenderView = ({
                 <Label className="text-xs text-muted-foreground uppercase tracking-[0.3em] font-black opacity-60">
                     Active Channel Code
                 </Label>
-                <div className="flex items-center justify-center gap-3">
+                <div className="flex-center gap-3">
                     {connectionCode ? (
-                        <div className="flex gap-2">
-                            {connectionCode.split('').map((char, i) => (
-                                <motion.span
-                                    initial={{ y: 10, opacity: 0 }}
-                                    animate={{ y: 0, opacity: 1 }}
-                                    transition={{
-                                        delay: i * 0.05,
-                                        type: 'spring',
-                                    }}
-                                    key={i}
-                                    className="size-12 sm:size-14 flex items-center justify-center bg-white/5 border border-white/20 rounded-2xl text-3xl font-black text-primary shadow-lg backdrop-blur-md"
-                                >
-                                    {char}
-                                </motion.span>
-                            ))}
+                        <div className="w-full flex-center rounded-full h-20 sm:h-24 bg-muted">
+                            <div className="w-full flex-center gap-3 sm:gap-4">
+                                {connectionCode.split('').map((char, i) => (
+                                    <motion.span
+                                        initial={{ y: 10, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        transition={{
+                                            delay: i * 0.05,
+                                            type: 'spring',
+                                        }}
+                                        key={i}
+                                        className={cn(
+                                            'text-xl sm:text-3xl',
+                                            'font-bold aspect-square',
+                                            'flex-center',
+                                        )}
+                                    >
+                                        {char}
+                                    </motion.span>
+                                ))}
+                            </div>
                         </div>
                     ) : (
-                        <div className="h-14 flex items-center justify-center gap-3 text-primary/70 font-medium">
+                        <div className="h-14 flex-center gap-3 text-primary/70 font-medium">
                             <Loader2 className="w-6 h-6 animate-spin" />
                             <span className="animate-pulse">
                                 Building secure tunnel...
@@ -113,17 +120,15 @@ export const SenderView = ({
 
                 <div className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 max-w-[280px] text-center">
                     <p className="text-xs font-medium text-muted-foreground leading-relaxed">
-                        {isConnecting
-                            ? 'Receiver is connecting. Maintain this window open for the duration of the transfer.'
-                            : 'Waiting for a partner to enter the access key.'}
+                        Waiting for a partner to enter the access key.
                     </p>
                 </div>
 
                 <Button
-                    variant="ghost"
+                    variant="destructive"
+                    level="secondary"
                     size="sm"
                     onClick={onCancel}
-                    className="text-muted-foreground hover:text-destructive transition-colors mt-2"
                 >
                     Terminate Session
                 </Button>

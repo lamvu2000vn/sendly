@@ -21,7 +21,7 @@ export const BackgroundGradient = () => {
                     repeat: Infinity,
                     ease: 'easeInOut',
                 }}
-                className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-primary/20 blur-[120px]"
+                className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-primary/40 blur-[120px]"
             />
 
             <motion.div
@@ -38,7 +38,7 @@ export const BackgroundGradient = () => {
                     ease: 'easeInOut',
                     delay: 2,
                 }}
-                className="absolute top-[20%] -right-[10%] w-[40%] h-[40%] rounded-full bg-accent/15 blur-[100px]"
+                className="absolute top-[20%] -right-[10%] w-[40%] h-[40%] rounded-full bg-accent/40 blur-[100px]"
             />
 
             <motion.div
@@ -55,7 +55,7 @@ export const BackgroundGradient = () => {
                     ease: 'easeInOut',
                     delay: 5,
                 }}
-                className="absolute -bottom-[10%] left-[20%] w-[60%] h-[60%] rounded-full bg-primary/10 blur-[130px]"
+                className="absolute -bottom-[10%] left-[20%] w-[60%] h-[60%] rounded-full bg-yellow-500/40 blur-[130px]"
             />
 
             {/* Mesh Lines (Subtle) */}

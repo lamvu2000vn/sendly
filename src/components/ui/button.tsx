@@ -9,16 +9,18 @@ const buttonVariants = cva(
     {
         variants: {
             variant: {
-                default:
-                    'bg-primary text-primary-foreground hover:bg-primary/80',
+                default: '',
                 outline:
                     'border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:bg-transparent dark:hover:bg-input/30',
                 secondary:
                     'bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',
                 ghost: 'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50',
-                destructive:
-                    'bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40',
+                destructive: 'active:scale-[0.98]',
                 link: 'text-primary underline-offset-4 hover:underline',
+            },
+            level: {
+                primary: '',
+                secondary: '',
             },
             size: {
                 default:
@@ -32,8 +34,35 @@ const buttonVariants = cva(
                 'icon-lg': 'size-10',
             },
         },
+        compoundVariants: [
+            {
+                variant: 'default',
+                level: 'primary',
+                className:
+                    'bg-primary text-primary-foreground hover:bg-primary/80',
+            },
+            {
+                variant: 'default',
+                level: 'secondary',
+                className:
+                    'bg-primary/10 text-primary border-primary/10 hover:bg-primary/20',
+            },
+            {
+                variant: 'destructive',
+                level: 'primary',
+                className:
+                    'bg-destructive text-destructive-foreground shadow-lg shadow-destructive/20 hover:bg-destructive/90 hover:glow-destructive',
+            },
+            {
+                variant: 'destructive',
+                level: 'secondary',
+                className:
+                    'bg-destructive/10 text-destructive border-destructive/10 hover:bg-destructive/20',
+            },
+        ],
         defaultVariants: {
             variant: 'default',
+            level: 'primary',
             size: 'default',
         },
     },
@@ -43,6 +72,7 @@ function Button({
     className,
     variant = 'default',
     size = 'default',
+    level = 'primary',
     asChild = false,
     ...props
 }: React.ComponentProps<'button'> &
@@ -56,7 +86,8 @@ function Button({
             data-slot="button"
             data-variant={variant}
             data-size={size}
-            className={cn(buttonVariants({ variant, size, className }))}
+            data-level={level}
+            className={cn(buttonVariants({ variant, size, level, className }))}
             {...props}
         />
     );

@@ -103,23 +103,35 @@ export function useWebRTC() {
                         const msg = JSON.parse(event.data);
                         if (msg.type === 'manifest') {
                             setTransferState((prev) => {
-                                // If we already have some files (from file-start arriving first),
-                                // preserve their status/progress if they match IDs.
                                 const existingFiles = prev?.files || [];
+                                const newManifestFiles = msg.files;
+
+                                // Chuyển existingFiles thành một map để tra cứu nhanh hơn và cập nhật thông tin
+                                const updatedFiles = [...existingFiles];
+
+                                newManifestFiles.forEach((newFile: any) => {
+                                    const index = updatedFiles.findIndex(
+                                        (f) => f.id === newFile.id,
+                                    );
+                                    if (index > -1) {
+                                        // Cập nhật metadata nhưng giữ lại tiến trình/trạng thái hiện tại
+                                        updatedFiles[index] = {
+                                            ...updatedFiles[index],
+                                            ...newFile,
+                                        };
+                                    } else {
+                                        // Thêm file mới từ manifest
+                                        updatedFiles.push({
+                                            ...newFile,
+                                            progress: 0,
+                                            status: 'pending',
+                                        });
+                                    }
+                                });
+
                                 return {
                                     isReceiving: true,
-                                    files: msg.files.map((f: any) => {
-                                        const existing = existingFiles.find(
-                                            (ef) => ef.id === f.id,
-                                        );
-                                        return (
-                                            existing || {
-                                                ...f,
-                                                progress: 0,
-                                                status: 'pending',
-                                            }
-                                        );
-                                    }),
+                                    files: updatedFiles,
                                 };
                             });
                         } else if (msg.type === 'file-start') {
@@ -131,22 +143,35 @@ export function useWebRTC() {
                             };
                             await clearStorage(msg.fileId);
                             setTransferState((prev) => {
-                                const files = prev?.files || [
-                                    {
-                                        id: msg.fileId,
-                                        fileName: msg.fileName,
-                                        fileSize: msg.fileSize,
-                                        progress: 0,
-                                        status: 'pending',
-                                    },
-                                ];
-                                return {
-                                    isReceiving: true,
-                                    files: files.map((f) =>
+                                const existingFiles = prev?.files || [];
+                                const index = existingFiles.findIndex(
+                                    (f) => f.id === msg.fileId,
+                                );
+
+                                let updatedFiles;
+                                if (index > -1) {
+                                    updatedFiles = existingFiles.map((f) =>
                                         f.id === msg.fileId
                                             ? { ...f, status: 'transferring' }
                                             : f,
-                                    ),
+                                    );
+                                } else {
+                                    // Fallback: Nếu manifest chưa tới hoặc không có file này
+                                    updatedFiles = [
+                                        ...existingFiles,
+                                        {
+                                            id: msg.fileId,
+                                            fileName: msg.fileName,
+                                            fileSize: msg.fileSize,
+                                            progress: 0,
+                                            status: 'transferring',
+                                        },
+                                    ];
+                                }
+
+                                return {
+                                    isReceiving: true,
+                                    files: updatedFiles,
                                 };
                             });
                         }
@@ -431,10 +456,10 @@ export function useWebRTC() {
             status: 'pending',
         }));
 
-        setTransferState({
-            files: fileTransfers,
+        setTransferState((prev) => ({
+            files: [...(prev?.files || []), ...fileTransfers],
             isReceiving: false,
-        });
+        }));
 
         // Send manifest
         dcRef.current.send(
@@ -475,10 +500,10 @@ export function useWebRTC() {
             );
 
             setTransferState((prev) => {
-                const files = prev?.files || fileTransfers;
+                const currentFiles = prev?.files || [];
                 return {
                     isReceiving: false,
-                    files: files.map((f) =>
+                    files: currentFiles.map((f) =>
                         f.id === transfer.id
                             ? { ...f, status: 'transferring' }
                             : f,

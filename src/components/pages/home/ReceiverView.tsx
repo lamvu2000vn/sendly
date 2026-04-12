@@ -1,10 +1,12 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Input } from '@/components/ui/input';
+
+const CODE_LENGTH = 8;
 
 interface ReceiverViewProps {
     inputCode: string;
@@ -35,7 +37,6 @@ export const ReceiverView = ({
                     Target Access Key
                 </Label>
                 <div className="relative group">
-                    <div className="absolute -inset-1 bg-linear-to-r from-primary/20 to-accent/20 rounded-2xl blur-lg transition duration-500 group-focus-within:opacity-100 opacity-0" />
                     <Input
                         id="code-input"
                         placeholder="ENTER 8-DIGIT KEY"
@@ -43,17 +44,16 @@ export const ReceiverView = ({
                         onChange={(e) =>
                             onInputChange(e.target.value.toUpperCase())
                         }
-                        maxLength={8}
-                        className="relative h-20 text-4xl font-black text-center tracking-[0.3em] rounded-2xl border-white/10 bg-white/5 backdrop-blur-md uppercase placeholder:tracking-[0.1em] placeholder:text-sm placeholder:font-bold focus-visible:ring-primary/50 focus-visible:border-primary/50 transition-all"
+                        maxLength={CODE_LENGTH}
+                        className="relative h-20 text-xl md:text-3xl font-bold text-center tracking-[0.3em] rounded-xl border-white/10 bg-muted backdrop-blur-md uppercase placeholder:tracking-widest placeholder:text-base md:placeholder:text-xl placeholder:font-bold focus-visible:ring-primary/50 focus-visible:border-primary/50 transition-all"
                         disabled={isConnecting}
-                        autoFocus
                     />
                 </div>
             </div>
 
             <div className="space-y-4">
                 <Button
-                    className="w-full h-16 text-lg font-bold rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full h-16 sm:h-18 text-lg font-bold rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                     disabled={inputCode.length !== 8 || isConnecting}
                     onClick={onJoin}
                 >
@@ -85,10 +85,10 @@ export const ReceiverView = ({
                 className="flex justify-center"
             >
                 <Button
-                    variant="ghost"
+                    variant="destructive"
+                    level="secondary"
                     size="sm"
                     onClick={onCancel}
-                    className="text-muted-foreground hover:text-destructive transition-colors"
                 >
                     Abort Connection
                 </Button>

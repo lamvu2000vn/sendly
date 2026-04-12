@@ -32,8 +32,8 @@ export const ConnectedView = ({
 
         <div className="flex justify-center pt-2">
             <Button
-                variant="ghost"
-                className="text-destructive hover:bg-destructive/10 rounded-full px-6"
+                variant="destructive"
+                level="secondary"
                 onClick={onDisconnect}
             >
                 <XCircle className="w-4 h-4 mr-2" />
