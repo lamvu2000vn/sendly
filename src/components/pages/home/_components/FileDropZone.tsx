@@ -74,8 +74,8 @@ export const FileDropZone = ({ onFileSelect }: FileDropZoneProps) => {
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
                 className={cn(
-                    'group relative border-2 border-dashed border-primary/20 bg-primary/5 hover:bg-primary/10 hover:border-primary/40 p-8 rounded-3xl text-center transition-all duration-500 cursor-pointer overflow-hidden',
-                    'glass-morphism shadow-sm',
+                    'group relative border-4 border-dashed border-primary/40 bg-primary/10 hover:bg-primary/20 hover:border-primary/60 p-8 rounded-3xl text-center transition-all duration-500 cursor-pointer overflow-hidden',
+                    'shadow-sm',
                 )}
                 onClick={handleDropZoneClick}
                 onDragOver={(e) => e.preventDefault()}

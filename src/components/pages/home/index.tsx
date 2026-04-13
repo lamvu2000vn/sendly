@@ -103,7 +103,7 @@ export default function HomePageComponent() {
     const showTransferView = isConnected || hasReceivedFiles;
 
     return (
-        <main className="flex flex-col items-center justify-center flex-1 p-4 sm:p-10 md:p-16 relative overflow-hidden">
+        <main className="flex flex-col items-center justify-center min-h-screen p-4 sm:p-10 md:p-16 relative overflow-y-auto scrollbar-hide">
             <div className="w-full max-w-2xl space-y-8 sm:space-y-12 relative z-20">
                 <Hero />
 
