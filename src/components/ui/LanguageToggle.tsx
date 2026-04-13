@@ -87,7 +87,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                                     key={lang.code}
                                     onClick={() => changeLanguage(lang.code)}
                                     className={cn(
-                                        'relative flex items-center gap-3 w-full p-2.5 rounded-2xl transition-all duration-300 group overflow-hidden',
+                                        'relative flex items-center gap-3 w-full p-2.5 rounded-2xl transition-all duration-500 group overflow-hidden',
                                         isActive
                                             ? 'bg-primary/10 text-primary shadow-sm'
                                             : 'hover:bg-white/5 text-muted-foreground hover:text-foreground',

@@ -60,7 +60,7 @@ export const BackgroundGradient = () => {
 
             {/* Mesh Lines (Subtle) */}
             <div
-                className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none"
+                className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none transition-opacity duration-500"
                 style={{
                     backgroundImage:
                         'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)',

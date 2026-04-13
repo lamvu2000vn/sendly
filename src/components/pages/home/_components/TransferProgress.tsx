@@ -173,7 +173,7 @@ export const TransferProgress = ({
                                         transition: { duration: 0.2 },
                                     }}
                                     className={cn(
-                                        'relative group p-4 rounded-2xl border transition-all duration-300',
+                                        'relative group p-4 rounded-2xl border transition-all duration-500',
                                         'bg-card/40 border-border/50',
                                         isSuccess &&
                                             'border-primary/20 bg-primary/5',

@@ -32,7 +32,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
             whileTap={{ scale: 0.95 }}
             onClick={toggleTheme}
             className={cn(
-                'group relative flex items-center gap-2 p-2 rounded-2xl transition-all duration-300',
+                'group relative flex items-center gap-2 p-2 rounded-2xl transition-all duration-500',
                 'bg-white/10 dark:bg-black/10 backdrop-blur-md border border-white/20 dark:border-white/5',
                 'hover:bg-white/20 dark:hover:bg-white/10 shadow-lg',
                 className,
@@ -53,7 +53,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
                 </AnimatePresence>
             </div>
 
-            <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground group-hover:text-foreground transition-colors duration-300 px-1">
+            <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground group-hover:text-foreground transition-colors duration-500 px-1">
                 {currentTheme.label}
             </span>
 
