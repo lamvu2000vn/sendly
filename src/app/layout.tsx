@@ -40,6 +40,8 @@ export const viewport: Viewport = {
     maximumScale: 1,
 };
 
+import ThemeProvider from '@/components/providers/ThemeProvider';
+
 export default function RootLayout({
     children,
 }: Readonly<{
@@ -55,6 +57,7 @@ export default function RootLayout({
                 inter.variable,
                 jetbrainsMono.variable,
             )}
+            suppressHydrationWarning
         >
             <body
                 className="min-h-full flex flex-col font-sans selection:bg-primary/30 selection:text-primary"
@@ -62,11 +65,13 @@ export default function RootLayout({
             >
                 <BackgroundGradient />
                 <QueryProvider>
-                    <I18nProvider>
-                        <div className="relative z-10 flex flex-col min-h-screen">
-                            {children}
-                        </div>
-                    </I18nProvider>
+                    <ThemeProvider>
+                        <I18nProvider>
+                            <div className="relative z-10 flex flex-col min-h-screen">
+                                {children}
+                            </div>
+                        </I18nProvider>
+                    </ThemeProvider>
                 </QueryProvider>
                 <Toaster
                     position="top-center"

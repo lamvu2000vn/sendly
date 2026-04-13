@@ -14,8 +14,8 @@ export const ConnectionCard = ({ status, children }: ConnectionCardProps) => (
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
     >
-        <Card className="shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] dark:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] border-white/20 dark:border-white/5 overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] gap-0">
-            <CardHeader className="border-b border-white/10 dark:border-white/5 bg-white/5 px-6 sm:px-10 md:px-12 py-5 sm:py-6">
+        <Card className="shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] dark:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] border-white/20 dark:border-white/5 overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] gap-0 py-0">
+            <CardHeader className="border-b border-white/10 dark:border-white/5 bg-white/5 px-6 sm:px-10 md:px-12 py-5 sm:py-6 rounded-none">
                 <CardTitle className="flex justify-between items-center text-base sm:text-lg font-heading tracking-tight">
                     <span className="opacity-70 uppercase text-[10px] sm:text-xs md:text-sm font-black tracking-widest">
                         Session Link

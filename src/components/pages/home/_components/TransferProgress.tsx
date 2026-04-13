@@ -154,7 +154,7 @@ export const TransferProgress = ({
             <div className="max-h-[400px] overflow-y-auto overflow-x-hidden -mx-6 px-6 custom-scrollbar">
                 <div className="pt-2 pb-8 px-2 space-y-4">
                     <AnimatePresence mode="popLayout" initial={false}>
-                        {transferState.files.map((file, i) => {
+                        {transferState.files.map((file, _) => {
                             const isSuccess = file.status === 'completed';
                             const isTransferring =
                                 file.status === 'transferring';
