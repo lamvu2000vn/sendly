@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { generateCode, sendSignal } from '@/lib/signaling';
-import { clearStorage } from '@/lib/fileStorage';
+import { clearStorage, purgeStorage } from '@/lib/fileStorage';
 import { useTransferStore } from '@/store/useTransferStore';
 import { useAppStore } from '@/store/useAppStore';
 import { useFileSender } from './webrtc/useFileSender';
@@ -79,6 +79,8 @@ export function useWebRTC() {
         async (predefinedCode?: string | unknown) => {
             try {
                 cleanup();
+                await purgeStorage().catch(console.error);
+                clearTransfers();
                 setMode('host');
                 setDc(null);
 
@@ -116,15 +118,7 @@ export function useWebRTC() {
                 toast.error(t('toast.create_session_error'));
             }
         },
-        [
-            cleanup,
-            initializePeerConnection,
-            setConnectionCode,
-            setConnectionStatus,
-            setupDataChannel,
-            setMode,
-            t,
-        ],
+        [cleanup, clearTransfers, setMode, setConnectionCode, setConnectionStatus, initializePeerConnection, setupDataChannel, t],
     );
 
     const joinConnection = useCallback(
@@ -142,6 +136,8 @@ export function useWebRTC() {
                 }
 
                 cleanup();
+                await purgeStorage().catch(console.error);
+                clearTransfers();
                 setMode('guest');
                 setDc(null);
                 setConnectionCode(code);
@@ -153,14 +149,7 @@ export function useWebRTC() {
                 toast.error(t('toast.join_error'));
             }
         },
-        [
-            cleanup,
-            initializePeerConnection,
-            setConnectionCode,
-            setConnectionStatus,
-            setMode,
-            t,
-        ],
+        [cleanup, clearTransfers, initializePeerConnection, setConnectionCode, setConnectionStatus, setMode, t],
     );
 
     const handleDeleteFile = useCallback(
@@ -174,7 +163,7 @@ export function useWebRTC() {
     const disconnect = useCallback(
         (stayOnCurrentMode = false) => {
             cleanup();
-            clearStorage().catch(console.error);
+            purgeStorage().catch(console.error);
             setConnectionStatus('disconnected');
             clearTransfers();
             setConnectionCode('');
@@ -193,12 +182,19 @@ export function useWebRTC() {
         ],
     );
 
+    // Initial cleanup on app load
+    useEffect(() => {
+        purgeStorage().catch(console.error);
+        clearTransfers();
+    }, [clearTransfers]);
+
     useEffect(() => {
         return () => {
             cleanup();
-            clearStorage().catch(console.error);
+            purgeStorage().catch(console.error);
+            clearTransfers();
         };
-    }, [cleanup]);
+    }, [cleanup, clearTransfers]);
 
     const handleCancelTransfer = useCallback(
         (fileId: string) => {
@@ -219,13 +215,18 @@ export function useWebRTC() {
         [dc, cancelTransfer, transferState, t],
     );
 
+    const handleClearTransfer = useCallback(() => {
+        purgeStorage().catch(console.error);
+        clearTransfers();
+    }, [clearTransfers]);
+
     return {
         connectionCode,
         transferState,
         startConnection,
         joinConnection,
         sendFiles,
-        clearTransfer: clearTransfers,
+        clearTransfer: handleClearTransfer,
         deleteFile: handleDeleteFile,
         cancelTransfer: handleCancelTransfer,
         disconnect,

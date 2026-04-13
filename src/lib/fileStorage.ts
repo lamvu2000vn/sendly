@@ -60,6 +60,22 @@ export async function clearStorage(fileId?: string) {
     });
 }
 
+export async function purgeStorage() {
+    if (dbCache) {
+        dbCache.close();
+        dbCache = null;
+    }
+    return new Promise<void>((resolve, reject) => {
+        const request = indexedDB.deleteDatabase(DB_NAME);
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+        request.onblocked = () => {
+            console.warn('Delete database blocked');
+            resolve(); // Still resolve to avoid hanging
+        };
+    });
+}
+
 export async function saveChunk(fileId: string, chunk: ArrayBuffer) {
     const db = await initStorage();
     return new Promise<void>((resolve, reject) => {
