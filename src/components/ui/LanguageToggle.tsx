@@ -21,7 +21,7 @@ const LANGUAGES = [
     },
 ];
 
-export const LanguageToggle = () => {
+export const LanguageToggle = ({ className }: { className?: string }) => {
     const { i18n, t } = useTranslation();
 
     const changeLanguage = (code: string) => {
@@ -37,9 +37,9 @@ export const LanguageToggle = () => {
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="fixed bottom-6 right-6 z-50"
+            className={cn('relative z-50', className)}
         >
             <Popover>
                 <PopoverTrigger asChild>

@@ -15,9 +15,9 @@ export const Hero = () => {
                 whileHover={{ scale: 1.05, rotate: 5 }}
                 className="relative flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20"
             >
-                <div className="absolute inset-0 bg-primary blur-2xl opacity-20 animate-pulse" />
-                <div className="relative z-10 flex items-center justify-center w-full h-full rounded-xl bg-linear-to-br from-primary to-accent shadow-2xl shadow-primary/30">
-                    <Share2 className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                <div className="absolute inset-0 bg-primary blur-3xl opacity-30 animate-pulse" />
+                <div className="relative z-10 flex items-center justify-center w-full h-full rounded-2xl glass border-white/40 dark:border-white/10 shadow-2xl">
+                    <Share2 className="w-8 h-8 sm:w-10 sm:h-10 text-secondary drop-shadow-[0_0_8px_var(--secondary)]" />
                 </div>
             </motion.div>
 

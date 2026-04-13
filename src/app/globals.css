@@ -57,64 +57,66 @@
 }
 
 :root {
-    /* 2026 Modern Light Theme - Clean, Airy, Premium */
-    --background: oklch(0.99 0.005 240);
-    --foreground: oklch(0.2 0.02 240);
+    /* 2026 Pastel Harmony - Digital Lavender & Powder Pink */
+    --background: oklch(0.98 0.01 320);
+    --foreground: oklch(0.25 0.04 320);
 
-    --card: oklch(1 0 0 / 0.8);
-    --card-foreground: oklch(0.2 0.02 240);
+    --card: oklch(1 0 0 / 0.7);
+    --card-foreground: oklch(0.25 0.04 320);
 
-    --primary: oklch(0.6 0.18 250);
-    /* Royal Blue */
-    --primary-foreground: oklch(0.99 0.01 250);
+    --primary: oklch(0.78 0.1 275);
+    /* Digital Lavender */
+    --primary-foreground: oklch(0.99 0.02 275);
 
-    --secondary: oklch(0.9 0.05 280);
-    --secondary-foreground: oklch(0.25 0.1 280);
+    --secondary: oklch(0.88 0.08 350);
+    /* Powder Pink (Hồng phấn) */
+    --secondary-foreground: oklch(0.45 0.1 350);
 
-    --accent: oklch(0.7 0.25 330);
-    /* Orchid Pink */
-    --accent-foreground: oklch(0.99 0.01 330);
+    --accent: oklch(0.85 0.1 165);
+    /* Luminous Mint */
+    --accent-foreground: oklch(0.35 0.1 165);
 
-    --muted: oklch(0.95 0.01 240);
-    --muted-foreground: oklch(0.5 0.03 240);
+    --muted: oklch(0.96 0.02 320);
+    --muted-foreground: oklch(0.5 0.04 320);
 
-    --border: oklch(0.9 0.02 240);
-    --input: oklch(0.9 0.02 240);
-    --ring: oklch(0.6 0.18 250 / 0.4);
+    --border: oklch(0.92 0.03 320 / 0.5);
+    --input: oklch(0.92 0.03 320 / 0.5);
+    --ring: oklch(0.88 0.08 350 / 0.3);
 
-    --destructive: oklch(0.6 0.22 25);
-    --destructive-foreground: oklch(1 0 0);
+    --destructive: oklch(0.7 0.15 25);
+    --destructive-foreground: oklch(0.98 0.01 25);
 
-    --radius: 1rem;
+    --radius: 1.25rem;
 }
 
 .dark {
-    /* 2026 Modern Dark Theme - Deep, Glowing, Cyberpunk-Lite */
-    --background: oklch(0.12 0.015 250);
-    --foreground: oklch(0.95 0.01 250);
+    /* 2026 Midnight Pastel - Deep Purple & Radiant Pink */
+    --background: oklch(0.12 0.02 275);
+    --foreground: oklch(0.95 0.02 275);
 
-    --card: oklch(0.16 0.02 250 / 0.7);
-    --card-foreground: oklch(0.95 0.01 250);
+    --card: oklch(0.16 0.04 275 / 0.6);
+    --card-foreground: oklch(0.95 0.02 275);
 
-    --primary: oklch(0.65 0.2 260);
-    /* Electric Blue */
-    --primary-foreground: oklch(0.98 0.01 260);
+    --primary: oklch(0.7 0.12 275);
+    /* Radiant Lavender */
+    --primary-foreground: oklch(0.1 0.02 275);
 
-    --secondary: oklch(0.2 0.08 280);
-    --secondary-foreground: oklch(0.9 0.05 280);
+    --secondary: oklch(0.65 0.15 350);
+    /* Luminous Pink */
+    --secondary-foreground: oklch(0.98 0.02 350);
 
-    --accent: oklch(0.75 0.25 320);
-    /* Magenta Glow */
-    --accent-foreground: oklch(0.98 0.01 320);
+    --accent: oklch(0.75 0.15 170);
+    /* Neon Mint Glow */
+    --accent-foreground: oklch(0.1 0.05 170);
 
-    --muted: oklch(0.2 0.02 250);
-    --muted-foreground: oklch(0.6 0.03 250);
+    --muted: oklch(0.18 0.04 275);
+    --muted-foreground: oklch(0.6 0.04 275);
 
-    --border: oklch(0.25 0.03 250 / 0.5);
-    --input: oklch(0.25 0.03 250 / 0.5);
-    --ring: oklch(0.65 0.2 260 / 0.5);
+    --border: oklch(0.22 0.06 275 / 0.3);
+    --input: oklch(0.22 0.06 275 / 0.3);
+    --ring: oklch(0.65 0.15 350 / 0.4);
 
-    --destructive: oklch(0.65 0.25 25);
+    --destructive: oklch(0.6 0.2 25);
     --destructive-foreground: oklch(0.98 0.01 25);
 }
 
@@ -151,7 +153,7 @@
     }
 
     .text-gradient {
-        @apply bg-clip-text text-transparent bg-linear-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-gradient;
+        @apply bg-clip-text text-transparent bg-linear-to-r from-primary via-secondary via-accent to-primary bg-[length:200%_auto] animate-gradient;
     }
 
     .glow-primary {

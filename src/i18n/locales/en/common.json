@@ -41,6 +41,8 @@
         "ready_for_data": "Ready for data",
         "sent": "sent",
         "received": "received",
+        "files": "files",
+        "drag_and_drop_hint": "Files you select or receive will appear here instantly.",
 
         "status": {
             "pending": "pending",

@@ -41,6 +41,8 @@
         "ready_for_data": "Sẵn sàng nhận dữ liệu",
         "sent": "đã gửi",
         "received": "đã nhận",
+        "files": "tệp tin",
+        "drag_and_drop_hint": "Các tệp bạn chọn hoặc nhận được sẽ xuất hiện ở đây ngay lập tức.",
 
         "status": {
             "pending": "đang chờ",

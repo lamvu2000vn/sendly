@@ -155,8 +155,14 @@ export default function HomePageComponent() {
                                     >
                                         <motion.div
                                             variants={{
-                                                hidden: { scale: 0.8, opacity: 0 },
-                                                visible: { scale: 1, opacity: 1 },
+                                                hidden: {
+                                                    scale: 0.8,
+                                                    opacity: 0,
+                                                },
+                                                visible: {
+                                                    scale: 1,
+                                                    opacity: 1,
+                                                },
                                             }}
                                             className="relative w-20 h-20 mx-auto"
                                         >
@@ -180,8 +186,14 @@ export default function HomePageComponent() {
                                         >
                                             <motion.div
                                                 variants={{
-                                                    hidden: { y: 10, opacity: 0 },
-                                                    visible: { y: 0, opacity: 1 },
+                                                    hidden: {
+                                                        y: 10,
+                                                        opacity: 0,
+                                                    },
+                                                    visible: {
+                                                        y: 0,
+                                                        opacity: 1,
+                                                    },
                                                 }}
                                                 className="space-y-2"
                                             >
@@ -207,8 +219,14 @@ export default function HomePageComponent() {
                                             >
                                                 <motion.div
                                                     variants={{
-                                                        hidden: { y: 10, opacity: 0 },
-                                                        visible: { y: 0, opacity: 1 },
+                                                        hidden: {
+                                                            y: 10,
+                                                            opacity: 0,
+                                                        },
+                                                        visible: {
+                                                            y: 0,
+                                                            opacity: 1,
+                                                        },
                                                     }}
                                                 >
                                                     <Button
@@ -218,7 +236,9 @@ export default function HomePageComponent() {
                                                             startConnection();
                                                         }}
                                                     >
-                                                        {t('sender.generate_btn')}
+                                                        {t(
+                                                            'sender.generate_btn',
+                                                        )}
                                                     </Button>
                                                 </motion.div>
 
@@ -233,7 +253,7 @@ export default function HomePageComponent() {
                                                         <Separator />
                                                     </div>
                                                     <div className="relative flex justify-center text-xs uppercase">
-                                                        <span className="bg-card px-4 text-muted-foreground font-medium tracking-widest">
+                                                        <span className="bg-background/40 backdrop-blur-xl px-5 py-1.5 rounded-full border border-white/20 dark:border-white/5 text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] shadow-sm">
                                                             or
                                                         </span>
                                                     </div>
@@ -241,8 +261,14 @@ export default function HomePageComponent() {
 
                                                 <motion.div
                                                     variants={{
-                                                        hidden: { y: 10, opacity: 0 },
-                                                        visible: { y: 0, opacity: 1 },
+                                                        hidden: {
+                                                            y: 10,
+                                                            opacity: 0,
+                                                        },
+                                                        visible: {
+                                                            y: 0,
+                                                            opacity: 1,
+                                                        },
                                                     }}
                                                 >
                                                     <Button

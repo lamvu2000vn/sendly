@@ -1,8 +1,9 @@
-import { FileIcon, UploadCloud } from 'lucide-react';
+import { FileIcon, UploadCloud, Plus } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface FileDropZoneProps {
     onFileSelect: (files: File[]) => void;
@@ -68,23 +69,38 @@ export const FileDropZone = ({ onFileSelect }: FileDropZoneProps) => {
     };
 
     return (
-        <>
-            <div
-                className="group relative border-2 border-dashed border-primary/30 bg-primary/5 hover:bg-primary/10 hover:border-primary/50 p-10 rounded-2xl text-center transition-all duration-300 cursor-pointer"
+        <div className="relative">
+            <motion.div
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                className={cn(
+                    'group relative border-2 border-dashed border-primary/20 bg-primary/5 hover:bg-primary/10 hover:border-primary/40 p-8 rounded-3xl text-center transition-all duration-500 cursor-pointer overflow-hidden',
+                    'glass-morphism shadow-sm',
+                )}
                 onClick={handleDropZoneClick}
                 onDragOver={(e) => e.preventDefault()}
             >
-                <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <FileIcon className="w-10 h-10 text-primary" />
+                {/* Decorative background glow */}
+                <div className="absolute -top-20 -right-20 size-40 bg-primary/10 blur-[60px] rounded-full pointer-events-none group-hover:bg-primary/20 transition-colors" />
+                <div className="absolute -bottom-20 -left-20 size-40 bg-accent/10 blur-[60px] rounded-full pointer-events-none group-hover:bg-accent/20 transition-colors" />
+
+                <div className="relative z-10 py-4">
+                    <div className="mx-auto w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 relative">
+                        <FileIcon className="w-9 h-9 text-primary transition-transform duration-500 group-hover:rotate-6" />
+                        <div className="absolute -bottom-2 -right-2 size-8 bg-primary text-primary-foreground rounded-xl flex items-center justify-center shadow-lg transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                            <Plus className="w-5 h-5" />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <h3 className="text-xl font-bold tracking-tight">
+                            {t('drop_zone.title')}
+                        </h3>
+                        <p className="text-sm text-muted-foreground/60 font-medium">
+                            {t('drop_zone.subtitle')}
+                        </p>
+                    </div>
                 </div>
-                <div className="space-y-2">
-                    <h3 className="text-xl font-semibold">
-                        {t('drop_zone.title')}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                        {t('drop_zone.subtitle')}
-                    </p>
-                </div>
+
                 <input
                     type="file"
                     multiple
@@ -92,7 +108,7 @@ export const FileDropZone = ({ onFileSelect }: FileDropZoneProps) => {
                     ref={fileInputRef}
                     onChange={handleFileChange}
                 />
-            </div>
+            </motion.div>
 
             {typeof document !== 'undefined' &&
                 createPortal(
@@ -119,16 +135,10 @@ export const FileDropZone = ({ onFileSelect }: FileDropZoneProps) => {
                                         <UploadCloud className="w-16 h-16 animate-bounce" />
                                     </div>
                                     <h2 className="text-4xl font-bold tracking-tight">
-                                        {t(
-                                            'drop_zone.overlay_title',
-                                            'Drop files anywhere',
-                                        )}
+                                        {t('drop_zone.overlay_title')}
                                     </h2>
                                     <p className="text-xl opacity-80 max-w-md">
-                                        {t(
-                                            'drop_zone.overlay_subtitle',
-                                            'Release to start sending your files instantly',
-                                        )}
+                                        {t('drop_zone.overlay_subtitle')}
                                     </p>
                                 </motion.div>
                             </motion.div>
@@ -136,6 +146,6 @@ export const FileDropZone = ({ onFileSelect }: FileDropZoneProps) => {
                     </AnimatePresence>,
                     document.body,
                 )}
-        </>
+        </div>
     );
 };
