@@ -2,34 +2,42 @@
 
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { CopyIcon, ZapIcon, Loader2 } from 'lucide-react';
+import { CopyIcon, ZapIcon, Loader2, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 
-interface SenderViewProps {
+interface HostViewProps {
     connectionCode: string;
     isConnecting: boolean;
     onStart: () => void;
     onCopy: () => void;
-    onCancel: () => void;
+    onBack: () => void;
 }
 
-export const SenderView = ({
+export const HostView = ({
     connectionCode,
     isConnecting,
     onStart,
     onCopy,
-    onCancel,
-}: SenderViewProps) => {
+    onBack,
+}: HostViewProps) => {
     const { t } = useTranslation();
     if (!connectionCode && !isConnecting) {
         return (
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="text-center space-y-8"
+                className="text-center space-y-8 relative"
             >
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute -top-4 -left-2 rounded-full hover:bg-white/5"
+                    onClick={onBack}
+                >
+                    <ArrowLeft className="w-5 h-5" />
+                </Button>
                 <div className="relative w-20 h-20 mx-auto">
                     <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
                     <div className="relative z-10 w-full h-full bg-primary/10 rounded-full flex items-center justify-center">
@@ -129,7 +137,7 @@ export const SenderView = ({
                     variant="destructive"
                     level="secondary"
                     size="sm"
-                    onClick={onCancel}
+                    onClick={onBack}
                 >
                     {t('sender.terminate')}
                 </Button>

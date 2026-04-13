@@ -2,18 +2,21 @@
 
 import { useAppStore } from '@/store/useAppStore';
 import { useWebRTC } from '@/hooks/useWebRTC';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
 import { lazy, useState, useCallback, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ZapIcon } from 'lucide-react';
 
 import { Hero } from '@/components/pages/home/_components/Hero';
 import { Footer } from '@/components/pages/home/_components/Footer';
 import { ConnectionCard } from '@/components/pages/home/_components/ConnectionCard';
 import { ConnectedView } from '@/components/pages/home/_components/ConnectedView';
-import { SenderView } from '@/components/pages/home/_components/SenderView';
-import { ReceiverView } from '@/components/pages/home/_components/ReceiverView';
+import { HostView } from '@/components/pages/home/_components/HostView';
+import { GuestView } from '@/components/pages/home/_components/GuestView';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 
 const ConfirmDialog = lazy(() => import('@/components/dialogs/ConfirmDialog'));
 
@@ -43,10 +46,11 @@ export default function HomePageComponent() {
     });
 
     useEffect(() => {
-        if (mode === null) {
+        if (mode !== 'host' && mode !== 'guest') {
+            if (mode !== null) setMode(null);
             setInputCode('');
         }
-    }, [mode]);
+    }, [mode, setMode]);
 
     const isConnected = connectionStatus === 'connected';
     const isConnecting = connectionStatus === 'connecting';
@@ -127,67 +131,95 @@ export default function HomePageComponent() {
                             </motion.div>
                         ) : (
                             <motion.div
-                                key="entry"
+                                key="mode-selection"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 className="space-y-6"
                             >
-                                <Tabs
-                                    value={mode || 'sender'}
-                                    className="w-full"
-                                    onValueChange={(v) => {
-                                        disconnect(true);
-                                        setMode(v as 'sender' | 'receiver');
-                                        setInputCode('');
-                                    }}
-                                >
-                                    <TabsList
-                                        variant="default"
-                                        className="w-full mb-10 h-14 sm:h-16 p-1.5 bg-muted/50 rounded-2xl sm:rounded-3xl"
-                                    >
-                                        <TabsTrigger
-                                            value="sender"
-                                            className="h-full text-base sm:text-lg font-bold rounded-xl sm:rounded-2xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg transition-all"
-                                        >
-                                            {t('tabs.send')}
-                                        </TabsTrigger>
-                                        <TabsTrigger
-                                            value="receiver"
-                                            className="h-full text-base sm:text-lg font-bold rounded-xl sm:rounded-2xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-lg transition-all"
-                                        >
-                                            {t('tabs.receive')}
-                                        </TabsTrigger>
-                                    </TabsList>
+                                {!mode ||
+                                (mode !== 'host' && mode !== 'guest') ? (
+                                    <div className="text-center space-y-8 py-4">
+                                        <div className="relative w-20 h-20 mx-auto">
+                                            <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
+                                            <div className="relative z-10 w-full h-full bg-primary/10 rounded-full flex items-center justify-center">
+                                                <ZapIcon className="w-10 h-10 text-primary" />
+                                            </div>
+                                        </div>
 
-                                    <TabsContent
-                                        value="sender"
-                                        className="mt-0 outline-none"
-                                    >
-                                        <SenderView
+                                        <div className="space-y-6">
+                                            <div className="space-y-2">
+                                                <h3 className="text-xl font-bold font-heading">
+                                                    {t('sender.ready_title')}
+                                                </h3>
+                                                <p className="text-muted-foreground text-sm max-w-[240px] mx-auto leading-relaxed">
+                                                    {t('sender.ready_desc')}
+                                                </p>
+                                            </div>
+
+                                            <div className="space-y-6">
+                                                <Button
+                                                    className="w-full h-16 sm:h-20 text-lg sm:text-xl font-bold rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                                    onClick={() => {
+                                                        setMode('host');
+                                                        startConnection();
+                                                    }}
+                                                >
+                                                    {t('sender.generate_btn')}
+                                                </Button>
+
+                                                <div className="relative">
+                                                    <div className="absolute inset-0 flex items-center">
+                                                        <Separator />
+                                                    </div>
+                                                    <div className="relative flex justify-center text-xs uppercase">
+                                                        <span className="bg-card px-4 text-muted-foreground font-medium tracking-widest">
+                                                            or
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <Button
+                                                    variant="secondary"
+                                                    className="w-full h-12 sm:h-14 text-base font-bold rounded-2xl shadow-lg border border-white/5 hover:bg-white/10 transition-all"
+                                                    onClick={() =>
+                                                        setMode('guest')
+                                                    }
+                                                >
+                                                    Enter code
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : mode === 'host' ? (
+                                    <div className="mt-4">
+                                        <HostView
                                             connectionCode={connectionCode}
                                             isConnecting={isConnecting}
                                             onStart={startConnection}
                                             onCopy={handleCopy}
-                                            onCancel={() => handleDisconnect()}
+                                            onBack={() => {
+                                                handleDisconnect();
+                                                setMode(null);
+                                            }}
                                         />
-                                    </TabsContent>
-
-                                    <TabsContent
-                                        value="receiver"
-                                        className="mt-0 outline-none"
-                                    >
-                                        <ReceiverView
+                                    </div>
+                                ) : (
+                                    <div className="mt-4">
+                                        <GuestView
                                             inputCode={inputCode}
                                             isConnecting={isConnecting}
                                             onInputChange={setInputCode}
                                             onJoin={() =>
                                                 joinConnection(inputCode)
                                             }
-                                            onCancel={() => handleDisconnect()}
+                                            onBack={() => {
+                                                handleDisconnect();
+                                                setMode(null);
+                                            }}
                                         />
-                                    </TabsContent>
-                                </Tabs>
+                                    </div>
+                                )}
                             </motion.div>
                         )}
                     </AnimatePresence>

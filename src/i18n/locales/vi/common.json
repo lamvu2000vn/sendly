@@ -14,7 +14,7 @@
         "overlay_subtitle": "Thả tệp tin để bắt đầu gửi ngay lập tức"
     },
     "sender": {
-        "ready_title": "Sẵn sàng gửi?",
+        "ready_title": "Sẵn sàng kết nối?",
         "ready_desc": "Tạo mã bảo mật dùng một lần để truyền tệp P2P tức thì.",
         "generate_btn": "Tạo mã truy cập",
         "active_code": "Mã kênh đang hoạt động",
@@ -28,7 +28,7 @@
         "placeholder": "NHẬP MÃ",
         "opening": "Đang mở đường truyền...",
         "establish_btn": "Thiết lập kết nối",
-        "hint": "Mã được tạo bởi người gửi và hết hạn sau khi sử dụng.",
+        "hint": "Mã được tạo từ phía host và hết hạn sau khi kết nối.",
         "abort": "Hủy kết nối"
     },
     "connected": {

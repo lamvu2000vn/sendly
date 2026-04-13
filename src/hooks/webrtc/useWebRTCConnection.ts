@@ -29,11 +29,13 @@ export function useWebRTCConnection(
         });
 
         pc.oniceconnectionstatechange = () => {
-            if (
-                pc.iceConnectionState === 'disconnected' ||
-                pc.iceConnectionState === 'failed'
-            ) {
+            if (pc.iceConnectionState === 'failed') {
                 if (isTransferFinished()) return;
+
+                // Don't trigger error if we are already disconnecting
+                const currentStatus = useAppStore.getState().connectionStatus;
+                if (currentStatus === 'disconnected') return;
+
                 setConnectionStatus('error');
                 toast.error(t('toast.connection_issue'));
             }
@@ -49,7 +51,7 @@ export function useWebRTCConnection(
     }, [setConnectionStatus, onDataChannel, isTransferFinished, t]);
 
     // TanStack Query for Signaling
-    const targetSignalType = mode === 'sender' ? 'answer' : 'offer';
+    const targetSignalType = mode === 'host' ? 'answer' : 'offer';
     const { data: remoteSignal } = useQuery({
         queryKey: ['signaling', connectionCode, targetSignalType],
         queryFn: ({ signal }) =>
@@ -72,16 +74,13 @@ export function useWebRTCConnection(
 
         const handleHandshake = async () => {
             try {
-                if (
-                    mode === 'sender' &&
-                    remoteSignal.message.type === 'answer'
-                ) {
+                if (mode === 'host' && remoteSignal.message.type === 'answer') {
                     const answer = JSON.parse(remoteSignal.message.data);
                     await pcRef.current?.setRemoteDescription(
                         new RTCSessionDescription(answer),
                     );
                 } else if (
-                    mode === 'receiver' &&
+                    mode === 'guest' &&
                     remoteSignal.message.type === 'offer'
                 ) {
                     const offer = JSON.parse(remoteSignal.message.data);

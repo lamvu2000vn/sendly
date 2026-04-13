@@ -68,8 +68,8 @@
     /* Royal Blue */
     --primary-foreground: oklch(0.99 0.01 250);
 
-    --secondary: oklch(0.92 0.02 240);
-    --secondary-foreground: oklch(0.3 0.03 240);
+    --secondary: oklch(0.9 0.05 280);
+    --secondary-foreground: oklch(0.25 0.1 280);
 
     --accent: oklch(0.7 0.25 330);
     /* Orchid Pink */
@@ -100,8 +100,8 @@
     /* Electric Blue */
     --primary-foreground: oklch(0.98 0.01 260);
 
-    --secondary: oklch(0.22 0.03 250);
-    --secondary-foreground: oklch(0.9 0.02 250);
+    --secondary: oklch(0.2 0.08 280);
+    --secondary-foreground: oklch(0.9 0.05 280);
 
     --accent: oklch(0.75 0.25 320);
     /* Magenta Glow */

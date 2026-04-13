@@ -8,8 +8,8 @@ export type ConnectionStatus =
     | 'error';
 
 interface AppState {
-    mode: 'sender' | 'receiver' | null;
-    setMode: (mode: 'sender' | 'receiver' | null) => void;
+    mode: 'host' | 'guest' | null;
+    setMode: (mode: 'host' | 'guest' | null) => void;
     connectionStatus: ConnectionStatus;
     setConnectionStatus: (status: ConnectionStatus) => void;
     connectionCode: string;

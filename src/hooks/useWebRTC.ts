@@ -79,7 +79,7 @@ export function useWebRTC() {
         async (predefinedCode?: string | unknown) => {
             try {
                 cleanup();
-                setMode('sender');
+                setMode('host');
                 setDc(null);
 
                 const code =
@@ -142,7 +142,7 @@ export function useWebRTC() {
                 }
 
                 cleanup();
-                setMode('receiver');
+                setMode('guest');
                 setDc(null);
                 setConnectionCode(code);
                 setConnectionStatus('connecting');

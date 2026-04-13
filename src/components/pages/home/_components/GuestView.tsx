@@ -2,35 +2,43 @@
 
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowRight, Loader2, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { useTranslation } from 'react-i18next';
 
 const CODE_LENGTH = 8;
 
-interface ReceiverViewProps {
+interface GuestViewProps {
     inputCode: string;
     isConnecting: boolean;
     onInputChange: (value: string) => void;
     onJoin: () => void;
-    onCancel: () => void;
+    onBack: () => void;
 }
 
-export const ReceiverView = ({
+export const GuestView = ({
     inputCode,
     isConnecting,
     onInputChange,
     onJoin,
-    onCancel,
-}: ReceiverViewProps) => {
+    onBack,
+}: GuestViewProps) => {
     const { t } = useTranslation();
     return (
         <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-12"
+            className="space-y-12 relative"
         >
+            <Button
+                variant="ghost"
+                size="icon"
+                className="absolute -top-10 -left-2 rounded-full hover:bg-white/5"
+                onClick={onBack}
+            >
+                <ArrowLeft className="w-5 h-5" />
+            </Button>
             <div className="space-y-8">
                 <div className="space-y-4 text-center">
                     <Label
@@ -91,7 +99,7 @@ export const ReceiverView = ({
                         variant="destructive"
                         level="secondary"
                         size="sm"
-                        onClick={onCancel}
+                        onClick={onBack}
                     >
                         {t('receiver.abort')}
                     </Button>
