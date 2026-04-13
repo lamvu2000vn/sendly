@@ -3,7 +3,7 @@
 import { useAppStore } from '@/store/useAppStore';
 import { useWebRTC } from '@/hooks/useWebRTC';
 
-import { lazy, useState, useCallback, useEffect } from 'react';
+import { lazy, useState, useCallback, useEffect, Suspense } from 'react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,13 +12,28 @@ import { ZapIcon } from 'lucide-react';
 import { Hero } from '@/components/pages/home/_components/Hero';
 import { Footer } from '@/components/pages/home/_components/Footer';
 import { ConnectionCard } from '@/components/pages/home/_components/ConnectionCard';
-import { ConnectedView } from '@/components/pages/home/_components/ConnectedView';
-import { HostView } from '@/components/pages/home/_components/HostView';
-import { GuestView } from '@/components/pages/home/_components/GuestView';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 
 const ConfirmDialog = lazy(() => import('@/components/dialogs/ConfirmDialog'));
+
+const HostView = lazy(() =>
+    import('@/components/pages/home/_components/HostView').then((m) => ({
+        default: m.HostView,
+    })),
+);
+
+const GuestView = lazy(() =>
+    import('@/components/pages/home/_components/GuestView').then((m) => ({
+        default: m.GuestView,
+    })),
+);
+
+const ConnectedView = lazy(() =>
+    import('@/components/pages/home/_components/ConnectedView').then((m) => ({
+        default: m.ConnectedView,
+    })),
+);
 
 export default function HomePageComponent() {
     const { mode, setMode, connectionStatus, connectionCode } = useAppStore();
@@ -117,17 +132,25 @@ export default function HomePageComponent() {
                                 exit={{ opacity: 0, scale: 0.98 }}
                                 transition={{ duration: 0.4 }}
                             >
-                                <ConnectedView
-                                    isConnected={isConnected}
-                                    transferState={transferState}
-                                    onFileSelect={handleFileSelect}
-                                    onDisconnect={() =>
-                                        handleDisconnect(isConnected)
+                                <Suspense
+                                    fallback={
+                                        <div className="h-64 flex items-center justify-center">
+                                            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                                        </div>
                                     }
-                                    onClearTransfer={clearTransfer}
-                                    onDeleteFile={deleteFile}
-                                    onCancel={cancelTransfer}
-                                />
+                                >
+                                    <ConnectedView
+                                        isConnected={isConnected}
+                                        transferState={transferState}
+                                        onFileSelect={handleFileSelect}
+                                        onDisconnect={() =>
+                                            handleDisconnect(isConnected)
+                                        }
+                                        onClearTransfer={clearTransfer}
+                                        onDeleteFile={deleteFile}
+                                        onCancel={cancelTransfer}
+                                    />
+                                </Suspense>
                             </motion.div>
                         ) : (
                             <motion.div
@@ -284,34 +307,48 @@ export default function HomePageComponent() {
                                             </motion.div>
                                         </motion.div>
                                     </motion.div>
-                                ) : mode === 'host' ? (
-                                    <div className="mt-4">
-                                        <HostView
-                                            connectionCode={connectionCode}
-                                            isConnecting={isConnecting}
-                                            onStart={startConnection}
-                                            onCopy={handleCopy}
-                                            onBack={() => {
-                                                handleDisconnect();
-                                                setMode(null);
-                                            }}
-                                        />
-                                    </div>
                                 ) : (
-                                    <div className="mt-4">
-                                        <GuestView
-                                            inputCode={inputCode}
-                                            isConnecting={isConnecting}
-                                            onInputChange={setInputCode}
-                                            onJoin={() =>
-                                                joinConnection(inputCode)
-                                            }
-                                            onBack={() => {
-                                                handleDisconnect();
-                                                setMode(null);
-                                            }}
-                                        />
-                                    </div>
+                                    <Suspense
+                                        fallback={
+                                            <div className="h-64 flex items-center justify-center">
+                                                <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                                            </div>
+                                        }
+                                    >
+                                        {mode === 'host' ? (
+                                            <div className="mt-4">
+                                                <HostView
+                                                    connectionCode={
+                                                        connectionCode
+                                                    }
+                                                    isConnecting={isConnecting}
+                                                    onStart={startConnection}
+                                                    onCopy={handleCopy}
+                                                    onBack={() => {
+                                                        handleDisconnect();
+                                                        setMode(null);
+                                                    }}
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className="mt-4">
+                                                <GuestView
+                                                    inputCode={inputCode}
+                                                    isConnecting={isConnecting}
+                                                    onInputChange={setInputCode}
+                                                    onJoin={() =>
+                                                        joinConnection(
+                                                            inputCode,
+                                                        )
+                                                    }
+                                                    onBack={() => {
+                                                        handleDisconnect();
+                                                        setMode(null);
+                                                    }}
+                                                />
+                                            </div>
+                                        )}
+                                    </Suspense>
                                 )}
                             </motion.div>
                         )}
