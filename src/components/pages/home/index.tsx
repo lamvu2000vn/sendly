@@ -139,36 +139,96 @@ export default function HomePageComponent() {
                             >
                                 {!mode ||
                                 (mode !== 'host' && mode !== 'guest') ? (
-                                    <div className="text-center space-y-8 py-4">
-                                        <div className="relative w-20 h-20 mx-auto">
+                                    <motion.div
+                                        variants={{
+                                            hidden: { opacity: 0 },
+                                            visible: {
+                                                opacity: 1,
+                                                transition: {
+                                                    staggerChildren: 0.15,
+                                                },
+                                            },
+                                        }}
+                                        initial="hidden"
+                                        animate="visible"
+                                        className="text-center space-y-8 py-4"
+                                    >
+                                        <motion.div
+                                            variants={{
+                                                hidden: { scale: 0.8, opacity: 0 },
+                                                visible: { scale: 1, opacity: 1 },
+                                            }}
+                                            className="relative w-20 h-20 mx-auto"
+                                        >
                                             <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
                                             <div className="relative z-10 w-full h-full bg-primary/10 rounded-full flex items-center justify-center">
                                                 <ZapIcon className="w-10 h-10 text-primary" />
                                             </div>
-                                        </div>
+                                        </motion.div>
 
-                                        <div className="space-y-6">
-                                            <div className="space-y-2">
+                                        <motion.div
+                                            variants={{
+                                                hidden: { opacity: 0 },
+                                                visible: {
+                                                    opacity: 1,
+                                                    transition: {
+                                                        staggerChildren: 0.1,
+                                                    },
+                                                },
+                                            }}
+                                            className="space-y-6"
+                                        >
+                                            <motion.div
+                                                variants={{
+                                                    hidden: { y: 10, opacity: 0 },
+                                                    visible: { y: 0, opacity: 1 },
+                                                }}
+                                                className="space-y-2"
+                                            >
                                                 <h3 className="text-xl font-bold font-heading">
                                                     {t('sender.ready_title')}
                                                 </h3>
                                                 <p className="text-muted-foreground text-sm max-w-[240px] mx-auto leading-relaxed">
                                                     {t('sender.ready_desc')}
                                                 </p>
-                                            </div>
+                                            </motion.div>
 
-                                            <div className="space-y-6">
-                                                <Button
-                                                    className="w-full h-16 sm:h-20 text-lg sm:text-xl font-bold rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
-                                                    onClick={() => {
-                                                        setMode('host');
-                                                        startConnection();
+                                            <motion.div
+                                                variants={{
+                                                    hidden: { opacity: 0 },
+                                                    visible: {
+                                                        opacity: 1,
+                                                        transition: {
+                                                            staggerChildren: 0.1,
+                                                        },
+                                                    },
+                                                }}
+                                                className="space-y-6"
+                                            >
+                                                <motion.div
+                                                    variants={{
+                                                        hidden: { y: 10, opacity: 0 },
+                                                        visible: { y: 0, opacity: 1 },
                                                     }}
                                                 >
-                                                    {t('sender.generate_btn')}
-                                                </Button>
+                                                    <Button
+                                                        className="w-full h-16 sm:h-20 text-lg sm:text-xl font-bold rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                                        onClick={() => {
+                                                            setMode('host');
+                                                            startConnection();
+                                                        }}
+                                                    >
+                                                        {t('sender.generate_btn')}
+                                                    </Button>
+                                                </motion.div>
 
-                                                <div className="relative">
+                                                <motion.div
+                                                    variants={{
+                                                        hidden: { opacity: 0 },
+                                                        visible: { opacity: 1 },
+                                                    }}
+                                                    className="relative"
+                                                >
                                                     <div className="absolute inset-0 flex items-center">
                                                         <Separator />
                                                     </div>
@@ -177,20 +237,27 @@ export default function HomePageComponent() {
                                                             or
                                                         </span>
                                                     </div>
-                                                </div>
+                                                </motion.div>
 
-                                                <Button
-                                                    variant="secondary"
-                                                    className="w-full h-12 sm:h-14 text-base font-bold rounded-2xl shadow-lg border border-white/5 hover:bg-white/10 transition-all"
-                                                    onClick={() =>
-                                                        setMode('guest')
-                                                    }
+                                                <motion.div
+                                                    variants={{
+                                                        hidden: { y: 10, opacity: 0 },
+                                                        visible: { y: 0, opacity: 1 },
+                                                    }}
                                                 >
-                                                    Enter code
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                                    <Button
+                                                        variant="secondary"
+                                                        className="w-full h-12 sm:h-14 text-base font-bold rounded-2xl shadow-lg border border-white/5 hover:bg-white/10 transition-all"
+                                                        onClick={() =>
+                                                            setMode('guest')
+                                                        }
+                                                    >
+                                                        Enter code
+                                                    </Button>
+                                                </motion.div>
+                                            </motion.div>
+                                        </motion.div>
+                                    </motion.div>
                                 ) : mode === 'host' ? (
                                     <div className="mt-4">
                                         <HostView
