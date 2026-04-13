@@ -51,7 +51,18 @@
         "switch_mode": "Chuyển chế độ sẽ chấm dứt các lượt truyền tải hiện tại. Tiếp tục?"
     },
     "toast": {
-        "copy_success": "Mã truy cập đã được sao chép vào bộ nhớ tạm"
+        "copy_success": "Mã truy cập đã được sao chép vào bộ nhớ tạm",
+        "connected": "Đã kết nối thành công!",
+        "sender_disconnected": "Người gửi đã ngắt kết nối. Bạn vẫn có thể truy cập các file đã nhận.",
+        "disconnected": "Đã ngắt kết nối.",
+        "received": "Đã nhận: {{name}}",
+        "receive_error": "Lỗi khi nhận dữ liệu. Vui lòng thử lại.",
+        "connection_issue": "Kết nối gặp sự cố. Vui lòng thử lại.",
+        "handshake_error": "Lỗi trong quá trình bắt tay. Vui lòng thử lại.",
+        "create_session_error": "Không thể tạo phiên kết nối mới.",
+        "invalid_code": "Mã code không hợp lệ (phải là 8 ký tự chữ và số).",
+        "join_error": "Không thể tham gia kết nối. Vui lòng kiểm tra mã code.",
+        "sent": "Đã gửi: {{name}}"
     },
     "status": {
         "connected": "đã kết nối",

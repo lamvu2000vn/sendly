@@ -51,7 +51,18 @@
         "switch_mode": "Switching modes will terminate current transfers. Continue?"
     },
     "toast": {
-        "copy_success": "Access Key copied to clipboard"
+        "copy_success": "Access Key copied to clipboard",
+        "connected": "Connected successfully!",
+        "sender_disconnected": "Sender has disconnected. You can still access received files.",
+        "disconnected": "Disconnected.",
+        "received": "Received: {{name}}",
+        "receive_error": "Error receiving data. Please try again.",
+        "connection_issue": "Connection issue encountered. Please try again.",
+        "handshake_error": "Error during handshake. Please try again.",
+        "create_session_error": "Could not create a new session.",
+        "invalid_code": "Invalid code (must be 8 alphanumeric characters).",
+        "join_error": "Could not join connection. Please check the code.",
+        "sent": "Sent: {{name}}"
     },
     "status": {
         "connected": "connected",

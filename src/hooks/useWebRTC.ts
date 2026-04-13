@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppStore } from '@/store/useAppStore';
 import { generateCode, sendSignal, pollSignal } from '@/lib/signaling';
 import { toast } from 'sonner';
@@ -25,6 +26,7 @@ export interface TransferState {
 }
 
 export function useWebRTC() {
+    const { t } = useTranslation('common');
     const pcRef = useRef<RTCPeerConnection | null>(null);
     const dcRef = useRef<RTCDataChannel | null>(null);
     const resumeRef = useRef<(() => void) | null>(null);
@@ -61,31 +63,29 @@ export function useWebRTC() {
     }, []);
 
     const checkIsReceiveComplete = useCallback(() => {
-        const currentMode = useAppStore.getState().mode;
+        const currentMode = mode;
         return (
             currentMode === 'receiver' &&
             transferFilesRef.current.length > 0 &&
             transferFilesRef.current.every((f) => f.status === 'completed')
         );
-    }, []);
+    }, [mode]);
 
     const setupDataChannel = useCallback(
         (channel: RTCDataChannel) => {
             channel.onopen = () => {
                 setConnectionStatus('connected');
-                toast.success('Đã kết nối thành công!');
+                toast.success(t('toast.connected'));
             };
             channel.onclose = () => {
                 if (checkIsReceiveComplete()) {
-                    toast.info(
-                        'Người gửi đã ngắt kết nối. Bạn vẫn có thể truy cập các file đã nhận.',
-                    );
+                    toast.info(t('toast.sender_disconnected'));
                 } else {
                     setConnectionStatus('disconnected');
                     setTransferState(null);
                     setConnectionCode('');
-                    useAppStore.getState().setMode(null);
-                    toast.info('Đã ngắt kết nối.');
+                    setMode(null);
+                    toast.info(t('toast.disconnected'));
                 }
             };
             channel.binaryType = 'arraybuffer';
@@ -155,9 +155,9 @@ export function useWebRTC() {
                                     updatedFiles = existingFiles.map((f) =>
                                         f.id === msg.fileId
                                             ? {
-                                                  ...f,
-                                                  status: 'transferring' as const,
-                                              }
+                                                ...f,
+                                                status: 'transferring' as const,
+                                            }
                                             : f,
                                     );
                                 } else {
@@ -199,15 +199,15 @@ export function useWebRTC() {
                                     files: prev.files.map((f) =>
                                         f.id === file.id
                                             ? {
-                                                  ...f,
-                                                  progress:
-                                                      (file.received /
-                                                          file.size) *
-                                                      100,
-                                                  status: isComplete
-                                                      ? 'completed'
-                                                      : 'transferring',
-                                              }
+                                                ...f,
+                                                progress:
+                                                    (file.received /
+                                                        file.size) *
+                                                    100,
+                                                status: isComplete
+                                                    ? 'completed'
+                                                    : 'transferring',
+                                            }
                                             : f,
                                     ),
                                 };
@@ -230,7 +230,7 @@ export function useWebRTC() {
                                     ),
                                 };
                             });
-                            toast.success(`Đã nhận: ${file.name}`);
+                            toast.success(t('toast.received', { name: file.name }));
                             if (
                                 currentFileRef.current?.id === completedFileId
                             ) {
@@ -240,12 +240,12 @@ export function useWebRTC() {
                     }
                 } catch (error) {
                     console.error('Data channel message error', error);
-                    toast.error('Lỗi khi nhận dữ liệu. Vui lòng thử lại.');
+                    toast.error(t('toast.receive_error'));
                 }
             };
             dcRef.current = channel;
         },
-        [setConnectionStatus, setConnectionCode, checkIsReceiveComplete],
+        [setConnectionStatus, t, checkIsReceiveComplete, setConnectionCode, setMode],
     );
 
     const initializePeerConnection = useCallback(() => {
@@ -265,7 +265,7 @@ export function useWebRTC() {
                 if (checkIsReceiveComplete()) return;
 
                 setConnectionStatus('error');
-                toast.error('Kết nối gặp sự cố. Vui lòng thử lại.');
+                toast.error(t('toast.connection_issue'));
             }
         };
 
@@ -275,7 +275,7 @@ export function useWebRTC() {
 
         pcRef.current = pc;
         return pc;
-    }, [setConnectionStatus, setupDataChannel, checkIsReceiveComplete]);
+    }, [setConnectionStatus, setupDataChannel, checkIsReceiveComplete, t]);
 
     // TanStack Query for Signaling
     const targetSignalType = mode === 'sender' ? 'answer' : 'offer';
@@ -347,7 +347,7 @@ export function useWebRTC() {
                 }
             } catch (err) {
                 console.error('Handshake error', err);
-                toast.error('Lỗi trong quá trình bắt tay. Vui lòng thử lại.');
+                toast.error(t('toast.handshake_error'));
                 setConnectionStatus('error');
             }
         };
@@ -359,6 +359,7 @@ export function useWebRTC() {
         mode,
         connectionCode,
         setConnectionStatus,
+        t,
     ]);
 
     const startConnection = useCallback(
@@ -400,7 +401,7 @@ export function useWebRTC() {
             } catch (error) {
                 console.error('Failed to start connection', error);
                 setConnectionStatus('error');
-                toast.error('Không thể tạo phiên kết nối mới.');
+                toast.error(t('toast.create_session_error'));
             }
         },
         [
@@ -410,6 +411,7 @@ export function useWebRTC() {
             setConnectionStatus,
             setupDataChannel,
             setMode,
+            t,
         ],
     );
 
@@ -421,9 +423,7 @@ export function useWebRTC() {
 
                 const CODE_REGEX = /^[0-9A-Z]{8}$/;
                 if (!code || !CODE_REGEX.test(code.toUpperCase())) {
-                    toast.error(
-                        'Mã code không hợp lệ (phải là 8 ký tự chữ và số).',
-                    );
+                    toast.error(t('toast.invalid_code'));
                     return;
                 }
 
@@ -436,9 +436,7 @@ export function useWebRTC() {
             } catch (error) {
                 console.error('Failed to join connection', error);
                 setConnectionStatus('error');
-                toast.error(
-                    'Không thể tham gia kết nối. Vui lòng kiểm tra mã code.',
-                );
+                toast.error(t('toast.join_error'));
             }
         },
         [
@@ -447,6 +445,7 @@ export function useWebRTC() {
             setConnectionCode,
             setConnectionStatus,
             setMode,
+            t,
         ],
     );
 
@@ -556,12 +555,12 @@ export function useWebRTC() {
                                         files: prev.files.map((f) =>
                                             f.id === transfer.id
                                                 ? {
-                                                      ...f,
-                                                      progress,
-                                                      status: isComplete
-                                                          ? 'completed'
-                                                          : 'transferring',
-                                                  }
+                                                    ...f,
+                                                    progress,
+                                                    status: isComplete
+                                                        ? 'completed'
+                                                        : 'transferring',
+                                                }
                                                 : f,
                                         ),
                                     };
@@ -578,7 +577,7 @@ export function useWebRTC() {
                                     readNextChunk();
                                 }
                             } else {
-                                toast.success(`Đã gửi: ${file.name}`);
+                                toast.success(t('toast.sent', { name: file.name }));
                                 resolve();
                             }
                         } catch (error) {
@@ -591,7 +590,7 @@ export function useWebRTC() {
                 readNextChunk();
             });
         }
-    }, []);
+    }, [t]);
 
     const clearTransfer = useCallback(() => {
         if (transferState?.files) {
