@@ -3,7 +3,7 @@
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Download, RefreshCw, Trash2, CheckCircle2, File } from 'lucide-react';
-import { TransferState } from '@/hooks/useWebRTC';
+import { type TransferState } from '@/store/useTransferStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 

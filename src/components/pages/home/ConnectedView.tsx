@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { XCircle } from 'lucide-react';
-import { TransferState } from '@/hooks/useWebRTC';
+import { type TransferState } from '@/store/useTransferStore';
 import { FileDropZone } from './FileDropZone';
 import { TransferProgress } from './TransferProgress';
 

@@ -6,7 +6,8 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "lint": "eslint",
+        "lint": "eslint -f stylish",
+        "lint:fix": "eslint --fix -f stylish",
         "format:check": "prettier --check .",
         "format:write": "eslint --fix . && prettier --write ."
     },
