@@ -28,6 +28,7 @@ export function useFileSender(dc: RTCDataChannel | null) {
                 fileSize: file.size,
                 progress: 0,
                 status: 'pending' as const,
+                type: 'sent' as const,
             }));
 
             addFiles(fileTransfers, false);
@@ -58,6 +59,14 @@ export function useFileSender(dc: RTCDataChannel | null) {
                     currentChunkSize = MAX_CHUNK_SIZE;
                 else if (file.size > 1024 * 1024) currentChunkSize = 32 * 1024;
 
+                const currentStatus = useTransferStore
+                    .getState()
+                    .transferState?.files.find(
+                        (f) => f.id === transfer.id,
+                    )?.status;
+
+                if (currentStatus === 'cancelled') continue;
+
                 dc.send(
                     JSON.stringify({
                         type: 'file-start',
@@ -76,6 +85,23 @@ export function useFileSender(dc: RTCDataChannel | null) {
                         let offset = 0;
 
                         const readNextChunk = () => {
+                            // Check if file is cancelled before reading next chunk
+                            const currentFile = useTransferStore
+                                .getState()
+                                .transferState?.files.find(
+                                    (f) => f.id === transfer.id,
+                                );
+                            if (currentFile?.status === 'cancelled') {
+                                dc.send(
+                                    JSON.stringify({
+                                        type: 'file-cancel',
+                                        fileId: transfer.id,
+                                    }),
+                                );
+                                reject(new Error('Transfer cancelled'));
+                                return;
+                            }
+
                             const slice = file.slice(
                                 offset,
                                 offset + currentChunkSize,
@@ -86,6 +112,23 @@ export function useFileSender(dc: RTCDataChannel | null) {
                         reader.onload = (e) => {
                             if (!dc || dc.readyState !== 'open') {
                                 reject(new Error('Data channel closed'));
+                                return;
+                            }
+
+                            // Check if file is cancelled during sending
+                            const currentFile = useTransferStore
+                                .getState()
+                                .transferState?.files.find(
+                                    (f) => f.id === transfer.id,
+                                );
+                            if (currentFile?.status === 'cancelled') {
+                                dc.send(
+                                    JSON.stringify({
+                                        type: 'file-cancel',
+                                        fileId: transfer.id,
+                                    }),
+                                );
+                                reject(new Error('Transfer cancelled'));
                                 return;
                             }
 
@@ -144,9 +187,11 @@ export function useFileSender(dc: RTCDataChannel | null) {
                             reject(new Error('FileReader error'));
                         readNextChunk();
                     });
-                } catch (error) {
-                    console.error('File send error:', error);
-                    updateFileProgress(transfer.id, 0, 'error');
+                } catch (error: any) {
+                    if (error.message !== 'Transfer cancelled') {
+                        console.error('File send error:', error);
+                        updateFileProgress(transfer.id, 0, 'error');
+                    }
                 }
             }
         },

@@ -10,12 +10,7 @@ export function useFileReceiver() {
     const { mode } = useAppStore();
     const { transferState, addFiles, updateFileProgress } = useTransferStore();
 
-    // Use a ref to track the latest files for closure safety in callbacks
     const transferFilesRef = useRef<FileTransfer[]>([]);
-    useEffect(() => {
-        transferFilesRef.current = transferState?.files || [];
-    }, [transferState]);
-
     const currentFileRef = useRef<{
         id: string;
         name: string;
@@ -24,13 +19,33 @@ export function useFileReceiver() {
     } | null>(null);
     const lastUpdateRef = useRef<number>(0);
 
-    const isReceiveComplete = useCallback(() => {
+    useEffect(() => {
+        const files = transferState?.files || [];
+        transferFilesRef.current = files;
+
+        // If the current file being received is cancelled, reset currentFileRef
+        if (currentFileRef.current) {
+            const currentFile = files.find(
+                (f) => f.id === currentFileRef.current?.id,
+            );
+            if (currentFile?.status === 'cancelled') {
+                currentFileRef.current = null;
+            }
+        }
+    }, [transferState]);
+
+    const isTransferFinished = useCallback(() => {
         return (
-            mode === 'receiver' &&
             transferFilesRef.current.length > 0 &&
-            transferFilesRef.current.every((f) => f.status === 'completed')
+            transferFilesRef.current.every((f) =>
+                ['completed', 'cancelled', 'error'].includes(f.status),
+            )
         );
-    }, [mode]);
+    }, []);
+
+    const hasSuccessfulFiles = useCallback(() => {
+        return transferFilesRef.current.some((f) => f.status === 'completed');
+    }, []);
 
     const handleMessage = useCallback(
         async (event: MessageEvent) => {
@@ -44,8 +59,10 @@ export function useFileReceiver() {
                                 ...f,
                                 progress: 0,
                                 status: 'pending' as const,
+                                type: 'received' as const,
                             }),
                         );
+
                         addFiles(newFiles, true);
                     } else if (msg.type === 'file-start') {
                         currentFileRef.current = {
@@ -56,6 +73,27 @@ export function useFileReceiver() {
                         };
                         await clearStorage(msg.fileId);
                         updateFileProgress(msg.fileId, 0, 'transferring');
+                    } else if (msg.type === 'file-cancel') {
+                        const cancelledFile = transferFilesRef.current.find(
+                            (f) => f.id === msg.fileId,
+                        );
+
+                        // Only proceed if not already cancelled
+                        if (cancelledFile?.status !== 'cancelled') {
+                            if (
+                                currentFileRef.current &&
+                                currentFileRef.current.id === msg.fileId
+                            ) {
+                                currentFileRef.current = null;
+                            }
+                            await clearStorage(msg.fileId);
+                            updateFileProgress(msg.fileId, 0, 'cancelled');
+                            toast.error(
+                                t('toast.cancelled', {
+                                    name: cancelledFile?.fileName || msg.fileId,
+                                }),
+                            );
+                        }
                     }
                 } else if (event.data instanceof ArrayBuffer) {
                     const file = currentFileRef.current;
@@ -93,5 +131,5 @@ export function useFileReceiver() {
         [addFiles, updateFileProgress, t],
     );
 
-    return { handleMessage, isReceiveComplete };
+    return { handleMessage, isTransferFinished, hasSuccessfulFiles };
 }

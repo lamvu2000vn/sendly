@@ -62,14 +62,14 @@ export const SenderView = ({
             animate={{ opacity: 1 }}
             className="space-y-10"
         >
-            <div className="text-center space-y-6">
+            <div className="text-center space-y-4">
                 <Label className="text-xs text-muted-foreground uppercase tracking-[0.3em] font-black opacity-60">
                     {t('sender.active_code')}
                 </Label>
                 <div className="flex-center gap-3">
                     {connectionCode ? (
-                        <div className="w-full flex-center rounded-full h-20 sm:h-24 bg-muted">
-                            <div className="w-full flex-center gap-3 sm:gap-4">
+                        <div className="w-full flex-center rounded-xl sm:rounded-2xl h-16 sm:h-20 md:h-24 bg-muted backdrop-blur-md border border-white/10">
+                            <div className="w-full flex-center gap-3 sm:gap-4 md:gap-6">
                                 {connectionCode.split('').map((char, i) => (
                                     <motion.span
                                         initial={{ y: 10, opacity: 0 }}
@@ -80,7 +80,7 @@ export const SenderView = ({
                                         }}
                                         key={i}
                                         className={cn(
-                                            'text-xl sm:text-3xl',
+                                            'text-lg sm:text-2xl md:text-3xl',
                                             'font-bold aspect-square',
                                             'flex-center',
                                         )}

@@ -8,7 +8,7 @@ import { ICE_SERVERS, POLL_INTERVAL } from './constants';
 
 export function useWebRTCConnection(
     onDataChannel: (channel: RTCDataChannel) => void,
-    isReceiveComplete: () => boolean,
+    isTransferFinished: () => boolean,
 ) {
     const { t } = useTranslation('common');
     const pcRef = useRef<RTCPeerConnection | null>(null);
@@ -33,7 +33,7 @@ export function useWebRTCConnection(
                 pc.iceConnectionState === 'disconnected' ||
                 pc.iceConnectionState === 'failed'
             ) {
-                if (isReceiveComplete()) return;
+                if (isTransferFinished()) return;
                 setConnectionStatus('error');
                 toast.error(t('toast.connection_issue'));
             }
@@ -46,7 +46,7 @@ export function useWebRTCConnection(
 
         pcRef.current = pc;
         return pc;
-    }, [setConnectionStatus, onDataChannel, isReceiveComplete, t]);
+    }, [setConnectionStatus, onDataChannel, isTransferFinished, t]);
 
     // TanStack Query for Signaling
     const targetSignalType = mode === 'sender' ? 'answer' : 'offer';

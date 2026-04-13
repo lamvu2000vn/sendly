@@ -5,7 +5,8 @@ export interface FileTransfer {
     fileName: string;
     fileSize: number;
     progress: number;
-    status: 'pending' | 'transferring' | 'completed' | 'error';
+    status: 'pending' | 'transferring' | 'completed' | 'error' | 'cancelled';
+    type: 'sent' | 'received';
     objectUrl?: string;
 }
 
@@ -31,6 +32,7 @@ interface TransferStore {
     addFiles: (files: FileTransfer[], isReceiving: boolean) => void;
     clearTransfers: () => void;
     deleteFile: (fileId: string) => void;
+    cancelTransfer: (fileId: string) => void;
 }
 
 export const useTransferStore = create<TransferStore>((set) => ({
@@ -109,6 +111,18 @@ export const useTransferStore = create<TransferStore>((set) => ({
                 transferState: {
                     ...state.transferState,
                     files: updatedFiles,
+                },
+            };
+        }),
+    cancelTransfer: (fileId) =>
+        set((state) => {
+            if (!state.transferState) return state;
+            return {
+                transferState: {
+                    ...state.transferState,
+                    files: state.transferState.files.map((f) =>
+                        f.id === fileId ? { ...f, status: 'cancelled' } : f,
+                    ),
                 },
             };
         }),

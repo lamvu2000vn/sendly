@@ -9,7 +9,9 @@
     },
     "drop_zone": {
         "title": "Drop or Select Files",
-        "subtitle": "Multiple files supported, direct to peer."
+        "subtitle": "Multiple files supported, direct to peer.",
+        "overlay_title": "Drop files anywhere",
+        "overlay_subtitle": "Release to start sending your files instantly"
     },
     "sender": {
         "ready_title": "Ready to Send?",
@@ -35,12 +37,17 @@
         "outgoing": "Outgoing Stream",
         "download_all": "Download All",
         "clear": "Clear",
+        "leave": "Leave",
         "ready_for_data": "Ready for data",
+        "sent": "sent",
+        "received": "received",
+
         "status": {
             "pending": "pending",
             "transferring": "transferring",
             "completed": "completed",
-            "error": "error"
+            "error": "error",
+            "cancelled": "cancelled"
         }
     },
     "dialog": {
@@ -53,7 +60,7 @@
     "toast": {
         "copy_success": "Access Key copied to clipboard",
         "connected": "Connected successfully!",
-        "sender_disconnected": "Sender has disconnected. You can still access received files.",
+        "partner_disconnected": "Partner has disconnected. You can still access the files in progress.",
         "disconnected": "Disconnected.",
         "received": "Received: {{name}}",
         "receive_error": "Error receiving data. Please try again.",
@@ -62,7 +69,8 @@
         "create_session_error": "Could not create a new session.",
         "invalid_code": "Invalid code (must be 8 alphanumeric characters).",
         "join_error": "Could not join connection. Please check the code.",
-        "sent": "Sent: {{name}}"
+        "sent": "Sent: {{name}}",
+        "cancelled": "Transfer cancelled: {{name}}"
     },
     "status": {
         "connected": "connected",

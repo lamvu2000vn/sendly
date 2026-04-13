@@ -9,7 +9,9 @@
     },
     "drop_zone": {
         "title": "Thả hoặc chọn tệp tin",
-        "subtitle": "Hỗ trợ nhiều tệp, truyền trực tiếp tới thiết bị nhận."
+        "subtitle": "Hỗ trợ nhiều tệp, truyền trực tiếp tới thiết bị nhận.",
+        "overlay_title": "Thả tệp ở bất kỳ đâu",
+        "overlay_subtitle": "Thả tệp tin để bắt đầu gửi ngay lập tức"
     },
     "sender": {
         "ready_title": "Sẵn sàng gửi?",
@@ -35,12 +37,17 @@
         "outgoing": "Luồng dữ liệu đi",
         "download_all": "Tải xuống tất cả",
         "clear": "Xóa danh sách",
+        "leave": "Rời đi",
         "ready_for_data": "Sẵn sàng nhận dữ liệu",
+        "sent": "đã gửi",
+        "received": "đã nhận",
+
         "status": {
             "pending": "đang chờ",
             "transferring": "đang truyền",
             "completed": "hoàn tất",
-            "error": "lỗi"
+            "error": "lỗi",
+            "cancelled": "đã hủy"
         }
     },
     "dialog": {
@@ -53,7 +60,7 @@
     "toast": {
         "copy_success": "Mã truy cập đã được sao chép vào bộ nhớ tạm",
         "connected": "Đã kết nối thành công!",
-        "sender_disconnected": "Người gửi đã ngắt kết nối. Bạn vẫn có thể truy cập các file đã nhận.",
+        "partner_disconnected": "Đối phương đã ngắt kết nối. Bạn vẫn có thể truy cập các file trong danh sách.",
         "disconnected": "Đã ngắt kết nối.",
         "received": "Đã nhận: {{name}}",
         "receive_error": "Lỗi khi nhận dữ liệu. Vui lòng thử lại.",
@@ -62,7 +69,8 @@
         "create_session_error": "Không thể tạo phiên kết nối mới.",
         "invalid_code": "Mã code không hợp lệ (phải là 8 ký tự chữ và số).",
         "join_error": "Không thể tham gia kết nối. Vui lòng kiểm tra mã code.",
-        "sent": "Đã gửi: {{name}}"
+        "sent": "Đã gửi: {{name}}",
+        "cancelled": "Đã hủy truyền: {{name}}"
     },
     "status": {
         "connected": "đã kết nối",

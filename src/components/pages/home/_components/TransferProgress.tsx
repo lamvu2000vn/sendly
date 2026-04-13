@@ -2,26 +2,40 @@
 
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { Download, RefreshCw, Trash2, CheckCircle2, File } from 'lucide-react';
+import {
+    Download,
+    RefreshCw,
+    Trash2,
+    CheckCircle2,
+    File,
+    XCircle,
+} from 'lucide-react';
 import { type TransferState } from '@/store/useTransferStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
 
 interface TransferProgressProps {
     transferState: TransferState;
     onClear: () => void;
     onDeleteFile: (id: string) => void;
+    onCancel: (id: string) => void;
 }
 
 export const TransferProgress = ({
     transferState,
     onClear,
     onDeleteFile,
+    onCancel,
 }: TransferProgressProps) => {
     const { t } = useTranslation();
     const handleDownloadAll = () => {
         transferState.files.forEach((file) => {
-            if (file.status === 'completed' && file.objectUrl) {
+            if (
+                file.type === 'received' &&
+                file.status === 'completed' &&
+                file.objectUrl
+            ) {
                 const a = document.createElement('a');
                 a.href = file.objectUrl;
                 a.download = file.fileName;
@@ -49,17 +63,18 @@ export const TransferProgress = ({
                         : t('connected.outgoing')}
                 </h3>
                 <div className="flex items-center gap-2">
-                    {transferState.isReceiving && completedFilesCount > 1 && (
-                        <Button
-                            size="sm"
-                            variant="secondary"
-                            className="h-8 text-[10px] font-bold uppercase tracking-wider rounded-lg"
-                            onClick={handleDownloadAll}
-                        >
-                            <Download className="w-3 h-3 mr-2" />
-                            {t('connected.download_all')}
-                        </Button>
-                    )}
+                    {transferState.files.some((f) => f.type === 'received') &&
+                        completedFilesCount > 1 && (
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                className="h-8 text-[10px] font-bold uppercase tracking-wider rounded-lg"
+                                onClick={handleDownloadAll}
+                            >
+                                <Download className="w-3 h-3 mr-2" />
+                                {t('connected.download_all')}
+                            </Button>
+                        )}
                     {allCompleted && (
                         <Button
                             size="sm"
@@ -79,6 +94,8 @@ export const TransferProgress = ({
                     {transferState.files.map((file, i) => {
                         const isSuccess = file.status === 'completed';
                         const isTransferring = file.status === 'transferring';
+                        const isCancelled = file.status === 'cancelled';
+                        const isError = file.status === 'error';
 
                         return (
                             <motion.div
@@ -87,14 +104,24 @@ export const TransferProgress = ({
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ delay: i * 0.05 }}
-                                className="relative group p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all"
+                                className={cn(
+                                    'relative group p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/20 transition-all',
+                                    isCancelled && 'opacity-60 grayscale-[0.5]',
+                                )}
                             >
                                 <div className="flex items-start gap-4">
                                     <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                                         {isSuccess ? (
                                             <CheckCircle2 className="w-5 h-5 text-primary" />
                                         ) : (
-                                            <File className="w-5 h-5 text-muted-foreground" />
+                                            <File
+                                                className={cn(
+                                                    'w-5 h-5',
+                                                    isCancelled || isError
+                                                        ? 'text-destructive'
+                                                        : 'text-muted-foreground',
+                                                )}
+                                            />
                                         )}
                                     </div>
 
@@ -107,18 +134,47 @@ export const TransferProgress = ({
                                                 >
                                                     {file.fileName}
                                                 </p>
-                                                <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">
-                                                    {(
-                                                        file.fileSize /
-                                                        1024 /
-                                                        1024
-                                                    ).toFixed(2)}{' '}
-                                                    MB
+                                                <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                                                    <span>
+                                                        {(
+                                                            file.fileSize /
+                                                            1024 /
+                                                            1024
+                                                        ).toFixed(2)}{' '}
+                                                        MB
+                                                    </span>
+                                                    <span className="w-1 h-1 rounded-full bg-border" />
+                                                    <span
+                                                        className={cn(
+                                                            'font-black',
+                                                            file.type === 'sent'
+                                                                ? 'text-orange-500/80'
+                                                                : 'text-blue-500/80',
+                                                        )}
+                                                    >
+                                                        {t(
+                                                            `connected.${file.type}`,
+                                                        )}
+                                                    </span>
                                                 </p>
                                             </div>
 
+                                            {(isTransferring ||
+                                                file.status === 'pending') && (
+                                                <Button
+                                                    size="icon"
+                                                    variant="ghost"
+                                                    className="size-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                                                    onClick={() =>
+                                                        onCancel(file.id)
+                                                    }
+                                                >
+                                                    <XCircle className="w-3.5 h-3.5" />
+                                                </Button>
+                                            )}
+
                                             {isSuccess &&
-                                                transferState.isReceiving && (
+                                                file.type === 'received' && (
                                                     <div className="flex gap-1">
                                                         {file.objectUrl && (
                                                             <Button
@@ -158,11 +214,14 @@ export const TransferProgress = ({
                                         <div className="space-y-1.5">
                                             <div className="flex justify-between text-[10px] font-black uppercase tracking-widest">
                                                 <span
-                                                    className={
+                                                    className={cn(
                                                         isSuccess
                                                             ? 'text-primary'
-                                                            : 'text-muted-foreground'
-                                                    }
+                                                            : 'text-muted-foreground',
+                                                        (isCancelled ||
+                                                            isError) &&
+                                                            'text-destructive',
+                                                    )}
                                                 >
                                                     {isTransferring && (
                                                         <RefreshCw className="w-2.5 h-2.5 animate-spin inline mr-1" />
@@ -171,13 +230,24 @@ export const TransferProgress = ({
                                                         `connected.status.${file.status}` as any,
                                                     )}
                                                 </span>
-                                                <span className="text-primary">
+                                                <span
+                                                    className={cn(
+                                                        'text-primary',
+                                                        (isCancelled ||
+                                                            isError) &&
+                                                            'text-destructive',
+                                                    )}
+                                                >
                                                     {Math.round(file.progress)}%
                                                 </span>
                                             </div>
                                             <Progress
                                                 value={file.progress}
                                                 className="h-1.5 bg-white/5 overflow-hidden"
+                                                indicatorClassName={cn(
+                                                    (isCancelled || isError) &&
+                                                        'bg-destructive',
+                                                )}
                                             />
                                         </div>
                                     </div>

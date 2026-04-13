@@ -17,10 +17,12 @@ export function useWebRTC() {
     const { setConnectionStatus, connectionCode, setConnectionCode, setMode } =
         useAppStore();
 
-    const { handleMessage, isReceiveComplete } = useFileReceiver();
+    const { handleMessage, isTransferFinished, hasSuccessfulFiles } =
+        useFileReceiver();
     const { sendFiles, resumeSending } = useFileSender(dc);
 
-    const { clearTransfers, deleteFile, transferState } = useTransferStore();
+    const { clearTransfers, deleteFile, cancelTransfer, transferState } =
+        useTransferStore();
 
     const setupDataChannel = useCallback(
         (channel: RTCDataChannel) => {
@@ -30,10 +32,10 @@ export function useWebRTC() {
             };
 
             channel.onclose = () => {
-                if (isReceiveComplete()) {
-                    toast.info(t('toast.sender_disconnected'));
+                setConnectionStatus('disconnected');
+                if (hasSuccessfulFiles()) {
+                    toast.info(t('toast.partner_disconnected'));
                 } else {
-                    setConnectionStatus('disconnected');
                     clearTransfers();
                     setConnectionCode('');
                     setMode(null);
@@ -55,7 +57,7 @@ export function useWebRTC() {
             handleMessage,
             setConnectionStatus,
             t,
-            isReceiveComplete,
+            hasSuccessfulFiles,
             clearTransfers,
             setConnectionCode,
             setMode,
@@ -65,7 +67,7 @@ export function useWebRTC() {
 
     const { cleanup, initializePeerConnection, dcRef } = useWebRTCConnection(
         setupDataChannel,
-        isReceiveComplete,
+        isTransferFinished,
     );
 
     // Overwrite setDc when dcRef changes (internal to useWebRTCConnection)
@@ -177,6 +179,9 @@ export function useWebRTC() {
             clearTransfers();
             setConnectionCode('');
             setDc(null);
+
+            // By default, go back to the connection step (Sender/Receiver tab)
+            // If stayOnCurrentMode is false, it goes back to mode selection
             if (!stayOnCurrentMode) setMode(null);
         },
         [
@@ -195,6 +200,25 @@ export function useWebRTC() {
         };
     }, [cleanup]);
 
+    const handleCancelTransfer = useCallback(
+        (fileId: string) => {
+            const file = transferState?.files.find((f) => f.id === fileId);
+            cancelTransfer(fileId);
+            if (dc && dc.readyState === 'open') {
+                dc.send(
+                    JSON.stringify({
+                        type: 'file-cancel',
+                        fileId,
+                    }),
+                );
+            }
+            toast.error(
+                t('toast.cancelled', { name: file?.fileName || fileId }),
+            );
+        },
+        [dc, cancelTransfer, transferState, t],
+    );
+
     return {
         connectionCode,
         transferState,
@@ -203,6 +227,7 @@ export function useWebRTC() {
         sendFiles,
         clearTransfer: clearTransfers,
         deleteFile: handleDeleteFile,
+        cancelTransfer: handleCancelTransfer,
         disconnect,
     };
 }

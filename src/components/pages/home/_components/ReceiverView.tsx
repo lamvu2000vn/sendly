@@ -48,7 +48,7 @@ export const ReceiverView = ({
                                 onInputChange(e.target.value.toUpperCase())
                             }
                             maxLength={CODE_LENGTH}
-                            className="relative h-16 sm:h-20 md:h-24 text-lg sm:text-2xl md:text-3xl font-bold text-center tracking-[0.2em] sm:tracking-[0.3em] rounded-xl sm:rounded-2xl border-white/10 bg-muted backdrop-blur-md uppercase placeholder:tracking-widest placeholder:text-sm sm:placeholder:text-lg md:placeholder:text-xl placeholder:font-black focus-visible:ring-primary/50 focus-visible:border-primary/50 transition-all"
+                            className="relative h-16 sm:h-20 md:h-24 text-lg sm:text-2xl md:text-3xl font-bold text-center tracking-[0.5em] sm:tracking-[0.7em] rounded-xl sm:rounded-2xl border-white/10 bg-muted backdrop-blur-md uppercase placeholder:tracking-widest placeholder:text-sm sm:placeholder:text-lg md:placeholder:text-xl placeholder:font-black focus-visible:ring-primary/50 focus-visible:border-primary/50 transition-all"
                             disabled={isConnecting}
                         />
                     </div>
