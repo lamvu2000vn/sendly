@@ -17,6 +17,7 @@
         "ready_title": "Sẵn sàng kết nối?",
         "ready_desc": "Tạo mã bảo mật dùng một lần để truyền tệp P2P tức thì.",
         "generate_btn": "Tạo mã truy cập",
+        "enter_code_btn": "Nhập mã",
         "active_code": "Mã kênh đang hoạt động",
         "building": "Đang thiết lập đường truyền bảo mật...",
         "copy_btn": "Sao chép mã truy cập",

@@ -6,8 +6,6 @@ import { Toaster } from 'sonner';
 import QueryProvider from '@/components/providers/QueryProvider';
 import I18nProvider from '@/components/providers/I18nProvider';
 
-import { BackgroundGradient } from '@/components/ui/BackgroundGradient';
-
 const outfit = Outfit({
     subsets: ['latin'],
     variable: '--font-heading',
@@ -27,17 +25,63 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-    title: 'Sendly | Futuristic P2P File Transfer',
+    title: {
+        default: 'Sendly | Futuristic P2P File Transfer',
+        template: '%s | Sendly',
+    },
     description:
         'Fast, secure, and beautiful peer-to-peer file sharing directly in your browser. No servers, no storage, just direct connection.',
-    keywords: ['file transfer', 'webrtc', 'p2p', 'secure sharing', 'sendly'],
+    keywords: [
+        'file transfer',
+        'webrtc',
+        'p2p',
+        'secure sharing',
+        'sendly',
+        'fast transfer',
+        'private sharing',
+    ],
     authors: [{ name: 'Sendly Team' }],
+    creator: 'Sendly Team',
+    publisher: 'Sendly',
+    robots: {
+        index: true,
+        follow: true,
+    },
+    openGraph: {
+        type: 'website',
+        locale: 'en_US',
+        url: 'https://sendly.app',
+        siteName: 'Sendly',
+        title: 'Sendly | Futuristic P2P File Transfer',
+        description:
+            'Fast, secure, and beautiful peer-to-peer file sharing directly in your browser.',
+        images: [
+            {
+                url: '/og-image.png',
+                width: 1200,
+                height: 630,
+                alt: 'Sendly - Secure P2P File Transfer',
+            },
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Sendly | Futuristic P2P File Transfer',
+        description:
+            'Fast, secure, and beautiful peer-to-peer file sharing directly in your browser.',
+        images: ['/og-image.png'],
+    },
 };
 
 export const viewport: Viewport = {
+    themeColor: [
+        { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+        { media: '(prefers-color-scheme: dark)', color: '#000000' },
+    ],
     width: 'device-width',
     initialScale: 1,
     maximumScale: 1,
+    userScalable: false,
 };
 
 import ThemeProvider from '@/components/providers/ThemeProvider';
@@ -63,7 +107,6 @@ export default function RootLayout({
                 className="min-h-full flex flex-col font-sans selection:bg-primary/30 selection:text-primary"
                 suppressHydrationWarning
             >
-                <BackgroundGradient />
                 <QueryProvider>
                     <ThemeProvider>
                         <I18nProvider>

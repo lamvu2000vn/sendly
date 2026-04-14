@@ -1,3 +1,5 @@
+'use client';
+
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
@@ -118,7 +120,16 @@ export function useWebRTC() {
                 toast.error(t('toast.create_session_error'));
             }
         },
-        [cleanup, clearTransfers, setMode, setConnectionCode, setConnectionStatus, initializePeerConnection, setupDataChannel, t],
+        [
+            cleanup,
+            clearTransfers,
+            setMode,
+            setConnectionCode,
+            setConnectionStatus,
+            initializePeerConnection,
+            setupDataChannel,
+            t,
+        ],
     );
 
     const joinConnection = useCallback(
@@ -149,7 +160,15 @@ export function useWebRTC() {
                 toast.error(t('toast.join_error'));
             }
         },
-        [cleanup, clearTransfers, initializePeerConnection, setConnectionCode, setConnectionStatus, setMode, t],
+        [
+            cleanup,
+            clearTransfers,
+            initializePeerConnection,
+            setConnectionCode,
+            setConnectionStatus,
+            setMode,
+            t,
+        ],
     );
 
     const handleDeleteFile = useCallback(

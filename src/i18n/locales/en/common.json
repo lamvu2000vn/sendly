@@ -17,6 +17,7 @@
         "ready_title": "Ready to Connect?",
         "ready_desc": "Generate a secure, single-use code for instant P2P transfer.",
         "generate_btn": "Generate access key",
+        "enter_code_btn": "Enter code",
         "active_code": "Active Channel Code",
         "building": "Building secure tunnel...",
         "copy_btn": "Copy Access Key",

@@ -93,12 +93,48 @@ export async function getAllChunks(fileId: string): Promise<ArrayBuffer[]> {
         const transaction = db.transaction(STORE_NAME, 'readonly');
         const store = transaction.objectStore(STORE_NAME);
         const index = store.index('fileId');
-        const request = index.getAll(IDBKeyRange.only(fileId));
+        const request = index.openCursor(IDBKeyRange.only(fileId));
+
+        const chunks: ArrayBuffer[] = [];
         request.onsuccess = () => {
-            const results = request.result as { data: ArrayBuffer }[];
-            resolve(results.map((r) => r.data));
+            const cursor = request.result;
+            if (cursor) {
+                chunks.push(cursor.value.data);
+                cursor.continue();
+            } else {
+                resolve(chunks);
+            }
         };
         request.onerror = () => reject(request.error);
+    });
+}
+
+/**
+ * Returns a ReadableStream for a file's chunks,
+ * allowing for memory-efficient file access.
+ */
+export function getFileStream(fileId: string): ReadableStream<ArrayBuffer> {
+    return new ReadableStream({
+        async start(controller) {
+            const db = await initStorage();
+            const transaction = db.transaction(STORE_NAME, 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            const index = store.index('fileId');
+            const request = index.openCursor(IDBKeyRange.only(fileId));
+
+            request.onsuccess = () => {
+                const cursor = request.result;
+                if (cursor) {
+                    controller.enqueue(cursor.value.data);
+                    cursor.continue();
+                } else {
+                    controller.close();
+                }
+            };
+            request.onerror = () => {
+                controller.error(request.error);
+            };
+        },
     });
 }
 
@@ -106,6 +142,10 @@ export async function getBlobFromStorage(
     fileId: string,
     type: string = '',
 ): Promise<Blob> {
+    // For large files, we should ideally use the stream to create a blob if possible,
+    // but the Blob constructor already accepts a list of chunks.
+    // The key optimization is using a cursor to fetch chunks instead of index.getAll()
+    // which avoids creating a massive intermediate results array.
     const chunks = await getAllChunks(fileId);
     return new Blob(chunks, { type });
 }

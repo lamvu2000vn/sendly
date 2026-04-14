@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
                 pathname: '/**',
             },
         ],
+        minimumCacheTTL: 60,
+        formats: ['image/avif', 'image/webp'],
     },
     // Performance optimizations
     experimental: {
@@ -18,10 +20,16 @@ const nextConfig: NextConfig = {
             'framer-motion',
             'radix-ui',
             'sonner',
+            'clsx',
+            'tailwind-merge',
         ],
+        typedRoutes: true,
     },
     compiler: {
         removeConsole: process.env.NODE_ENV === 'production',
+    },
+    typescript: {
+        ignoreBuildErrors: false,
     },
 };
 
