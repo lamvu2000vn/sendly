@@ -87,7 +87,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                                     key={lang.code}
                                     onClick={() => changeLanguage(lang.code)}
                                     className={cn(
-                                        'relative flex items-center gap-3 w-full p-2.5 rounded-2xl transition-all duration-500 group overflow-hidden',
+                                        'relative flex items-center gap-3 w-full p-2.5 rounded-2xl transition-all duration-200 group overflow-hidden',
                                         isActive
                                             ? 'bg-primary/10 text-primary shadow-sm'
                                             : 'hover:bg-white/5 text-muted-foreground hover:text-foreground',
@@ -100,14 +100,14 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                                             transition={{
                                                 type: 'spring',
                                                 bounce: 0.2,
-                                                duration: 0.6,
+                                                duration: 0.4,
                                             }}
                                         />
                                     )}
 
                                     <div
                                         className={cn(
-                                            'relative w-8 h-8 rounded-full overflow-hidden border border-white/10 shadow-md shrink-0 transition-all duration-500',
+                                            'relative w-8 h-8 rounded-full overflow-hidden border border-white/10 shadow-md shrink-0 transition-all duration-200',
                                             isActive
                                                 ? 'scale-110 ring-2 ring-primary/20 ring-offset-2 ring-offset-background/50'
                                                 : 'group-hover:scale-105',

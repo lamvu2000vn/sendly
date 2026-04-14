@@ -23,8 +23,8 @@ const nextConfig: NextConfig = {
             'clsx',
             'tailwind-merge',
         ],
-        typedRoutes: true,
     },
+    typedRoutes: true,
     compiler: {
         removeConsole: process.env.NODE_ENV === 'production',
     },

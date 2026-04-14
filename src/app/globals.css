@@ -137,11 +137,9 @@
 @layer utilities {
     .glass {
         @apply backdrop-blur-xl border border-white/10 dark:border-white/5;
-        background: radial-gradient(
-            circle at top left,
-            var(--card),
-            transparent
-        );
+        background: radial-gradient(circle at top left,
+                var(--card),
+                transparent);
     }
 
     .glass-morphism {
