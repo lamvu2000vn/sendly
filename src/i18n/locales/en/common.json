@@ -1,4 +1,7 @@
 {
+    "common": {
+        "or": "or"
+    },
     "hero": {
         "tagline": "Stream files between devices.",
         "p2p": "End-to-End P2P"

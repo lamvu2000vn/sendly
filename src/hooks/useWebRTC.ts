@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { toast } from '@/store/useNotificationStore';
 import { generateCode, sendSignal } from '@/lib/signaling';
 import { clearStorage, purgeStorage } from '@/lib/fileStorage';
 import { useTransferStore } from '@/store/useTransferStore';
@@ -227,9 +227,7 @@ export function useWebRTC() {
                     }),
                 );
             }
-            toast.error(
-                t('toast.cancelled', { name: file?.fileName || fileId }),
-            );
+            toast.error(t('toast.cancelled', { name: file?.fileName || fileId }));
         },
         [dc, cancelTransfer, transferState, t],
     );

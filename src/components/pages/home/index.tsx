@@ -6,7 +6,7 @@ import { useWebRTC } from '@/hooks/useWebRTC';
 import { makeAsyncComponent } from '@/utils/async-load';
 
 import { useState, useCallback, useEffect, lazy } from 'react';
-import { toast } from 'sonner';
+import { toast } from '@/store/useNotificationStore';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ModeSelection } from '@/components/pages/home/_components/ModeSelection';
@@ -70,7 +70,7 @@ export default function HomePageComponent() {
     }>({
         open: false,
         message: '',
-        onConfirm: () => {},
+        onConfirm: () => { },
     });
 
     useEffect(() => {
@@ -134,10 +134,10 @@ export default function HomePageComponent() {
     const cardTitle = showTransferView
         ? t('card.title_connected')
         : isNoMode
-          ? t('card.title_select')
-          : mode === 'host'
-            ? t('card.title_host')
-            : t('card.title_guest');
+            ? t('card.title_select')
+            : mode === 'host'
+                ? t('card.title_host')
+                : t('card.title_guest');
 
     return (
         <main className="flex flex-col items-center justify-center min-h-screen p-4 sm:p-10 md:p-16 relative overflow-y-auto scrollbar-hide">

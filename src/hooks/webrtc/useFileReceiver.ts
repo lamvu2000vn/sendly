@@ -1,6 +1,6 @@
 import { useCallback, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { toast } from '@/store/useNotificationStore';
 import { useAppStore } from '@/store/useAppStore';
 import { useTransferStore, type FileTransfer } from '@/store/useTransferStore';
 import { saveChunk, clearStorage, getBlobFromStorage } from '@/lib/fileStorage';

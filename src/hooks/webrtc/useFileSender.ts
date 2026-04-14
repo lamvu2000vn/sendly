@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'sonner';
+import { toast } from '@/store/useNotificationStore';
 import { useTransferStore, type FileTransfer } from '@/store/useTransferStore';
 import { DEFAULT_CHUNK_SIZE, MAX_CHUNK_SIZE } from './constants';
 

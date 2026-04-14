@@ -1,7 +1,7 @@
 import { useCallback, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '@/store/useAppStore';
-import { toast } from 'sonner';
+import { toast } from '@/store/useNotificationStore';
 import { useQuery } from '@tanstack/react-query';
 import { pollSignal, sendSignal } from '@/lib/signaling';
 import { ICE_SERVERS, POLL_INTERVAL } from './constants';

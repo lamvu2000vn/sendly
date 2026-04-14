@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from 'next';
 import { Outfit, Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
-import { Toaster } from 'sonner';
 import QueryProvider from '@/components/providers/QueryProvider';
 import I18nProvider from '@/components/providers/I18nProvider';
 
@@ -85,6 +84,7 @@ export const viewport: Viewport = {
 };
 
 import ThemeProvider from '@/components/providers/ThemeProvider';
+import { NotificationProvider } from '@/components/ui/NotificationProvider';
 
 export default function RootLayout({
     children,
@@ -116,12 +116,7 @@ export default function RootLayout({
                         </I18nProvider>
                     </ThemeProvider>
                 </QueryProvider>
-                <Toaster
-                    position="top-center"
-                    richColors
-                    closeButton
-                    theme="system"
-                />
+                <NotificationProvider />
             </body>
         </html>
     );

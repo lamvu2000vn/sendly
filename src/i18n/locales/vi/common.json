@@ -1,4 +1,7 @@
 {
+    "common": {
+        "or": "hoặc"
+    },
     "hero": {
         "tagline": "Truyền nhận tệp tin giữa các thiết bị.",
         "p2p": "Kết nối P2P đầu-cuối"
