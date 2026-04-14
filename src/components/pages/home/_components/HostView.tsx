@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { CopyIcon, ZapIcon, Loader2, ArrowLeft } from 'lucide-react';
+import { CopyIcon, ZapIcon, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
@@ -30,14 +30,6 @@ export const HostView = ({
                 animate={{ opacity: 1, scale: 1 }}
                 className="relative space-y-8 text-center"
             >
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute -top-4 -left-2 rounded-full hover:bg-white/5"
-                    onClick={onBack}
-                >
-                    <ArrowLeft className="h-5 w-5" />
-                </Button>
                 <div className="relative mx-auto h-20 w-20">
                     <div className="bg-primary/20 absolute inset-0 animate-ping rounded-full" />
                     <div className="bg-primary/10 relative z-10 flex h-full w-full items-center justify-center rounded-full">

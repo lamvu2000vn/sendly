@@ -14,6 +14,8 @@ import { Hero } from '@/components/pages/home/_components/Hero';
 import { Footer } from '@/components/pages/home/_components/Footer';
 import { ConnectionCard } from '@/components/pages/home/_components/ConnectionCard';
 import DefaultCardSkeleton from '@/components/skeletons/DefaultCardSkeleton';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
 import { lazyNamed } from '@/utils/lazy-named';
 
 const ConfirmDialog = makeAsyncComponent(
@@ -131,20 +133,46 @@ export default function HomePageComponent() {
     const showTransferView = isConnected || hasReceivedFiles;
     const isNoMode = !mode || (mode !== 'host' && mode !== 'guest');
 
-    const cardTitle = showTransferView
-        ? t('card.title_connected')
-        : isNoMode
-          ? t('card.title_select')
-          : mode === 'host'
-            ? t('card.title_host')
-            : t('card.title_guest');
+    const renderTitle = () => {
+        const titleText = showTransferView
+            ? t('card.title_connected')
+            : isNoMode
+              ? t('card.title_select')
+              : mode === 'host'
+                ? t('card.title_host')
+                : t('card.title_guest');
+
+        const showBackButton = !isNoMode && !showTransferView;
+
+        return (
+            <>
+                {showBackButton && (
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="cur"
+                        onClick={() => {
+                            handleDisconnect();
+                            setMode(null);
+                        }}
+                    >
+                        <ArrowLeft className="h-5 w-5" />
+                    </Button>
+                )}
+
+                <span className="text-[10px] font-black tracking-widest uppercase opacity-70 sm:text-xs md:text-sm">
+                    {titleText}
+                </span>
+            </>
+        );
+    };
 
     return (
         <main className="scrollbar-hide relative flex min-h-screen flex-col items-center justify-center overflow-y-auto p-4 sm:p-10 md:p-16">
             <div className="relative z-20 w-full max-w-2xl space-y-8 sm:space-y-12">
                 <Hero />
 
-                <ConnectionCard status={connectionStatus} title={cardTitle}>
+                <ConnectionCard status={connectionStatus} title={renderTitle()}>
                     <AnimatePresence mode="wait">
                         {showTransferView ? (
                             <motion.div

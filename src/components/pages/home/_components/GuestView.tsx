@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { ArrowRight, Loader2, ArrowLeft } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { useTranslation } from 'react-i18next';
@@ -31,14 +31,6 @@ export const GuestView = ({
             animate={{ opacity: 1, y: 0 }}
             className="relative space-y-12"
         >
-            <Button
-                variant="ghost"
-                size="icon"
-                className="absolute -top-10 -left-2 rounded-full hover:bg-white/5"
-                onClick={onBack}
-            >
-                <ArrowLeft className="h-5 w-5" />
-            </Button>
             <div className="space-y-8">
                 <div className="space-y-4 text-center">
                     <Label
