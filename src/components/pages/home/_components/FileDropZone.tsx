@@ -74,28 +74,28 @@ export const FileDropZone = ({ onFileSelect }: FileDropZoneProps) => {
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
                 className={cn(
-                    'group relative border-4 border-dashed border-primary/40 bg-primary/10 hover:bg-primary/20 hover:border-primary/60 p-8 rounded-3xl text-center transition-all duration-500 cursor-pointer overflow-hidden',
+                    'group border-primary/40 bg-primary/10 hover:bg-primary/20 hover:border-primary/60 relative cursor-pointer overflow-hidden rounded-3xl border-4 border-dashed p-8 text-center transition-all duration-500',
                     'shadow-sm',
                 )}
                 onClick={handleDropZoneClick}
                 onDragOver={(e) => e.preventDefault()}
             >
                 {/* Decorative background glow */}
-                <div className="absolute -top-20 -right-20 size-40 bg-primary/10 blur-[60px] rounded-full pointer-events-none group-hover:bg-primary/20 transition-colors" />
-                <div className="absolute -bottom-20 -left-20 size-40 bg-accent/10 blur-[60px] rounded-full pointer-events-none group-hover:bg-accent/20 transition-colors" />
+                <div className="bg-primary/10 group-hover:bg-primary/20 pointer-events-none absolute -top-20 -right-20 size-40 rounded-full blur-[60px] transition-colors" />
+                <div className="bg-accent/10 group-hover:bg-accent/20 pointer-events-none absolute -bottom-20 -left-20 size-40 rounded-full blur-[60px] transition-colors" />
 
                 <div className="relative z-10 py-4">
-                    <div className="mx-auto w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 relative">
-                        <FileIcon className="w-9 h-9 text-primary transition-transform duration-500 group-hover:rotate-6" />
-                        <div className="absolute -bottom-2 -right-2 size-8 bg-primary text-primary-foreground rounded-xl flex items-center justify-center shadow-lg transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                            <Plus className="w-5 h-5" />
+                    <div className="bg-primary/10 relative mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl transition-transform duration-500 group-hover:scale-110">
+                        <FileIcon className="text-primary h-9 w-9 transition-transform duration-500 group-hover:rotate-6" />
+                        <div className="bg-primary text-primary-foreground absolute -right-2 -bottom-2 flex size-8 translate-y-2 transform items-center justify-center rounded-xl opacity-0 shadow-lg transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                            <Plus className="h-5 w-5" />
                         </div>
                     </div>
                     <div className="space-y-2">
                         <h3 className="text-xl font-bold tracking-tight">
                             {t('drop_zone.title')}
                         </h3>
-                        <p className="text-sm text-muted-foreground/60 font-medium">
+                        <p className="text-muted-foreground/60 text-sm font-medium">
                             {t('drop_zone.subtitle')}
                         </p>
                     </div>
@@ -118,7 +118,7 @@ export const FileDropZone = ({ onFileSelect }: FileDropZoneProps) => {
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="fixed inset-0 z-100 bg-primary/95 backdrop-blur-md flex flex-col items-center justify-center text-primary-foreground p-6"
+                                className="bg-primary/95 text-primary-foreground fixed inset-0 z-100 flex flex-col items-center justify-center p-6 backdrop-blur-md"
                             >
                                 <motion.div
                                     initial={{ scale: 0.5, opacity: 0 }}
@@ -131,13 +131,13 @@ export const FileDropZone = ({ onFileSelect }: FileDropZoneProps) => {
                                     }}
                                     className="flex flex-col items-center space-y-6 text-center"
                                 >
-                                    <div className="w-32 h-32 bg-white/20 rounded-full flex items-center justify-center mb-4">
-                                        <UploadCloud className="w-16 h-16 animate-bounce" />
+                                    <div className="mb-4 flex h-32 w-32 items-center justify-center rounded-full bg-white/20">
+                                        <UploadCloud className="h-16 w-16 animate-bounce" />
                                     </div>
                                     <h2 className="text-4xl font-bold tracking-tight">
                                         {t('drop_zone.overlay_title')}
                                     </h2>
-                                    <p className="text-xl opacity-80 max-w-md">
+                                    <p className="max-w-md text-xl opacity-80">
                                         {t('drop_zone.overlay_subtitle')}
                                     </p>
                                 </motion.div>

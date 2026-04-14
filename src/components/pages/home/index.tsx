@@ -70,7 +70,7 @@ export default function HomePageComponent() {
     }>({
         open: false,
         message: '',
-        onConfirm: () => { },
+        onConfirm: () => {},
     });
 
     useEffect(() => {
@@ -134,14 +134,14 @@ export default function HomePageComponent() {
     const cardTitle = showTransferView
         ? t('card.title_connected')
         : isNoMode
-            ? t('card.title_select')
-            : mode === 'host'
-                ? t('card.title_host')
-                : t('card.title_guest');
+          ? t('card.title_select')
+          : mode === 'host'
+            ? t('card.title_host')
+            : t('card.title_guest');
 
     return (
-        <main className="flex flex-col items-center justify-center min-h-screen p-4 sm:p-10 md:p-16 relative overflow-y-auto scrollbar-hide">
-            <div className="w-full max-w-2xl space-y-8 sm:space-y-12 relative z-20">
+        <main className="scrollbar-hide relative flex min-h-screen flex-col items-center justify-center overflow-y-auto p-4 sm:p-10 md:p-16">
+            <div className="relative z-20 w-full max-w-2xl space-y-8 sm:space-y-12">
                 <Hero />
 
                 <ConnectionCard status={connectionStatus} title={cardTitle}>

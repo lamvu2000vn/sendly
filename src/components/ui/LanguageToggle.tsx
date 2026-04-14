@@ -46,16 +46,16 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                     <Button
                         variant="secondary"
                         size="sm"
-                        className="group relative h-12 px-4 rounded-2xl glass border-white/10 shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center gap-3 overflow-hidden"
+                        className="group glass relative flex h-12 items-center gap-3 overflow-hidden rounded-2xl border-white/10 px-4 shadow-xl transition-all hover:scale-105 active:scale-95"
                         title={t('language.toggle')}
                     >
-                        <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="bg-primary/5 absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100" />
 
-                        <div className="relative w-6 h-6 rounded-full overflow-hidden border border-white/20 shadow-sm shrink-0">
+                        <div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full border border-white/20 shadow-sm">
                             <Image
                                 src={currentLang.flag}
                                 alt={currentLang.label}
-                                className="w-full h-full object-cover"
+                                className="h-full w-full object-cover"
                                 fill
                             />
                         </div>
@@ -74,7 +74,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent
-                    className="w-56 p-2 mb-3"
+                    className="mb-3 w-56 p-2"
                     align="end"
                     side="top"
                     sideOffset={12}
@@ -87,16 +87,16 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                                     key={lang.code}
                                     onClick={() => changeLanguage(lang.code)}
                                     className={cn(
-                                        'relative flex items-center gap-3 w-full p-2.5 rounded-2xl transition-all duration-200 group overflow-hidden',
+                                        'group relative flex w-full items-center gap-3 overflow-hidden rounded-2xl p-2.5 transition-all duration-200',
                                         isActive
                                             ? 'bg-primary/10 text-primary shadow-sm'
-                                            : 'hover:bg-white/5 text-muted-foreground hover:text-foreground',
+                                            : 'text-muted-foreground hover:text-foreground hover:bg-white/5',
                                     )}
                                 >
                                     {isActive && (
                                         <motion.div
                                             layoutId="active-bg"
-                                            className="absolute inset-0 bg-primary/5 rounded-2xl -z-10"
+                                            className="bg-primary/5 absolute inset-0 -z-10 rounded-2xl"
                                             transition={{
                                                 type: 'spring',
                                                 bounce: 0.2,
@@ -107,25 +107,25 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
 
                                     <div
                                         className={cn(
-                                            'relative w-8 h-8 rounded-full overflow-hidden border border-white/10 shadow-md shrink-0 transition-all duration-200',
+                                            'relative h-8 w-8 shrink-0 overflow-hidden rounded-full border border-white/10 shadow-md transition-all duration-200',
                                             isActive
-                                                ? 'scale-110 ring-2 ring-primary/20 ring-offset-2 ring-offset-background/50'
+                                                ? 'ring-primary/20 ring-offset-background/50 scale-110 ring-2 ring-offset-2'
                                                 : 'group-hover:scale-105',
                                         )}
                                     >
                                         <Image
                                             src={lang.flag}
                                             alt={lang.label}
-                                            className="w-full h-full object-cover"
+                                            className="h-full w-full object-cover"
                                             fill
                                         />
                                     </div>
 
-                                    <div className="flex flex-col flex-1 text-left">
+                                    <div className="flex flex-1 flex-col text-left">
                                         <span className="text-sm font-semibold tracking-tight">
                                             {lang.label}
                                         </span>
-                                        <span className="text-[10px] uppercase opacity-50 font-black tracking-widest">
+                                        <span className="text-[10px] font-black tracking-widest uppercase opacity-50">
                                             {lang.code}
                                         </span>
                                     </div>
@@ -134,9 +134,9 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                                         <motion.div
                                             initial={{ scale: 0, opacity: 0 }}
                                             animate={{ scale: 1, opacity: 1 }}
-                                            className="flex items-center justify-center w-5 h-5 rounded-full bg-primary text-primary-foreground"
+                                            className="bg-primary text-primary-foreground flex h-5 w-5 items-center justify-center rounded-full"
                                         >
-                                            <Check className="w-3 h-3 stroke-3" />
+                                            <Check className="h-3 w-3 stroke-3" />
                                         </motion.div>
                                     )}
                                 </button>

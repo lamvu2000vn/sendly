@@ -27,7 +27,7 @@ export function ModeSelection({ onHost, onGuest }: ModeSelectionProps) {
             }}
             initial="hidden"
             animate="visible"
-            className="text-center space-y-8 py-4"
+            className="space-y-8 py-4 text-center"
         >
             <motion.div
                 variants={{
@@ -40,11 +40,11 @@ export function ModeSelection({ onHost, onGuest }: ModeSelectionProps) {
                         opacity: 1,
                     },
                 }}
-                className="relative w-20 h-20 mx-auto"
+                className="relative mx-auto h-20 w-20"
             >
-                <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
-                <div className="relative z-10 w-full h-full bg-primary/10 rounded-full flex items-center justify-center">
-                    <ZapIcon className="w-10 h-10 text-primary" />
+                <div className="bg-primary/20 absolute inset-0 animate-ping rounded-full" />
+                <div className="bg-primary/10 relative z-10 flex h-full w-full items-center justify-center rounded-full">
+                    <ZapIcon className="text-primary h-10 w-10" />
                 </div>
             </motion.div>
 
@@ -73,10 +73,10 @@ export function ModeSelection({ onHost, onGuest }: ModeSelectionProps) {
                     }}
                     className="space-y-2"
                 >
-                    <h3 className="text-xl font-bold font-heading">
+                    <h3 className="font-heading text-xl font-bold">
                         {t('sender.ready_title')}
                     </h3>
-                    <p className="text-muted-foreground text-sm max-w-[240px] mx-auto leading-relaxed">
+                    <p className="text-muted-foreground mx-auto max-w-[240px] text-sm leading-relaxed">
                         {t('sender.ready_desc')}
                     </p>
                 </motion.div>
@@ -106,7 +106,7 @@ export function ModeSelection({ onHost, onGuest }: ModeSelectionProps) {
                         }}
                     >
                         <Button
-                            className="w-full h-16 sm:h-20 text-lg sm:text-xl font-bold rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                            className="glow-primary shadow-primary/20 h-16 w-full rounded-2xl text-lg font-bold shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] sm:h-20 sm:text-xl"
                             onClick={onHost}
                         >
                             {t('sender.generate_btn')}
@@ -124,7 +124,7 @@ export function ModeSelection({ onHost, onGuest }: ModeSelectionProps) {
                             <Separator />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background/40 backdrop-blur-xl px-5 py-1.5 rounded-full border border-white/20 dark:border-white/5 text-muted-foreground text-[10px] font-black uppercase tracking-[0.2em] shadow-sm">
+                            <span className="bg-background/40 text-muted-foreground rounded-full border border-white/20 px-5 py-1.5 text-[10px] font-black tracking-[0.2em] uppercase shadow-sm backdrop-blur-xl dark:border-white/5">
                                 {t('common.or') || 'or'}
                             </span>
                         </div>
@@ -144,7 +144,7 @@ export function ModeSelection({ onHost, onGuest }: ModeSelectionProps) {
                     >
                         <Button
                             variant="secondary"
-                            className="w-full h-12 sm:h-14 text-base font-bold rounded-2xl shadow-lg border border-white/5 hover:bg-white/10 transition-all"
+                            className="h-12 w-full rounded-2xl border border-white/5 text-base font-bold shadow-lg transition-all hover:bg-white/10 sm:h-14"
                             onClick={onGuest}
                         >
                             {t('sender.enter_code_btn')}

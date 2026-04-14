@@ -6,7 +6,7 @@ import DefaultCardSkeleton from '@/components/skeletons/DefaultCardSkeleton';
 const HomePageComponent = dynamic(() => import('@/components/pages/home'), {
     ssr: false,
     loading: () => (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex min-h-screen items-center justify-center">
             <DefaultCardSkeleton />
         </div>
     ),

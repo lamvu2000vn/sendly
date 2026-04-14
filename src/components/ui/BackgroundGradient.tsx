@@ -4,8 +4,8 @@ import { motion } from 'framer-motion';
 
 export const BackgroundGradient = () => {
     return (
-        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-            <div className="absolute inset-0 bg-background" />
+        <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+            <div className="bg-background absolute inset-0" />
 
             {/* Glowing Blobs */}
             <motion.div
@@ -21,7 +21,7 @@ export const BackgroundGradient = () => {
                     repeat: Infinity,
                     ease: 'easeInOut',
                 }}
-                className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-primary/40 blur-[120px]"
+                className="bg-primary/40 absolute -top-[10%] -left-[10%] h-[50%] w-[50%] rounded-full blur-[120px]"
             />
 
             <motion.div
@@ -38,7 +38,7 @@ export const BackgroundGradient = () => {
                     ease: 'easeInOut',
                     delay: 2,
                 }}
-                className="absolute top-[20%] -right-[10%] w-[40%] h-[40%] rounded-full bg-accent/40 blur-[100px]"
+                className="bg-accent/40 absolute top-[20%] -right-[10%] h-[40%] w-[40%] rounded-full blur-[100px]"
             />
 
             <motion.div
@@ -55,12 +55,12 @@ export const BackgroundGradient = () => {
                     ease: 'easeInOut',
                     delay: 5,
                 }}
-                className="absolute -bottom-[10%] left-[20%] w-[60%] h-[60%] rounded-full bg-yellow-500/40 blur-[130px]"
+                className="absolute -bottom-[10%] left-[20%] h-[60%] w-[60%] rounded-full bg-yellow-500/40 blur-[130px]"
             />
 
             {/* Mesh Lines (Subtle) */}
             <div
-                className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none transition-opacity duration-500"
+                className="pointer-events-none absolute inset-0 opacity-[0.03] transition-opacity duration-500 dark:opacity-[0.05]"
                 style={{
                     backgroundImage:
                         'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)',

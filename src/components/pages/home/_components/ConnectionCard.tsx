@@ -9,16 +9,20 @@ interface ConnectionCardProps {
     children: React.ReactNode;
 }
 
-export const ConnectionCard = ({ status, title, children }: ConnectionCardProps) => (
+export const ConnectionCard = ({
+    status,
+    title,
+    children,
+}: ConnectionCardProps) => (
     <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
     >
-        <Card className="shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] dark:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)] border-white/20 dark:border-white/5 overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] gap-0 py-0">
-            <CardHeader className="border-b border-white/10 dark:border-white/5 bg-white/5 px-6 sm:px-10 md:px-12 py-5 sm:py-6 rounded-none">
-                <CardTitle className="flex justify-between items-center text-base sm:text-lg font-heading tracking-tight">
-                    <span className="opacity-70 uppercase text-[10px] sm:text-xs md:text-sm font-black tracking-widest">
+        <Card className="gap-0 overflow-hidden rounded-[2rem] border-white/20 py-0 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)] sm:rounded-[2.5rem] dark:border-white/5 dark:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.6)]">
+            <CardHeader className="rounded-none border-b border-white/10 bg-white/5 px-6 py-5 sm:px-10 sm:py-6 md:px-12 dark:border-white/5">
+                <CardTitle className="font-heading flex items-center justify-between text-base tracking-tight sm:text-lg">
+                    <span className="text-[10px] font-black tracking-widest uppercase opacity-70 sm:text-xs md:text-sm">
                         {title}
                     </span>
                     <ConnectionStatusIndicator status={status} />

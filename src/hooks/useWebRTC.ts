@@ -227,7 +227,9 @@ export function useWebRTC() {
                     }),
                 );
             }
-            toast.error(t('toast.cancelled', { name: file?.fileName || fileId }));
+            toast.error(
+                t('toast.cancelled', { name: file?.fileName || fileId }),
+            );
         },
         [dc, cancelTransfer, transferState, t],
     );

@@ -7,8 +7,10 @@
         "build": "next build",
         "start": "next start",
         "lint": "eslint -f stylish",
+        "lint:fix": "eslint --fix .",
         "format:check": "prettier --check .",
-        "format:write": "eslint --fix . && prettier --write ."
+        "format:write": "npm run lint:fix && prettier --write .",
+        "tailwind:fix": "npm run format:write"
     },
     "dependencies": {
         "@tanstack/react-query": "^5.97.0",
@@ -37,8 +39,10 @@
         "eslint": "^9",
         "eslint-config-next": "16.2.2",
         "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-tailwindcss": "^3.18.3",
         "eslint-plugin-unused-imports": "^4.4.1",
         "prettier": "^3.8.1",
+        "prettier-plugin-tailwindcss": "^0.7.2",
         "tailwindcss": "^4",
         "typescript": "^5"
     }

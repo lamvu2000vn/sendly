@@ -126,32 +126,34 @@
     }
 
     body {
-        @apply bg-background text-foreground transition-all duration-500 ease-in-out selection:bg-primary/30 selection:text-primary overflow-x-hidden;
+        @apply bg-background text-foreground selection:bg-primary/30 selection:text-primary overflow-x-hidden transition-all duration-500 ease-in-out;
     }
 
     html {
-        @apply font-sans antialiased scroll-smooth;
+        @apply scroll-smooth font-sans antialiased;
     }
 }
 
 @layer utilities {
     .glass {
-        @apply backdrop-blur-xl border border-white/10 dark:border-white/5;
-        background: radial-gradient(circle at top left,
-                var(--card),
-                transparent);
+        @apply border border-white/10 backdrop-blur-xl dark:border-white/5;
+        background: radial-gradient(
+            circle at top left,
+            var(--card),
+            transparent
+        );
     }
 
     .glass-morphism {
-        @apply backdrop-blur-2xl bg-white/5 border border-white/10 shadow-2xl;
+        @apply border border-white/10 bg-white/5 shadow-2xl backdrop-blur-2xl;
     }
 
     .neo-blur {
-        @apply backdrop-blur-3xl bg-background/60;
+        @apply bg-background/60 backdrop-blur-3xl;
     }
 
     .text-gradient {
-        @apply bg-clip-text text-transparent bg-linear-to-r from-primary via-secondary via-accent to-primary bg-[length:200%_auto] animate-gradient;
+        @apply from-primary via-secondary via-accent to-primary animate-gradient bg-linear-to-r bg-[length:200%_auto] bg-clip-text text-transparent;
     }
 
     .glow-primary {

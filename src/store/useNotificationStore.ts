@@ -39,11 +39,19 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
 
 export const toast = {
     success: (message: string) =>
-        useNotificationStore.getState().addNotification({ type: 'success', message }),
+        useNotificationStore
+            .getState()
+            .addNotification({ type: 'success', message }),
     error: (message: string) =>
-        useNotificationStore.getState().addNotification({ type: 'error', message }),
+        useNotificationStore
+            .getState()
+            .addNotification({ type: 'error', message }),
     info: (message: string) =>
-        useNotificationStore.getState().addNotification({ type: 'info', message }),
+        useNotificationStore
+            .getState()
+            .addNotification({ type: 'info', message }),
     warning: (message: string) =>
-        useNotificationStore.getState().addNotification({ type: 'warning', message }),
+        useNotificationStore
+            .getState()
+            .addNotification({ type: 'warning', message }),
 };

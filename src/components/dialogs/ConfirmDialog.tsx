@@ -29,9 +29,9 @@ export default function ConfirmDialog({
 }: ConfirmDialogProps) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="glass border-white/10 rounded-3xl sm:max-w-md">
+            <DialogContent className="glass rounded-3xl border-white/10 sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle className="text-xl font-heading">
+                    <DialogTitle className="font-heading text-xl">
                         {title}
                     </DialogTitle>
                     <DialogDescription className="text-muted-foreground">
@@ -48,7 +48,7 @@ export default function ConfirmDialog({
                     </Button>
                     <Button
                         variant="destructive"
-                        className="rounded-xl font-bold glow-destructive shadow-lg"
+                        className="glow-destructive rounded-xl font-bold shadow-lg"
                         onClick={() => {
                             onConfirm();
                             onOpenChange(false);

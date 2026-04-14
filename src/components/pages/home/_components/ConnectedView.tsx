@@ -27,8 +27,8 @@ export const ConnectedView = ({
 }: ConnectedViewProps) => {
     const { t } = useTranslation();
     return (
-        <div className="flex flex-col gap-8 animate-in zoom-in-95 duration-500">
-            <div className="flex flex-col gap-8 min-h-0">
+        <div className="animate-in zoom-in-95 flex flex-col gap-8 duration-500">
+            <div className="flex min-h-0 flex-col gap-8">
                 {isConnected && <FileDropZone onFileSelect={onFileSelect} />}
 
                 {transferState && (
@@ -41,14 +41,14 @@ export const ConnectedView = ({
                 )}
             </div>
 
-            <div className="flex justify-center pt-6 border-t border-border/10">
+            <div className="border-border/10 flex justify-center border-t pt-6">
                 <Button
                     variant={isConnected ? 'destructive' : 'secondary'}
                     level="secondary"
-                    className="h-11 px-8 rounded-2xl"
+                    className="h-11 rounded-2xl px-8"
                     onClick={onDisconnect}
                 >
-                    <XCircle className="w-4 h-4 mr-2" />
+                    <XCircle className="mr-2 h-4 w-4" />
                     {isConnected
                         ? t('connected.end_session')
                         : t('connected.leave')}

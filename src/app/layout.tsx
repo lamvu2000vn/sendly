@@ -104,13 +104,13 @@ export default function RootLayout({
             suppressHydrationWarning
         >
             <body
-                className="min-h-full flex flex-col font-sans selection:bg-primary/30 selection:text-primary"
+                className="selection:bg-primary/30 selection:text-primary flex min-h-full flex-col font-sans"
                 suppressHydrationWarning
             >
                 <QueryProvider>
                     <ThemeProvider>
                         <I18nProvider>
-                            <div className="relative z-10 flex flex-col min-h-screen">
+                            <div className="relative z-10 flex min-h-screen flex-col">
                                 {children}
                             </div>
                         </I18nProvider>

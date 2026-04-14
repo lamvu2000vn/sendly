@@ -29,7 +29,7 @@ export const GuestView = ({
         <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-12 relative"
+            className="relative space-y-12"
         >
             <Button
                 variant="ghost"
@@ -37,17 +37,17 @@ export const GuestView = ({
                 className="absolute -top-10 -left-2 rounded-full hover:bg-white/5"
                 onClick={onBack}
             >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft className="h-5 w-5" />
             </Button>
             <div className="space-y-8">
                 <div className="space-y-4 text-center">
                     <Label
                         htmlFor="code-input"
-                        className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground opacity-60"
+                        className="text-muted-foreground text-xs font-black tracking-[0.3em] uppercase opacity-60"
                     >
                         {t('receiver.target_label')}
                     </Label>
-                    <div className="relative group">
+                    <div className="group relative">
                         <Input
                             id="code-input"
                             placeholder={t('receiver.placeholder')}
@@ -56,7 +56,7 @@ export const GuestView = ({
                                 onInputChange(e.target.value.toUpperCase())
                             }
                             maxLength={CODE_LENGTH}
-                            className="relative h-16 sm:h-20 md:h-24 text-lg sm:text-2xl md:text-3xl font-bold text-center tracking-[0.5em] sm:tracking-[0.7em] rounded-xl sm:rounded-2xl border-white/10 bg-muted backdrop-blur-md uppercase placeholder:tracking-widest placeholder:text-sm sm:placeholder:text-lg md:placeholder:text-xl placeholder:font-black focus-visible:ring-primary/50 focus-visible:border-primary/50 transition-all"
+                            className="bg-muted focus-visible:ring-primary/50 focus-visible:border-primary/50 relative h-16 rounded-xl border-white/10 text-center text-lg font-bold tracking-[0.5em] uppercase backdrop-blur-md transition-all placeholder:text-sm placeholder:font-black placeholder:tracking-widest sm:h-20 sm:rounded-2xl sm:text-2xl sm:tracking-[0.7em] sm:placeholder:text-lg md:h-24 md:text-3xl md:placeholder:text-xl"
                             disabled={isConnecting}
                         />
                     </div>
@@ -64,26 +64,26 @@ export const GuestView = ({
 
                 <div className="space-y-4">
                     <Button
-                        className="w-full h-14 sm:h-16 md:h-18 text-base sm:text-lg font-bold rounded-xl sm:rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                        className="glow-primary shadow-primary/20 h-14 w-full rounded-xl text-base font-bold shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] sm:h-16 sm:rounded-2xl sm:text-lg md:h-18"
                         disabled={inputCode.length !== 8 || isConnecting}
                         onClick={onJoin}
                     >
                         <span className="flex items-center justify-center gap-2 sm:gap-3">
                             {isConnecting ? (
                                 <>
-                                    <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
+                                    <Loader2 className="h-5 w-5 animate-spin sm:h-6 sm:w-6" />
                                     {t('receiver.opening')}
                                 </>
                             ) : (
                                 <>
                                     {t('receiver.establish_btn')}
-                                    <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
+                                    <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1 sm:h-6 sm:w-6" />
                                 </>
                             )}
                         </span>
                     </Button>
 
-                    <p className="text-[10px] text-center text-muted-foreground uppercase tracking-widest font-bold opacity-50">
+                    <p className="text-muted-foreground text-center text-[10px] font-bold tracking-widest uppercase opacity-50">
                         {t('receiver.hint')}
                     </p>
                 </div>

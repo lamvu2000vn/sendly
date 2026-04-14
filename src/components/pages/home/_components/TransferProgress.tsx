@@ -39,27 +39,27 @@ const getFileIcon = (fileName: string) => {
         case 'gif':
         case 'svg':
         case 'webp':
-            return <FileImage className="w-5 h-5" />;
+            return <FileImage className="h-5 w-5" />;
         case 'mp4':
         case 'mov':
         case 'avi':
         case 'mkv':
-            return <FileVideo className="w-5 h-5" />;
+            return <FileVideo className="h-5 w-5" />;
         case 'pdf':
         case 'doc':
         case 'docx':
-            return <FileText className="w-5 h-5" />;
+            return <FileText className="h-5 w-5" />;
         case 'zip':
         case 'rar':
         case '7z':
         case 'tar':
         case 'gz':
-            return <FileArchive className="w-5 h-5" />;
+            return <FileArchive className="h-5 w-5" />;
         case 'mp3':
         case 'wav':
         case 'ogg':
         case 'flac':
-            return <FileAudio className="w-5 h-5" />;
+            return <FileAudio className="h-5 w-5" />;
         case 'js':
         case 'ts':
         case 'tsx':
@@ -70,9 +70,9 @@ const getFileIcon = (fileName: string) => {
         case 'py':
         case 'go':
         case 'rs':
-            return <FileCode className="w-5 h-5" />;
+            return <FileCode className="h-5 w-5" />;
         default:
-            return <File className="w-5 h-5" />;
+            return <File className="h-5 w-5" />;
     }
 };
 
@@ -110,15 +110,15 @@ export const TransferProgress = ({
 
     return (
         <div className="space-y-8">
-            <div className="flex justify-between items-center px-2">
+            <div className="flex items-center justify-between px-2">
                 <div className="flex flex-col">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary/70">
+                    <h3 className="text-primary/70 text-[10px] font-black tracking-[0.3em] uppercase">
                         {transferState.isReceiving
                             ? t('connected.incoming')
                             : t('connected.outgoing')}
                     </h3>
-                    <div className="flex items-center gap-2 mt-1">
-                        <div className="h-1 w-8 rounded-full bg-linear-to-r from-primary to-accent" />
+                    <div className="mt-1 flex items-center gap-2">
+                        <div className="from-primary to-accent h-1 w-8 rounded-full bg-linear-to-r" />
                         <span className="text-xs font-bold opacity-40">
                             {transferState.files.length} {t('connected.files')}
                         </span>
@@ -130,10 +130,10 @@ export const TransferProgress = ({
                             <Button
                                 size="sm"
                                 variant="secondary"
-                                className="h-9 px-4 text-[11px] font-bold uppercase tracking-wider rounded-lg border bg-secondary/50 hover:bg-secondary/80 transition-all"
+                                className="bg-secondary/50 hover:bg-secondary/80 h-9 rounded-lg border px-4 text-[11px] font-bold tracking-wider uppercase transition-all"
                                 onClick={handleDownloadAll}
                             >
-                                <Download className="w-3.5 h-3.5 mr-2" />
+                                <Download className="mr-2 h-3.5 w-3.5" />
                                 {t('connected.download_all')}
                             </Button>
                         )}
@@ -141,18 +141,18 @@ export const TransferProgress = ({
                         <Button
                             size="sm"
                             variant="ghost"
-                            className="h-9 px-4 text-[11px] font-bold uppercase tracking-wider text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg"
+                            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 h-9 rounded-lg px-4 text-[11px] font-bold tracking-wider uppercase"
                             onClick={onClear}
                         >
-                            <Trash2 className="w-3.5 h-3.5 mr-2" />
+                            <Trash2 className="mr-2 h-3.5 w-3.5" />
                             {t('connected.clear')}
                         </Button>
                     )}
                 </div>
             </div>
 
-            <div className="max-h-[400px] overflow-y-auto overflow-x-hidden -mx-6 px-6 custom-scrollbar">
-                <div className="pt-2 pb-8 px-2 space-y-4">
+            <div className="custom-scrollbar -mx-6 max-h-[400px] overflow-x-hidden overflow-y-auto px-6">
+                <div className="space-y-4 px-2 pt-2 pb-8">
                     <AnimatePresence mode="popLayout" initial={false}>
                         {transferState.files.map((file, _) => {
                             const isSuccess = file.status === 'completed';
@@ -173,7 +173,7 @@ export const TransferProgress = ({
                                         transition: { duration: 0.2 },
                                     }}
                                     className={cn(
-                                        'relative group p-4 rounded-2xl border transition-all duration-500',
+                                        'group relative rounded-2xl border p-4 transition-all duration-500',
                                         'bg-card/40 border-border/50',
                                         isSuccess &&
                                             'border-primary/20 bg-primary/5',
@@ -186,7 +186,7 @@ export const TransferProgress = ({
                                     {/* Animated background for transferring state */}
                                     {isTransferring && (
                                         <motion.div
-                                            className="absolute inset-0 rounded-2xl bg-linear-to-r from-accent/5 via-transparent to-primary/5 pointer-events-none"
+                                            className="from-accent/5 to-primary/5 pointer-events-none absolute inset-0 rounded-2xl bg-linear-to-r via-transparent"
                                             animate={{
                                                 backgroundPosition: [
                                                     '0% 50%',
@@ -205,10 +205,10 @@ export const TransferProgress = ({
                                         />
                                     )}
 
-                                    <div className="flex items-start gap-4 relative z-10">
+                                    <div className="relative z-10 flex items-start gap-4">
                                         <div
                                             className={cn(
-                                                'size-10 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300',
+                                                'flex size-10 shrink-0 items-center justify-center rounded-xl transition-transform duration-300',
                                                 isSuccess
                                                     ? 'bg-primary/20 text-primary'
                                                     : isTransferring
@@ -219,18 +219,18 @@ export const TransferProgress = ({
                                             )}
                                         >
                                             {isSuccess ? (
-                                                <CheckCircle2 className="w-5 h-5" />
+                                                <CheckCircle2 className="h-5 w-5" />
                                             ) : (
                                                 getFileIcon(file.fileName)
                                             )}
                                         </div>
 
-                                        <div className="flex-1 min-w-0 flex flex-col gap-3">
-                                            <div className="flex justify-between items-start gap-4">
-                                                <div className="space-y-1 min-w-0">
+                                        <div className="flex min-w-0 flex-1 flex-col gap-3">
+                                            <div className="flex items-start justify-between gap-4">
+                                                <div className="min-w-0 space-y-1">
                                                     <div className="flex items-center gap-2">
                                                         <p
-                                                            className="text-[15px] font-bold truncate leading-tight tracking-tight"
+                                                            className="truncate text-[15px] leading-tight font-bold tracking-tight"
                                                             title={
                                                                 file.fileName
                                                             }
@@ -239,13 +239,13 @@ export const TransferProgress = ({
                                                         </p>
                                                         {file.type ===
                                                         'sent' ? (
-                                                            <ArrowUpRight className="w-3 h-3 text-orange-500/60 shrink-0" />
+                                                            <ArrowUpRight className="h-3 w-3 shrink-0 text-orange-500/60" />
                                                         ) : (
-                                                            <ArrowDownLeft className="w-3 h-3 text-blue-500/60 shrink-0" />
+                                                            <ArrowDownLeft className="h-3 w-3 shrink-0 text-blue-500/60" />
                                                         )}
                                                     </div>
                                                     <div className="flex items-center gap-2">
-                                                        <span className="text-[10px] font-black text-muted-foreground/60 uppercase tracking-widest">
+                                                        <span className="text-muted-foreground/60 text-[10px] font-black tracking-widest uppercase">
                                                             {(
                                                                 file.fileSize /
                                                                 1024 /
@@ -253,10 +253,10 @@ export const TransferProgress = ({
                                                             ).toFixed(2)}{' '}
                                                             MB
                                                         </span>
-                                                        <span className="w-0.5 h-0.5 rounded-full bg-border" />
+                                                        <span className="bg-border h-0.5 w-0.5 rounded-full" />
                                                         <span
                                                             className={cn(
-                                                                'text-[10px] font-black uppercase tracking-widest',
+                                                                'text-[10px] font-black tracking-widest uppercase',
                                                                 file.type ===
                                                                     'sent'
                                                                     ? 'text-orange-500/70'
@@ -270,21 +270,21 @@ export const TransferProgress = ({
                                                     </div>
                                                 </div>
 
-                                                <div className="flex gap-1 shrink-0">
+                                                <div className="flex shrink-0 gap-1">
                                                     {(isTransferring ||
                                                         file.status ===
                                                             'pending') && (
                                                         <Button
                                                             size="icon"
                                                             variant="ghost"
-                                                            className="size-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                                                            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 size-8 rounded-lg transition-colors"
                                                             onClick={() =>
                                                                 onCancel(
                                                                     file.id,
                                                                 )
                                                             }
                                                         >
-                                                            <XCircle className="w-3.5 h-3.5" />
+                                                            <XCircle className="h-3.5 w-3.5" />
                                                         </Button>
                                                     )}
 
@@ -297,7 +297,7 @@ export const TransferProgress = ({
                                                                         size="icon"
                                                                         variant="secondary"
                                                                         asChild
-                                                                        className="size-8 rounded-lg border bg-secondary/50 hover:bg-secondary/80 transition-all"
+                                                                        className="bg-secondary/50 hover:bg-secondary/80 size-8 rounded-lg border transition-all"
                                                                     >
                                                                         <a
                                                                             href={
@@ -307,21 +307,21 @@ export const TransferProgress = ({
                                                                                 file.fileName
                                                                             }
                                                                         >
-                                                                            <Download className="w-3.5 h-3.5" />
+                                                                            <Download className="h-3.5 w-3.5" />
                                                                         </a>
                                                                     </Button>
                                                                 )}
                                                             <Button
                                                                 size="icon"
                                                                 variant="ghost"
-                                                                className="size-8 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                                                                className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 size-8 rounded-lg transition-colors"
                                                                 onClick={() =>
                                                                     onDeleteFile(
                                                                         file.id,
                                                                     )
                                                                 }
                                                             >
-                                                                <Trash2 className="w-3.5 h-3.5" />
+                                                                <Trash2 className="h-3.5 w-3.5" />
                                                             </Button>
                                                         </div>
                                                     )}
@@ -329,14 +329,14 @@ export const TransferProgress = ({
                                             </div>
 
                                             <div className="space-y-2">
-                                                <div className="flex justify-between items-end">
+                                                <div className="flex items-end justify-between">
                                                     <div className="flex items-center gap-2">
                                                         {isTransferring && (
-                                                            <RefreshCw className="w-3 h-3 animate-spin text-accent" />
+                                                            <RefreshCw className="text-accent h-3 w-3 animate-spin" />
                                                         )}
                                                         <span
                                                             className={cn(
-                                                                'text-[10px] font-black uppercase tracking-[0.2em]',
+                                                                'text-[10px] font-black tracking-[0.2em] uppercase',
                                                                 isSuccess
                                                                     ? 'text-primary'
                                                                     : 'text-muted-foreground/60',
@@ -352,7 +352,7 @@ export const TransferProgress = ({
                                                     </div>
                                                     <span
                                                         className={cn(
-                                                            'text-[11px] font-black tabular-nums tracking-wider',
+                                                            'text-[11px] font-black tracking-wider tabular-nums',
                                                             isSuccess
                                                                 ? 'text-primary'
                                                                 : 'text-primary/70',
@@ -367,14 +367,14 @@ export const TransferProgress = ({
                                                         %
                                                     </span>
                                                 </div>
-                                                <div className="relative group/progress">
+                                                <div className="group/progress relative">
                                                     <Progress
                                                         value={file.progress}
-                                                        className="h-2 bg-muted/30 overflow-hidden rounded-full"
+                                                        className="bg-muted/30 h-2 overflow-hidden rounded-full"
                                                         indicatorClassName={cn(
                                                             'transition-all duration-500 ease-out',
                                                             isTransferring &&
-                                                                'bg-linear-to-r from-primary to-accent',
+                                                                'from-primary to-accent bg-linear-to-r',
                                                             (isCancelled ||
                                                                 isError) &&
                                                                 'bg-destructive',
@@ -384,7 +384,7 @@ export const TransferProgress = ({
                                                     />
                                                     {isTransferring && (
                                                         <motion.div
-                                                            className="absolute top-0 bottom-0 w-20 bg-white/30 blur-md pointer-events-none"
+                                                            className="pointer-events-none absolute top-0 bottom-0 w-20 bg-white/30 blur-md"
                                                             animate={{
                                                                 left: [
                                                                     '-20%',
@@ -411,12 +411,12 @@ export const TransferProgress = ({
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            className="py-16 text-center space-y-4"
+                            className="space-y-4 py-16 text-center"
                         >
-                            <div className="size-16 bg-muted/50 rounded-2xl flex items-center justify-center mx-auto border border-border/50 relative">
-                                <File className="w-6 h-6 text-muted-foreground/40" />
+                            <div className="bg-muted/50 border-border/50 relative mx-auto flex size-16 items-center justify-center rounded-2xl border">
+                                <File className="text-muted-foreground/40 h-6 w-6" />
                                 <motion.div
-                                    className="absolute inset-0 rounded-2xl border border-primary/20"
+                                    className="border-primary/20 absolute inset-0 rounded-2xl border"
                                     animate={{
                                         scale: [1, 1.1, 1],
                                         opacity: [0.3, 0, 0.3],
@@ -428,10 +428,10 @@ export const TransferProgress = ({
                                 />
                             </div>
                             <div className="space-y-1">
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">
+                                <p className="text-muted-foreground/60 text-[10px] font-black tracking-[0.2em] uppercase">
                                     {t('connected.ready_for_data')}
                                 </p>
-                                <p className="text-[10px] text-muted-foreground/40 font-medium max-w-[180px] mx-auto leading-relaxed">
+                                <p className="text-muted-foreground/40 mx-auto max-w-[180px] text-[10px] leading-relaxed font-medium">
                                     {t('connected.drag_and_drop_hint')}
                                 </p>
                             </div>

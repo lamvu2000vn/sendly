@@ -18,13 +18,13 @@ const DefaultCardSkeleton = forwardRef<
             <div
                 ref={ref}
                 className={cn(
-                    'h-64 flex items-center justify-center',
+                    'flex h-64 items-center justify-center',
                     className,
                 )}
             >
                 <div
                     className={cn(
-                        'w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin',
+                        'border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent',
                         spinnerClassName,
                     )}
                 />

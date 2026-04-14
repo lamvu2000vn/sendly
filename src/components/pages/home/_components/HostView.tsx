@@ -28,7 +28,7 @@ export const HostView = ({
             <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="text-center space-y-8 relative"
+                className="relative space-y-8 text-center"
             >
                 <Button
                     variant="ghost"
@@ -36,25 +36,25 @@ export const HostView = ({
                     className="absolute -top-4 -left-2 rounded-full hover:bg-white/5"
                     onClick={onBack}
                 >
-                    <ArrowLeft className="w-5 h-5" />
+                    <ArrowLeft className="h-5 w-5" />
                 </Button>
-                <div className="relative w-20 h-20 mx-auto">
-                    <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
-                    <div className="relative z-10 w-full h-full bg-primary/10 rounded-full flex items-center justify-center">
-                        <ZapIcon className="w-10 h-10 text-primary" />
+                <div className="relative mx-auto h-20 w-20">
+                    <div className="bg-primary/20 absolute inset-0 animate-ping rounded-full" />
+                    <div className="bg-primary/10 relative z-10 flex h-full w-full items-center justify-center rounded-full">
+                        <ZapIcon className="text-primary h-10 w-10" />
                     </div>
                 </div>
                 <div className="space-y-6">
                     <div className="space-y-2">
-                        <h3 className="text-xl font-bold font-heading">
+                        <h3 className="font-heading text-xl font-bold">
                             {t('sender.ready_title')}
                         </h3>
-                        <p className="text-muted-foreground text-sm max-w-[240px] mx-auto leading-relaxed">
+                        <p className="text-muted-foreground mx-auto max-w-[240px] text-sm leading-relaxed">
                             {t('sender.ready_desc')}
                         </p>
                     </div>
                     <Button
-                        className="w-full h-14 sm:h-18 text-lg font-bold rounded-2xl glow-primary shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                        className="glow-primary shadow-primary/20 h-14 w-full rounded-2xl text-lg font-bold shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] sm:h-18"
                         onClick={onStart}
                     >
                         {t('sender.generate_btn')}
@@ -70,14 +70,14 @@ export const HostView = ({
             animate={{ opacity: 1 }}
             className="space-y-10"
         >
-            <div className="text-center space-y-4">
-                <Label className="text-xs text-muted-foreground uppercase tracking-[0.3em] font-black opacity-60">
+            <div className="space-y-4 text-center">
+                <Label className="text-muted-foreground text-xs font-black tracking-[0.3em] uppercase opacity-60">
                     {t('sender.active_code')}
                 </Label>
                 <div className="flex-center gap-3">
                     {connectionCode ? (
-                        <div className="w-full flex-center rounded-xl sm:rounded-2xl h-16 sm:h-20 md:h-24 bg-muted backdrop-blur-md border border-white/10">
-                            <div className="w-full flex-center gap-3 sm:gap-4 md:gap-6">
+                        <div className="flex-center bg-muted h-16 w-full rounded-xl border border-white/10 backdrop-blur-md sm:h-20 sm:rounded-2xl md:h-24">
+                            <div className="flex-center w-full gap-3 sm:gap-4 md:gap-6">
                                 {connectionCode.split('').map((char, i) => (
                                     <motion.span
                                         initial={{ y: 10, opacity: 0 }}
@@ -89,7 +89,7 @@ export const HostView = ({
                                         key={i}
                                         className={cn(
                                             'text-lg sm:text-2xl md:text-3xl',
-                                            'font-bold aspect-square',
+                                            'aspect-square font-bold',
                                             'flex-center',
                                         )}
                                     >
@@ -99,8 +99,8 @@ export const HostView = ({
                             </div>
                         </div>
                     ) : (
-                        <div className="h-14 flex-center gap-3 text-primary/70 font-medium">
-                            <Loader2 className="w-6 h-6 animate-spin" />
+                        <div className="flex-center text-primary/70 h-14 gap-3 font-medium">
+                            <Loader2 className="h-6 w-6 animate-spin" />
                             <span className="animate-pulse">
                                 {t('sender.building')}
                             </span>
@@ -118,17 +118,17 @@ export const HostView = ({
                     >
                         <Button
                             variant="secondary"
-                            className="rounded-2xl px-8 h-12 font-bold shadow-lg border border-white/5 hover:bg-white/10"
+                            className="h-12 rounded-2xl border border-white/5 px-8 font-bold shadow-lg hover:bg-white/10"
                             onClick={onCopy}
                         >
-                            <CopyIcon className="w-4 h-4 mr-3" />
+                            <CopyIcon className="mr-3 h-4 w-4" />
                             {t('sender.copy_btn')}
                         </Button>
                     </motion.div>
                 )}
 
-                <div className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 max-w-[280px] text-center">
-                    <p className="text-xs font-medium text-muted-foreground leading-relaxed">
+                <div className="max-w-[280px] rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-center">
+                    <p className="text-muted-foreground text-xs leading-relaxed font-medium">
                         {t('sender.waiting')}
                     </p>
                 </div>

@@ -10,10 +10,10 @@ export const NotificationProvider: React.FC = () => {
 
     return (
         <div
-            className="fixed top-6 left-0 right-0 z-100 flex flex-col items-center pointer-events-none px-4"
+            className="pointer-events-none fixed top-6 right-0 left-0 z-100 flex flex-col items-center px-4"
             aria-live="polite"
         >
-            <div className="relative w-full max-w-sm h-0">
+            <div className="relative h-0 w-full max-w-sm">
                 <AnimatePresence mode="popLayout">
                     {notifications.map((notification, index) => (
                         <NotificationItem

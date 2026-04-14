@@ -3,10 +3,12 @@ import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
 import unusedImports from 'eslint-plugin-unused-imports';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import tailwind from 'eslint-plugin-tailwindcss';
 
 const eslintConfig = defineConfig([
     ...nextVitals,
     ...nextTs,
+    ...tailwind.configs['flat/recommended'],
     {
         plugins: {
             'unused-imports': unusedImports,
@@ -26,6 +28,13 @@ const eslintConfig = defineConfig([
             ],
             '@typescript-eslint/no-explicit-any': 'off',
             'react-hooks/set-state-in-effect': 'off',
+            'tailwindcss/no-custom-classname': 'off', // Optional: disable if using custom classes often
+        },
+        settings: {
+            tailwindcss: {
+                callees: ['cn', 'clsx', 'cva', 'twMerge'],
+                cssFiles: ['src/app/globals.css'],
+            },
         },
     },
     // Keep prettier config last to override others.
