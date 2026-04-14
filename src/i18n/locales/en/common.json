@@ -81,6 +81,12 @@
         "error": "error",
         "disconnected": "disconnected"
     },
+    "card": {
+        "title_select": "Session Link",
+        "title_host": "Host Session",
+        "title_guest": "Join Session",
+        "title_connected": "Transfer Hub"
+    },
     "language": {
         "en": "English",
         "vi": "Tiếng Việt",

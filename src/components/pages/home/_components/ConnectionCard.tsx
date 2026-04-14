@@ -5,10 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 interface ConnectionCardProps {
     status: ConnectionStatus;
+    title: string;
     children: React.ReactNode;
 }
 
-export const ConnectionCard = ({ status, children }: ConnectionCardProps) => (
+export const ConnectionCard = ({ status, title, children }: ConnectionCardProps) => (
     <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -18,7 +19,7 @@ export const ConnectionCard = ({ status, children }: ConnectionCardProps) => (
             <CardHeader className="border-b border-white/10 dark:border-white/5 bg-white/5 px-6 sm:px-10 md:px-12 py-5 sm:py-6 rounded-none">
                 <CardTitle className="flex justify-between items-center text-base sm:text-lg font-heading tracking-tight">
                     <span className="opacity-70 uppercase text-[10px] sm:text-xs md:text-sm font-black tracking-widest">
-                        Session Link
+                        {title}
                     </span>
                     <ConnectionStatusIndicator status={status} />
                 </CardTitle>

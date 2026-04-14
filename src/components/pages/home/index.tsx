@@ -131,12 +131,20 @@ export default function HomePageComponent() {
     const showTransferView = isConnected || hasReceivedFiles;
     const isNoMode = !mode || (mode !== 'host' && mode !== 'guest');
 
+    const cardTitle = showTransferView
+        ? t('card.title_connected')
+        : isNoMode
+          ? t('card.title_select')
+          : mode === 'host'
+            ? t('card.title_host')
+            : t('card.title_guest');
+
     return (
         <main className="flex flex-col items-center justify-center min-h-screen p-4 sm:p-10 md:p-16 relative overflow-y-auto scrollbar-hide">
             <div className="w-full max-w-2xl space-y-8 sm:space-y-12 relative z-20">
                 <Hero />
 
-                <ConnectionCard status={connectionStatus}>
+                <ConnectionCard status={connectionStatus} title={cardTitle}>
                     <AnimatePresence mode="wait">
                         {showTransferView ? (
                             <motion.div

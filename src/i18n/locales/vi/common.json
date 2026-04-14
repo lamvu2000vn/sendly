@@ -81,6 +81,12 @@
         "error": "lỗi",
         "disconnected": "đã ngắt kết nối"
     },
+    "card": {
+        "title_select": "Liên kết phiên",
+        "title_host": "Phiên chủ",
+        "title_guest": "Tham gia phiên",
+        "title_connected": "Trung tâm truyền tải"
+    },
     "language": {
         "en": "English",
         "vi": "Tiếng Việt",
