@@ -3,7 +3,7 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, AlertCircle, AlertTriangle, Home } from 'lucide-react';
+import { AlertCircle, AlertTriangle, Home } from 'lucide-react';
 
 import { useNetwork } from '@/hooks/useNetwork';
 
@@ -12,10 +12,7 @@ interface ErrorViewProps {
     onBackToHome: () => void;
 }
 
-export const ErrorView = ({
-    reason,
-    onBackToHome,
-}: ErrorViewProps) => {
+export const ErrorView = ({ reason, onBackToHome }: ErrorViewProps) => {
     const { t } = useTranslation();
     const isOnline = useNetwork();
     const isReasonOffline = reason === 'offline';
