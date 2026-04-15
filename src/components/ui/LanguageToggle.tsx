@@ -46,12 +46,12 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                     <Button
                         variant="secondary"
                         size="sm"
-                        className="group glass relative flex h-12 items-center gap-3 overflow-hidden rounded-2xl border-white/10 px-4 shadow-xl transition-all duration-500 hover:scale-105 active:scale-95"
+                        className="group glass relative flex h-12 items-center gap-3 overflow-hidden rounded-2xl px-4 shadow-xl transition-all duration-500 hover:scale-105 active:scale-95"
                         title={t('language.toggle')}
                     >
                         <div className="bg-primary/5 absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100" />
 
-                        <div className="relative h-6 w-6 shrink-0 overflow-hidden rounded-full border border-white/20 shadow-sm">
+                        <div className="border-border relative h-6 w-6 shrink-0 overflow-hidden rounded-full border shadow-sm">
                             <Image
                                 src={currentLang.flag}
                                 alt={currentLang.label}
@@ -66,7 +66,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                                 initial={{ y: 10, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
                                 exit={{ y: -10, opacity: 0 }}
-                                className="text-xs font-black tracking-widest"
+                                className="text-muted-foreground group-hover:text-foreground text-xs font-black tracking-widest"
                             >
                                 {currentLang.code.toUpperCase()}
                             </motion.span>
@@ -90,7 +90,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                                         'group relative flex w-full items-center gap-3 overflow-hidden rounded-2xl p-2.5 transition-all duration-500',
                                         isActive
                                             ? 'bg-primary/10 text-primary shadow-sm'
-                                            : 'text-muted-foreground hover:text-foreground hover:bg-white/5',
+                                            : 'text-muted-foreground hover:text-foreground hover:bg-border',
                                     )}
                                 >
                                     {isActive && (
@@ -107,7 +107,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
 
                                     <div
                                         className={cn(
-                                            'relative h-8 w-8 shrink-0 overflow-hidden rounded-full border border-white/10 shadow-md transition-all duration-500',
+                                            'border-border relative h-8 w-8 shrink-0 overflow-hidden rounded-full border shadow-md transition-all duration-500',
                                             isActive
                                                 ? 'ring-primary/20 ring-offset-background/50 scale-110 ring-2 ring-offset-2'
                                                 : 'group-hover:scale-105',

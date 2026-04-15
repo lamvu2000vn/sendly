@@ -29,7 +29,7 @@ export default function ConfirmDialog({
 }: ConfirmDialogProps) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="glass rounded-3xl border-white/10 sm:max-w-md">
+            <DialogContent className="glass border-border rounded-3xl sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle className="font-heading text-xl">
                         {title}

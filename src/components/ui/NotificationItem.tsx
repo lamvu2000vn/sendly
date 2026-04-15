@@ -152,7 +152,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
             className={cn(
                 'group pointer-events-auto absolute top-0 left-1/2 w-fit max-w-xl -translate-x-1/2 overflow-hidden',
                 'glass cursor-grab rounded-3xl p-4 shadow-[0_20px_40px_rgba(0,0,0,0.3)] select-none active:cursor-grabbing',
-                'flex items-center gap-4 border-white/20',
+                'border-border flex items-center gap-4',
             )}
         >
             <div
