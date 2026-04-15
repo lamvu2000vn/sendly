@@ -14,8 +14,13 @@ export function useWebRTCConnection(
     const pcRef = useRef<RTCPeerConnection | null>(null);
     const dcRef = useRef<RTCDataChannel | null>(null);
 
-    const { connectionStatus, setConnectionStatus, connectionCode, mode, isCodeExpired } =
-        useAppStore();
+    const {
+        connectionStatus,
+        setConnectionStatus,
+        connectionCode,
+        mode,
+        isCodeExpired,
+    } = useAppStore();
 
     const cleanup = useCallback(() => {
         pcRef.current?.close();
@@ -37,8 +42,12 @@ export function useWebRTCConnection(
                 const currentStatus = useAppStore.getState().connectionStatus;
                 if (currentStatus === 'disconnected') return;
 
-                const isOffline = typeof window !== 'undefined' && !window.navigator.onLine;
-                setConnectionStatus('error', isOffline ? 'offline' : 'network_failed');
+                const isOffline =
+                    typeof window !== 'undefined' && !window.navigator.onLine;
+                setConnectionStatus(
+                    'error',
+                    isOffline ? 'offline' : 'network_failed',
+                );
                 toast.error(t('toast.connection_issue'));
             }
         };
@@ -111,13 +120,15 @@ export function useWebRTCConnection(
 
                     pcRef.current!.onicecandidate = (e) => {
                         if (e.candidate) {
-                            console.log('New ICE Candidate:', e.candidate.candidate);
+                            console.log(
+                                'New ICE Candidate:',
+                                e.candidate.candidate,
+                            );
                         } else {
                             console.log('ICE Gathering Finished');
                             sendAnswer();
                         }
                     };
-
 
                     const answer = await pcRef.current?.createAnswer();
                     if (answer) {

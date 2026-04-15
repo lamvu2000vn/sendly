@@ -86,6 +86,7 @@ export const viewport: Viewport = {
 
 import ThemeProvider from '@/components/providers/ThemeProvider';
 import { NotificationProvider } from '@/components/ui/NotificationProvider';
+import { NetworkMonitor } from '@/components/common/NetworkMonitor';
 
 export default function RootLayout({
     children,
@@ -114,6 +115,7 @@ export default function RootLayout({
                             <div className="relative z-10 flex min-h-screen flex-col">
                                 {children}
                             </div>
+                            <NetworkMonitor />
                         </I18nProvider>
                     </ThemeProvider>
                 </QueryProvider>

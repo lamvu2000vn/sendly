@@ -10,4 +10,3 @@ export const ICE_SERVERS: RTCIceServer[] = [
     { urls: 'stun:stun4.l.google.com:19302' },
     { urls: 'stun:stun.services.mozilla.com' },
 ];
-

@@ -5,15 +5,23 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, AlertCircle, AlertTriangle, Home } from 'lucide-react';
 
+import { useNetwork } from '@/hooks/useNetwork';
+
 interface ErrorViewProps {
     reason: string | null;
     onRetry: () => void;
     onBackToHome: () => void;
 }
 
-export const ErrorView = ({ reason, onRetry, onBackToHome }: ErrorViewProps) => {
+export const ErrorView = ({
+    reason,
+    onRetry,
+    onBackToHome,
+}: ErrorViewProps) => {
     const { t } = useTranslation();
-    const isOffline = reason === 'offline' || (typeof window !== 'undefined' && !window.navigator.onLine);
+    const isOnline = useNetwork();
+    const isReasonOffline = reason === 'offline';
+    const isOffline = isReasonOffline || !isOnline;
 
     return (
         <motion.div
@@ -30,23 +38,23 @@ export const ErrorView = ({ reason, onRetry, onBackToHome }: ErrorViewProps) => 
             </div>
 
             <div className="space-y-3">
-                <h2 className="text-2xl font-bold tracking-tight text-foreground">
+                <h2 className="text-foreground text-2xl font-bold tracking-tight">
                     {t('error.title')}
                 </h2>
-                <p className="mx-auto max-w-sm text-muted-foreground">
+                <p className="text-muted-foreground mx-auto max-w-sm">
                     {isOffline ? t('error.offline') : t('error.network_issue')}
                 </p>
             </div>
 
-            <div className="w-full max-w-md space-y-4 rounded-2xl bg-muted/50 p-6 text-left ring-1 ring-white/10">
-                <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+            <div className="bg-muted/50 w-full max-w-md space-y-4 rounded-2xl p-6 text-left ring-1 ring-white/10">
+                <div className="text-foreground flex items-center gap-2 text-sm font-semibold">
                     <AlertTriangle className="h-4 w-4 text-red-400" />
                     {t('error.troubleshoot_title')}
                 </div>
-                <ul className="space-y-3 text-sm text-muted-foreground">
+                <ul className="text-muted-foreground space-y-3 text-sm">
                     {[1, 2, 3].map((num) => (
                         <li key={num} className="flex gap-3">
-                            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-background text-[10px] font-bold text-foreground ring-1 ring-white/10">
+                            <span className="bg-background text-foreground flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ring-1 ring-white/10">
                                 {num}
                             </span>
                             <span>{t(`error.troubleshoot_${num}` as any)}</span>
@@ -58,10 +66,13 @@ export const ErrorView = ({ reason, onRetry, onBackToHome }: ErrorViewProps) => 
             <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
                 <Button
                     onClick={onRetry}
-                    className="group h-12 gap-2 rounded-xl px-8 transition-all active:scale-95"
+                    disabled={!isOnline}
+                    className="group h-12 min-w-[140px] gap-2 rounded-xl px-8 transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                    <RefreshCw className="h-4 w-4 transition-transform group-hover:rotate-180" />
-                    {t('error.retry')}
+                    <RefreshCw
+                        className={`h-4 w-4 transition-transform ${isOnline ? 'group-hover:rotate-180' : ''}`}
+                    />
+                    {!isOnline ? t('error.no_connection') : t('error.retry')}
                 </Button>
                 <Button
                     variant="ghost"

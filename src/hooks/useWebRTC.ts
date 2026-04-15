@@ -156,7 +156,10 @@ export function useWebRTC() {
 
                 pc.onicecandidate = (e) => {
                     if (e.candidate) {
-                        console.log('New ICE Candidate:', e.candidate.candidate);
+                        console.log(
+                            'New ICE Candidate:',
+                            e.candidate.candidate,
+                        );
                     } else {
                         console.log('ICE Gathering Finished');
                         sendOffer();
@@ -261,12 +264,15 @@ export function useWebRTC() {
 
     useEffect(() => {
         const handleOnline = () => {
-            // When coming back online, we don't necessarily reset error, 
+            // When coming back online, we don't necessarily reset error,
             // but we might want to if the error was 'offline'
         };
         const handleOffline = () => {
             const currentStatus = useAppStore.getState().connectionStatus;
-            if (currentStatus === 'connected' || currentStatus === 'connecting') {
+            if (
+                currentStatus === 'connected' ||
+                currentStatus === 'connecting'
+            ) {
                 setConnectionStatus('error', 'offline');
                 toast.error(t('error.offline'));
             }
