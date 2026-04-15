@@ -87,7 +87,8 @@
         "connected": "connected",
         "connecting": "connecting",
         "error": "error",
-        "disconnected": "disconnected"
+        "disconnected": "disconnected",
+        "offline": "offline"
     },
     "card": {
         "title_select": "Session Link",

@@ -87,7 +87,8 @@
         "connected": "đã kết nối",
         "connecting": "đang kết nối",
         "error": "lỗi",
-        "disconnected": "đã ngắt kết nối"
+        "disconnected": "đã ngắt kết nối",
+        "offline": "ngoại tuyến"
     },
     "card": {
         "title_select": "Liên kết phiên",

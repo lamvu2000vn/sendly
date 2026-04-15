@@ -5,7 +5,8 @@ export type ConnectionStatus =
     | 'disconnected'
     | 'connecting'
     | 'connected'
-    | 'error';
+    | 'error'
+    | 'offline';
 
 export type Theme = 'light' | 'dark' | 'system';
 

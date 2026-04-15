@@ -14,6 +14,7 @@ export const ConnectionStatusIndicator = ({
         connecting: 'bg-yellow-500',
         error: 'bg-red-500',
         disconnected: 'bg-gray-400',
+        offline: 'bg-zinc-500',
     };
 
     const color = statusColors[status] || 'bg-gray-400';
