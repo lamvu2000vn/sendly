@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Share2 } from 'lucide-react';
+import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 
 export const Hero = () => {
@@ -12,13 +12,17 @@ export const Hero = () => {
                 initial={{ scale: 0.8, opacity: 0, rotate: -10 }}
                 animate={{ scale: 1, opacity: 1, rotate: 0 }}
                 transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-                whileHover={{ scale: 1.05, rotate: 5 }}
+                whileHover={{ scale: 1.3, rotate: 10 }}
                 className="relative flex h-16 w-16 items-center justify-center sm:h-20 sm:w-20"
             >
                 <div className="bg-primary absolute inset-0 animate-pulse opacity-30 blur-3xl" />
-                <div className="glass relative z-10 flex h-full w-full items-center justify-center rounded-2xl border-white/40 shadow-2xl dark:border-white/10">
-                    <Share2 className="text-secondary h-8 w-8 drop-shadow-[0_0_8px_var(--secondary)] sm:h-10 sm:w-10" />
-                </div>
+                <Image
+                    src="/assets/images/icon_256.svg"
+                    alt="Sendly Icon"
+                    width={64}
+                    height={64}
+                    className="drop-shadow-[0_0_8px_var(--secondary)]"
+                />
             </motion.div>
 
             <div className="space-y-2">
