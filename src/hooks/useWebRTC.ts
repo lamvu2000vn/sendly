@@ -108,8 +108,14 @@ export function useWebRTC() {
                 };
 
                 pc.onicecandidate = (e) => {
-                    if (e.candidate === null) sendOffer();
+                    if (e.candidate) {
+                        console.log('New ICE Candidate:', e.candidate.candidate);
+                    } else {
+                        console.log('ICE Gathering Finished');
+                        sendOffer();
+                    }
                 };
+
 
                 const offer = await pc.createOffer();
                 await pc.setLocalDescription(offer);

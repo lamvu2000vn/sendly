@@ -29,6 +29,7 @@ export function useWebRTCConnection(
         });
 
         pc.oniceconnectionstatechange = () => {
+            console.log('ICE Connection State:', pc.iceConnectionState);
             if (pc.iceConnectionState === 'failed') {
                 if (isTransferFinished()) return;
 
@@ -102,8 +103,14 @@ export function useWebRTCConnection(
                     };
 
                     pcRef.current!.onicecandidate = (e) => {
-                        if (e.candidate === null) sendAnswer();
+                        if (e.candidate) {
+                            console.log('New ICE Candidate:', e.candidate.candidate);
+                        } else {
+                            console.log('ICE Gathering Finished');
+                            sendAnswer();
+                        }
                     };
+
 
                     const answer = await pcRef.current?.createAnswer();
                     if (answer) {
