@@ -49,6 +49,7 @@ export const HostView = ({
     if (!connectionCode && !isConnecting) {
         return (
             <motion.div
+                key="host-ready"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 className="relative space-y-8 text-center"
@@ -81,6 +82,7 @@ export const HostView = ({
 
     return (
         <motion.div
+            key="host-active"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="space-y-10"
@@ -91,7 +93,7 @@ export const HostView = ({
                         {t('sender.active_code')}
                     </Label>
                     {!isCodeExpired && connectionCode && (
-                        <div className="border-border flex items-center gap-1.5 rounded-full border bg-white/10 px-2.5 py-1">
+                        <div className="border-border flex items-center gap-1.5 rounded-full border bg-white/10 px-2.5 py-1 transition-none!">
                             <div className="bg-primary h-1.5 w-1.5 animate-pulse rounded-full" />
                             <span className="text-[10px] font-bold tabular-nums">
                                 {timeLeft}s
