@@ -57,6 +57,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                                 alt={currentLang.label}
                                 className="h-full w-full object-cover"
                                 fill
+                                sizes="24px"
                             />
                         </div>
 
@@ -118,6 +119,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                                             alt={lang.label}
                                             className="h-full w-full object-cover"
                                             fill
+                                            sizes="32px"
                                         />
                                     </div>
 
