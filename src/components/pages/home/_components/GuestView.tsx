@@ -48,7 +48,7 @@ export const GuestView = ({
                                 onInputChange(e.target.value.toUpperCase())
                             }
                             maxLength={CODE_LENGTH}
-                            className="bg-muted focus-visible:ring-primary/50 focus-visible:border-primary/50 relative h-16 rounded-xl border-white/10 text-center text-lg font-bold tracking-[0.5em] uppercase backdrop-blur-md transition-all placeholder:text-sm placeholder:font-black placeholder:tracking-widest sm:h-20 sm:rounded-2xl sm:text-2xl sm:tracking-[0.7em] sm:placeholder:text-lg md:h-24 md:text-3xl md:placeholder:text-xl"
+                            className="bg-muted focus-visible:ring-primary/50 focus-visible:border-primary/50 relative h-16 rounded-xl border-white/10 text-center text-lg font-bold tracking-[0.5em] uppercase backdrop-blur-md transition-all duration-500 placeholder:text-sm placeholder:font-black placeholder:tracking-widest sm:h-20 sm:rounded-2xl sm:text-2xl sm:tracking-[0.7em] sm:placeholder:text-lg md:h-24 md:text-3xl md:placeholder:text-xl"
                             disabled={isConnecting}
                         />
                     </div>
@@ -56,7 +56,7 @@ export const GuestView = ({
 
                 <div className="space-y-4">
                     <Button
-                        className="glow-primary shadow-primary/20 h-14 w-full rounded-xl text-base font-bold shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] sm:h-16 sm:rounded-2xl sm:text-lg md:h-18"
+                        className="glow-primary shadow-primary/20 h-14 w-full rounded-xl text-base font-bold shadow-xl transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] sm:h-16 sm:rounded-2xl sm:text-lg md:h-18"
                         disabled={inputCode.length !== 8 || isConnecting}
                         onClick={onJoin}
                     >

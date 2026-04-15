@@ -122,15 +122,45 @@
 
 @layer base {
     * {
-        @apply border-border outline-ring/50 transition-colors duration-500;
+        @apply border-border outline-ring/50;
+    }
+
+    /* Unified Theme Transitions: Ensure smooth color morphing when switching dark/light mode */
+    html,
+    body {
+        @apply transition-colors duration-500 ease-in-out;
+    }
+
+    /* Apply global color transitions to all elements to capture text, background, and border changes */
+    *,
+    ::before,
+    ::after {
+        @apply transition-colors duration-500 ease-in-out;
     }
 
     body {
-        @apply bg-background text-foreground selection:bg-primary/30 selection:text-primary overflow-x-hidden transition-all duration-500 ease-in-out;
+        @apply bg-background text-foreground selection:bg-primary/30 selection:text-primary overflow-x-hidden;
     }
 
     html {
         @apply scroll-smooth font-sans antialiased;
+        /* Prevent layout shift on Windows/Linux and respect mobile tap styles */
+        scrollbar-gutter: stable;
+        -webkit-tap-highlight-color: transparent;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Accessibility: Respect system settings for reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        ::before,
+        ::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
     }
 }
 

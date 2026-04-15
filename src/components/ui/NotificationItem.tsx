@@ -201,7 +201,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
 
             <button
                 onClick={() => removeNotification(notification.id)}
-                className="absolute top-2 right-2 rounded-full p-1.5 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-white/10"
+                className="absolute top-2 right-2 rounded-full p-1.5 opacity-0 transition-opacity duration-500 group-hover:opacity-100 hover:bg-white/10"
             >
                 <X className="text-muted-foreground h-3.5 w-3.5" />
             </button>

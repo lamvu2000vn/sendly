@@ -46,7 +46,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                     <Button
                         variant="secondary"
                         size="sm"
-                        className="group glass relative flex h-12 items-center gap-3 overflow-hidden rounded-2xl border-white/10 px-4 shadow-xl transition-all hover:scale-105 active:scale-95"
+                        className="group glass relative flex h-12 items-center gap-3 overflow-hidden rounded-2xl border-white/10 px-4 shadow-xl transition-all duration-500 hover:scale-105 active:scale-95"
                         title={t('language.toggle')}
                     >
                         <div className="bg-primary/5 absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100" />
@@ -87,7 +87,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                                     key={lang.code}
                                     onClick={() => changeLanguage(lang.code)}
                                     className={cn(
-                                        'group relative flex w-full items-center gap-3 overflow-hidden rounded-2xl p-2.5 transition-all duration-200',
+                                        'group relative flex w-full items-center gap-3 overflow-hidden rounded-2xl p-2.5 transition-all duration-500',
                                         isActive
                                             ? 'bg-primary/10 text-primary shadow-sm'
                                             : 'text-muted-foreground hover:text-foreground hover:bg-white/5',
@@ -107,7 +107,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
 
                                     <div
                                         className={cn(
-                                            'relative h-8 w-8 shrink-0 overflow-hidden rounded-full border border-white/10 shadow-md transition-all duration-200',
+                                            'relative h-8 w-8 shrink-0 overflow-hidden rounded-full border border-white/10 shadow-md transition-all duration-500',
                                             isActive
                                                 ? 'ring-primary/20 ring-offset-background/50 scale-110 ring-2 ring-offset-2'
                                                 : 'group-hover:scale-105',

@@ -106,7 +106,7 @@ export function ModeSelection({ onHost, onGuest }: ModeSelectionProps) {
                         }}
                     >
                         <Button
-                            className="glow-primary shadow-primary/20 h-16 w-full rounded-2xl text-lg font-bold shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] sm:h-20 sm:text-xl"
+                            className="glow-primary shadow-primary/20 h-16 w-full rounded-2xl text-lg font-bold shadow-xl transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] sm:h-20 sm:text-xl"
                             onClick={onHost}
                         >
                             {t('sender.generate_btn')}
@@ -144,7 +144,7 @@ export function ModeSelection({ onHost, onGuest }: ModeSelectionProps) {
                     >
                         <Button
                             variant="secondary"
-                            className="h-12 w-full rounded-2xl border border-white/5 text-base font-bold shadow-lg transition-all hover:bg-white/10 sm:h-14"
+                            className="h-12 w-full rounded-2xl border border-white/5 text-base font-bold shadow-lg transition-all duration-500 hover:bg-white/10 sm:h-14"
                             onClick={onGuest}
                         >
                             {t('sender.enter_code_btn')}

@@ -142,7 +142,7 @@ export const HostView = ({
                                 <Button
                                     size="sm"
                                     onClick={onStart}
-                                    className="h-9 gap-2 rounded-xl bg-primary px-5 font-bold text-xs ring-1 ring-white/20 hover:scale-105 active:scale-95 transition-all shadow-xl"
+                                    className="h-9 gap-2 rounded-xl bg-primary px-5 font-bold text-xs ring-1 ring-white/20 hover:scale-105 active:scale-95 transition-all duration-500 shadow-xl"
                                 >
                                     <RefreshCw className="h-3.5 w-3.5" />
                                     {t('sender.regenerate_btn')}
@@ -171,7 +171,7 @@ export const HostView = ({
                     </motion.div>
                 )}
 
-                <div className="max-w-[280px] rounded-2xl border border-border bg-white/5 px-6 py-3 text-center transition-all duration-300">
+                <div className="max-w-[280px] rounded-2xl border border-border bg-white/5 px-6 py-3 text-center transition-all duration-500">
                     <p className="text-muted-foreground text-xs leading-relaxed font-medium">
                         {isCodeExpired ? t('sender.expired_desc') : t('sender.waiting')}
                     </p>
@@ -182,7 +182,7 @@ export const HostView = ({
                     level="secondary"
                     size="sm"
                     onClick={onBack}
-                    className="opacity-70 hover:opacity-100 transition-opacity"
+                    className="opacity-70 hover:opacity-100 transition-opacity duration-500"
                 >
                     {t('sender.terminate')}
                 </Button>
