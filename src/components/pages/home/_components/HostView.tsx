@@ -18,6 +18,8 @@ interface HostViewProps {
     onBack: () => void;
 }
 
+const EXPIRATION_TIME = 60 * 1000;
+
 export const HostView = ({
     connectionCode,
     isConnecting,
@@ -36,7 +38,10 @@ export const HostView = ({
 
         const updateTimer = () => {
             const elapsed = Date.now() - connectionCodeCreatedAt;
-            const remaining = Math.max(0, Math.ceil((30000 - elapsed) / 1000));
+            const remaining = Math.max(
+                0,
+                Math.ceil((EXPIRATION_TIME - elapsed) / 1000),
+            );
             setTimeLeft(remaining);
         };
 
@@ -65,7 +70,7 @@ export const HostView = ({
                         <h3 className="font-heading text-xl font-bold">
                             {t('sender.ready_title')}
                         </h3>
-                        <p className="text-muted-foreground mx-auto max-w-[240px] text-sm leading-relaxed">
+                        <p className="text-muted-foreground mx-auto max-w-60 text-sm leading-relaxed">
                             {t('sender.ready_desc')}
                         </p>
                     </div>
@@ -139,13 +144,13 @@ export const HostView = ({
                                 exit={{ opacity: 0, scale: 0.9 }}
                                 className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-1 sm:gap-3"
                             >
-                                <p className="text-foreground text-sm font-bold drop-shadow-md">
+                                <p className="text-foreground text-xs font-bold drop-shadow-md sm:text-sm">
                                     {t('sender.code_expired')}
                                 </p>
                                 <Button
                                     size="sm"
                                     onClick={onStart}
-                                    className="bg-primary h-9 gap-2 rounded-xl px-5 text-xs font-bold shadow-xl ring-1 ring-white/20 transition-all duration-500 hover:scale-105 active:scale-95"
+                                    className="bg-primary h-7 gap-2 rounded-xl px-5 text-xs font-bold shadow-xl ring-1 ring-white/20 transition-all duration-500 hover:scale-105 active:scale-95 sm:h-9"
                                 >
                                     <RefreshCw className="h-3.5 w-3.5" />
                                     {t('sender.regenerate_btn')}
