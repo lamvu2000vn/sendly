@@ -134,7 +134,7 @@ export const HostView = ({
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
-                                className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3"
+                                className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-1 sm:gap-3"
                             >
                                 <p className="text-sm font-bold text-foreground drop-shadow-md">
                                     {t('sender.code_expired')}
