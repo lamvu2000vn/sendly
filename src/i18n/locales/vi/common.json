@@ -104,8 +104,6 @@
         "title": "Kết nối thất bại",
         "network_issue": "Không thể thiết lập kết nối peer-to-peer. Điều này thường do các hạn chế về mạng (như tường lửa công ty) hoặc do một trong hai bên mất kết nối internet.",
         "offline": "Bạn hiện đang ngoại tuyến. Vui lòng kiểm tra kết nối internet và thử lại.",
-        "retry": "Thử lại",
-        "no_connection": "Chưa có kết nối",
         "troubleshoot_title": "Cách khắc phục:",
         "troubleshoot_1": "Đảm bảo cả hai thiết bị đều có kết nối mạng ổn định.",
         "troubleshoot_2": "Vô hiệu hóa VPN hoặc proxy nếu đang sử dụng.",

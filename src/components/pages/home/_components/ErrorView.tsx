@@ -9,13 +9,11 @@ import { useNetwork } from '@/hooks/useNetwork';
 
 interface ErrorViewProps {
     reason: string | null;
-    onRetry: () => void;
     onBackToHome: () => void;
 }
 
 export const ErrorView = ({
     reason,
-    onRetry,
     onBackToHome,
 }: ErrorViewProps) => {
     const { t } = useTranslation();
@@ -64,16 +62,6 @@ export const ErrorView = ({
             </div>
 
             <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
-                <Button
-                    onClick={onRetry}
-                    disabled={!isOnline}
-                    className="group h-12 min-w-[140px] gap-2 rounded-xl px-8 transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                    <RefreshCw
-                        className={`h-4 w-4 transition-transform ${isOnline ? 'group-hover:rotate-180' : ''}`}
-                    />
-                    {!isOnline ? t('error.no_connection') : t('error.retry')}
-                </Button>
                 <Button
                     variant="ghost"
                     onClick={onBackToHome}

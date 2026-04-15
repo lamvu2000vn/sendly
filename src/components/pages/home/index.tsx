@@ -192,13 +192,6 @@ export default function HomePageComponent() {
                             >
                                 <ErrorView
                                     reason={errorReason}
-                                    onRetry={() => {
-                                        if (mode === 'host') {
-                                            startConnection();
-                                        } else if (mode === 'guest') {
-                                            joinConnection(inputCode);
-                                        }
-                                    }}
                                     onBackToHome={() => {
                                         handleDisconnect();
                                         setMode(null);
