@@ -22,6 +22,7 @@ export const Hero = () => {
                     width={64}
                     height={64}
                     className="drop-shadow-[0_0_8px_var(--secondary)]"
+                    priority
                 />
             </motion.div>
 
