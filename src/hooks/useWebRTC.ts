@@ -16,8 +16,49 @@ export function useWebRTC() {
     const { t } = useTranslation('common');
     const [dc, setDc] = useState<RTCDataChannel | null>(null);
 
-    const { setConnectionStatus, connectionCode, setConnectionCode, setMode } =
-        useAppStore();
+    const {
+        connectionStatus,
+        setConnectionStatus,
+        connectionCode,
+        setConnectionCode,
+        setMode,
+        isCodeExpired,
+        setCodeExpired,
+        connectionCodeCreatedAt,
+    } = useAppStore();
+
+    // Expiration Timer Logic
+    useEffect(() => {
+        if (
+            connectionStatus !== 'connecting' ||
+            !connectionCode ||
+            isCodeExpired ||
+            !connectionCodeCreatedAt
+        ) {
+            return;
+        }
+
+        const checkExpiration = () => {
+            const now = Date.now();
+            const elapsed = now - connectionCodeCreatedAt;
+            const remaining = 30000 - elapsed;
+
+            if (remaining <= 0) {
+                setCodeExpired(true);
+            }
+        };
+
+        const timer = setInterval(checkExpiration, 1000);
+        checkExpiration(); // Initial check
+
+        return () => clearInterval(timer);
+    }, [
+        connectionStatus,
+        connectionCode,
+        isCodeExpired,
+        connectionCodeCreatedAt,
+        setCodeExpired,
+    ]);
 
     const { handleMessage, isTransferFinished, hasSuccessfulFiles } =
         useFileReceiver();
@@ -99,11 +140,17 @@ export function useWebRTC() {
 
                 let signalSent = false;
                 const sendOffer = () => {
+                    // Stop sending offer if code is expired
+                    if (useAppStore.getState().isCodeExpired) return;
+
                     if (signalSent || !pc.localDescription) return;
                     signalSent = true;
                     sendSignal(code, {
                         type: 'offer',
                         data: JSON.stringify(pc.localDescription),
+                    }).catch((err) => {
+                        console.error('Failed to send offer', err);
+                        setConnectionStatus('error', 'signaling_failed');
                     });
                 };
 
@@ -115,7 +162,6 @@ export function useWebRTC() {
                         sendOffer();
                     }
                 };
-
 
                 const offer = await pc.createOffer();
                 await pc.setLocalDescription(offer);
@@ -212,6 +258,28 @@ export function useWebRTC() {
         purgeStorage().catch(console.error);
         clearTransfers();
     }, [clearTransfers]);
+
+    useEffect(() => {
+        const handleOnline = () => {
+            // When coming back online, we don't necessarily reset error, 
+            // but we might want to if the error was 'offline'
+        };
+        const handleOffline = () => {
+            const currentStatus = useAppStore.getState().connectionStatus;
+            if (currentStatus === 'connected' || currentStatus === 'connecting') {
+                setConnectionStatus('error', 'offline');
+                toast.error(t('error.offline'));
+            }
+        };
+
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+
+        return () => {
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+        };
+    }, [setConnectionStatus, t]);
 
     useEffect(() => {
         return () => {

@@ -13,11 +13,15 @@ interface AppState {
     mode: 'host' | 'guest' | null;
     setMode: (mode: 'host' | 'guest' | null) => void;
     connectionStatus: ConnectionStatus;
-    setConnectionStatus: (status: ConnectionStatus) => void;
+    setConnectionStatus: (status: ConnectionStatus, reason?: string) => void;
     connectionCode: string;
     setConnectionCode: (code: string) => void;
+    connectionCodeCreatedAt: number | null;
+    isCodeExpired: boolean;
+    setCodeExpired: (expired: boolean) => void;
     theme: Theme;
     setTheme: (theme: Theme) => void;
+    errorReason: string | null;
 }
 
 export const useAppStore = create<AppState>()(
@@ -26,9 +30,19 @@ export const useAppStore = create<AppState>()(
             mode: null,
             setMode: (mode) => set({ mode }),
             connectionStatus: 'disconnected',
-            setConnectionStatus: (status) => set({ connectionStatus: status }),
+            errorReason: null,
+            setConnectionStatus: (status, reason) =>
+                set({ connectionStatus: status, errorReason: reason || null }),
             connectionCode: '',
-            setConnectionCode: (code) => set({ connectionCode: code }),
+            setConnectionCode: (code) =>
+                set({
+                    connectionCode: code,
+                    connectionCodeCreatedAt: code ? Date.now() : null,
+                    isCodeExpired: false,
+                }),
+            connectionCodeCreatedAt: null,
+            isCodeExpired: false,
+            setCodeExpired: (expired) => set({ isCodeExpired: expired }),
             theme: 'system',
             setTheme: (theme) => set({ theme }),
         }),

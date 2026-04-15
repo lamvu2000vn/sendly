@@ -25,7 +25,10 @@
         "building": "Building secure tunnel...",
         "copy_btn": "Copy Access Key",
         "waiting": "Waiting for a partner to enter the access key.",
-        "terminate": "Terminate Session"
+        "terminate": "Terminate Session",
+        "code_expired": "Access key has expired",
+        "regenerate_btn": "Regenerate",
+        "expired_desc": "The access key expired for security. Click above to generate a new one."
     },
     "receiver": {
         "target_label": "Target Access Key",
@@ -94,5 +97,16 @@
         "en": "English",
         "vi": "Tiếng Việt",
         "toggle": "Switch Language"
+    },
+    "error": {
+        "title": "Connection Failed",
+        "network_issue": "Could not establish a peer-to-peer connection. This is often due to network restrictions (like corporate firewalls) or one side losing internet connection.",
+        "offline": "You are currently offline. Please check your internet connection and try again.",
+        "retry": "Retry",
+        "troubleshoot_title": "How to fix:",
+        "troubleshoot_1": "Ensure both devices have a stable internet connection.",
+        "troubleshoot_2": "Disable VPN or proxy if you are using one.",
+        "troubleshoot_3": "If you are on a corporate network, try using a different network or mobile data.",
+        "back_to_home": "Back to Home"
     }
 }

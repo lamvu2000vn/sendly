@@ -14,7 +14,7 @@ export function useWebRTCConnection(
     const pcRef = useRef<RTCPeerConnection | null>(null);
     const dcRef = useRef<RTCDataChannel | null>(null);
 
-    const { connectionStatus, setConnectionStatus, connectionCode, mode } =
+    const { connectionStatus, setConnectionStatus, connectionCode, mode, isCodeExpired } =
         useAppStore();
 
     const cleanup = useCallback(() => {
@@ -37,7 +37,8 @@ export function useWebRTCConnection(
                 const currentStatus = useAppStore.getState().connectionStatus;
                 if (currentStatus === 'disconnected') return;
 
-                setConnectionStatus('error');
+                const isOffline = typeof window !== 'undefined' && !window.navigator.onLine;
+                setConnectionStatus('error', isOffline ? 'offline' : 'network_failed');
                 toast.error(t('toast.connection_issue'));
             }
         };
@@ -57,7 +58,10 @@ export function useWebRTCConnection(
         queryKey: ['signaling', connectionCode, targetSignalType],
         queryFn: ({ signal }) =>
             pollSignal(connectionCode, targetSignalType, signal),
-        enabled: connectionStatus === 'connecting' && !!connectionCode,
+        enabled:
+            connectionStatus === 'connecting' &&
+            !!connectionCode &&
+            !isCodeExpired,
         refetchInterval: POLL_INTERVAL,
         staleTime: 0,
         gcTime: 0,
@@ -99,6 +103,9 @@ export function useWebRTCConnection(
                             data: JSON.stringify(
                                 pcRef.current.localDescription,
                             ),
+                        }).catch((err) => {
+                            console.error('Failed to send answer', err);
+                            setConnectionStatus('error', 'signaling_failed');
                         });
                     };
 
@@ -121,7 +128,7 @@ export function useWebRTCConnection(
             } catch (err) {
                 console.error('Handshake error', err);
                 toast.error(t('toast.handshake_error'));
-                setConnectionStatus('error');
+                setConnectionStatus('error', 'handshake_failed');
             }
         };
 

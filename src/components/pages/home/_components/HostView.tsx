@@ -2,14 +2,17 @@
 
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { CopyIcon, ZapIcon, Loader2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { CopyIcon, ZapIcon, Loader2, RefreshCw } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from 'react';
+import { useAppStore } from '@/store/useAppStore';
 
 interface HostViewProps {
     connectionCode: string;
     isConnecting: boolean;
+    isCodeExpired?: boolean;
     onStart: () => void;
     onCopy: () => void;
     onBack: () => void;
@@ -18,11 +21,30 @@ interface HostViewProps {
 export const HostView = ({
     connectionCode,
     isConnecting,
+    isCodeExpired,
     onStart,
     onCopy,
     onBack,
 }: HostViewProps) => {
     const { t } = useTranslation();
+    const { connectionCodeCreatedAt } = useAppStore();
+    const [timeLeft, setTimeLeft] = useState(30);
+
+    useEffect(() => {
+        if (!connectionCodeCreatedAt || isCodeExpired || !connectionCode) return;
+
+        const updateTimer = () => {
+            const elapsed = Date.now() - connectionCodeCreatedAt;
+            const remaining = Math.max(0, Math.ceil((30000 - elapsed) / 1000));
+            setTimeLeft(remaining);
+        };
+
+        const timer = setInterval(updateTimer, 1000);
+        updateTimer();
+
+        return () => clearInterval(timer);
+    }, [connectionCodeCreatedAt, isCodeExpired, connectionCode]);
+
     if (!connectionCode && !isConnecting) {
         return (
             <motion.div
@@ -63,46 +85,76 @@ export const HostView = ({
             className="space-y-10"
         >
             <div className="space-y-4 text-center">
-                <Label className="text-muted-foreground text-xs font-black tracking-[0.3em] uppercase opacity-60">
-                    {t('sender.active_code')}
-                </Label>
-                <div className="flex-center gap-3">
-                    {connectionCode ? (
-                        <div className="flex-center bg-muted h-16 w-full rounded-xl border border-white/10 backdrop-blur-md sm:h-20 sm:rounded-2xl md:h-24">
-                            <div className="flex-center w-full gap-3 sm:gap-4 md:gap-6">
-                                {connectionCode.split('').map((char, i) => (
-                                    <motion.span
-                                        initial={{ y: 10, opacity: 0 }}
-                                        animate={{ y: 0, opacity: 1 }}
-                                        transition={{
-                                            delay: i * 0.05,
-                                            type: 'spring',
-                                        }}
-                                        key={i}
-                                        className={cn(
-                                            'text-lg sm:text-2xl md:text-3xl',
-                                            'aspect-square font-bold',
-                                            'flex-center',
-                                        )}
-                                    >
-                                        {char}
-                                    </motion.span>
-                                ))}
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="flex-center text-primary/70 h-14 gap-3 font-medium">
-                            <Loader2 className="h-6 w-6 animate-spin" />
-                            <span className="animate-pulse">
-                                {t('sender.building')}
+                <div className="flex items-center justify-center gap-4">
+                    <Label className="text-muted-foreground text-xs font-black tracking-[0.3em] uppercase opacity-60">
+                        {t('sender.active_code')}
+                    </Label>
+                    {!isCodeExpired && connectionCode && (
+                        <div className="flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 border border-border">
+                            <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+                            <span className="text-[10px] font-bold tabular-nums">
+                                {timeLeft}s
                             </span>
                         </div>
                     )}
                 </div>
+
+                <div className="flex-center relative overflow-hidden group rounded-xl sm:rounded-2xl">
+                    <div
+                        className={cn(
+                            'flex-center bg-muted h-16 w-full rounded-xl border border-border backdrop-blur-md transition-all duration-500 sm:h-20 sm:rounded-2xl md:h-24',
+                            isCodeExpired && 'blur-md grayscale',
+                        )}
+                    >
+                        <div className="flex-center w-full gap-3 sm:gap-4 md:gap-6">
+                            {connectionCode.split('').map((char, i) => (
+                                <motion.span
+                                    initial={{ y: 10, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{
+                                        delay: i * 0.05,
+                                        type: 'spring',
+                                    }}
+                                    key={i}
+                                    className={cn(
+                                        'text-lg sm:text-2xl md:text-3xl',
+                                        'aspect-square font-bold',
+                                        'flex-center',
+                                    )}
+                                >
+                                    {char}
+                                </motion.span>
+                            ))}
+                        </div>
+                    </div>
+
+                    <AnimatePresence>
+                        {isCodeExpired && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3"
+                            >
+                                <p className="text-sm font-bold text-foreground drop-shadow-md">
+                                    {t('sender.code_expired')}
+                                </p>
+                                <Button
+                                    size="sm"
+                                    onClick={onStart}
+                                    className="h-9 gap-2 rounded-xl bg-primary px-5 font-bold text-xs ring-1 ring-white/20 hover:scale-105 active:scale-95 transition-all shadow-xl"
+                                >
+                                    <RefreshCw className="h-3.5 w-3.5" />
+                                    {t('sender.regenerate_btn')}
+                                </Button>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
             </div>
 
             <div className="flex flex-col items-center gap-6">
-                {connectionCode && (
+                {connectionCode && !isCodeExpired && (
                     <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -110,7 +162,7 @@ export const HostView = ({
                     >
                         <Button
                             variant="secondary"
-                            className="h-12 rounded-2xl border border-white/5 px-8 font-bold shadow-lg hover:bg-white/10"
+                            className="h-12 rounded-2xl border border-border px-8 font-bold shadow-lg hover:bg-white/10 transition-all hover:scale-[1.02]"
                             onClick={onCopy}
                         >
                             <CopyIcon className="mr-3 h-4 w-4" />
@@ -119,9 +171,9 @@ export const HostView = ({
                     </motion.div>
                 )}
 
-                <div className="max-w-[280px] rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-center">
+                <div className="max-w-[280px] rounded-2xl border border-border bg-white/5 px-6 py-3 text-center transition-all duration-300">
                     <p className="text-muted-foreground text-xs leading-relaxed font-medium">
-                        {t('sender.waiting')}
+                        {isCodeExpired ? t('sender.expired_desc') : t('sender.waiting')}
                     </p>
                 </div>
 
@@ -130,6 +182,7 @@ export const HostView = ({
                     level="secondary"
                     size="sm"
                     onClick={onBack}
+                    className="opacity-70 hover:opacity-100 transition-opacity"
                 >
                     {t('sender.terminate')}
                 </Button>

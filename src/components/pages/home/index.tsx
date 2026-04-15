@@ -13,6 +13,7 @@ import { ModeSelection } from '@/components/pages/home/_components/ModeSelection
 import { Hero } from '@/components/pages/home/_components/Hero';
 import { Footer } from '@/components/pages/home/_components/Footer';
 import { ConnectionCard } from '@/components/pages/home/_components/ConnectionCard';
+import { ErrorView } from '@/components/pages/home/_components/ErrorView';
 import DefaultCardSkeleton from '@/components/skeletons/DefaultCardSkeleton';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
@@ -51,7 +52,14 @@ const ConnectedView = makeAsyncComponent(
 );
 
 export default function HomePageComponent() {
-    const { mode, setMode, connectionStatus, connectionCode } = useAppStore();
+    const {
+        mode,
+        setMode,
+        connectionStatus,
+        connectionCode,
+        errorReason,
+        isCodeExpired,
+    } = useAppStore();
     const {
         transferState,
         startConnection,
@@ -174,7 +182,30 @@ export default function HomePageComponent() {
 
                 <ConnectionCard status={connectionStatus} title={renderTitle()}>
                     <AnimatePresence mode="wait">
-                        {showTransferView ? (
+                        {connectionStatus === 'error' ? (
+                            <motion.div
+                                key="error"
+                                initial={{ opacity: 0, scale: 0.98 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.98 }}
+                                transition={{ duration: 0.4 }}
+                            >
+                                <ErrorView
+                                    reason={errorReason}
+                                    onRetry={() => {
+                                        if (mode === 'host') {
+                                            startConnection();
+                                        } else if (mode === 'guest') {
+                                            joinConnection(inputCode);
+                                        }
+                                    }}
+                                    onBackToHome={() => {
+                                        handleDisconnect();
+                                        setMode(null);
+                                    }}
+                                />
+                            </motion.div>
+                        ) : showTransferView ? (
                             <motion.div
                                 key="connected"
                                 initial={{ opacity: 0, scale: 0.98 }}
@@ -215,6 +246,7 @@ export default function HomePageComponent() {
                                         <HostView
                                             connectionCode={connectionCode}
                                             isConnecting={isConnecting}
+                                            isCodeExpired={isCodeExpired}
                                             onStart={startConnection}
                                             onCopy={handleCopy}
                                             onBack={() => {
