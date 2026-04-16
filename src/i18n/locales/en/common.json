@@ -17,6 +17,7 @@
         "overlay_subtitle": "Release to start sending your files instantly"
     },
     "sender": {
+        "waiting_title": "Waiting for connection",
         "ready_title": "Ready to Connect?",
         "ready_desc": "Generate a secure, single-use code for instant P2P transfer.",
         "generate_btn": "Generate access key",

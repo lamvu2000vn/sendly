@@ -16,4 +16,4 @@ export const HOST_CODE_EXPIRATION = 5 * 60 * 1000; // 5 minutes
 export const GUEST_CODE_EXPIRATION = 30 * 1000; // 30 seconds
 export const GUEST_VALIDATION_TIMEOUT = 15 * 1000; // 15 seconds
 export const GUEST_CONNECTION_TIMEOUT = 20 * 1000; // 20 seconds
-export const HOST_ICE_TIMEOUT = 30 * 1000; // 30 seconds
+export const HOST_ICE_TIMEOUT = 20 * 1000; // 20 seconds

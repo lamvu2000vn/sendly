@@ -13,6 +13,7 @@ import { HOST_CODE_EXPIRATION } from '@/hooks/webrtc/constants';
 interface HostViewProps {
     connectionCode: string;
     isConnecting: boolean;
+    isSignalFound?: boolean;
     isCodeExpired?: boolean;
     onStart: () => void;
     onCopy: () => void;
@@ -23,6 +24,7 @@ interface HostViewProps {
 export const HostView = ({
     connectionCode,
     isConnecting,
+    isSignalFound,
     isCodeExpired,
     onStart,
     onCopy,
@@ -33,7 +35,12 @@ export const HostView = ({
     const [timeLeft, setTimeLeft] = useState(HOST_CODE_EXPIRATION / 1000);
 
     useEffect(() => {
-        if (!connectionCodeCreatedAt || isCodeExpired || !connectionCode)
+        if (
+            !connectionCodeCreatedAt ||
+            isCodeExpired ||
+            !connectionCode ||
+            isSignalFound
+        )
             return;
 
         const updateTimer = () => {
@@ -49,7 +56,12 @@ export const HostView = ({
         updateTimer();
 
         return () => clearInterval(timer);
-    }, [connectionCodeCreatedAt, isCodeExpired, connectionCode]);
+    }, [
+        connectionCodeCreatedAt,
+        isCodeExpired,
+        connectionCode,
+        isSignalFound,
+    ]);
 
     if (!connectionCode && !isConnecting) {
         return (
@@ -97,7 +109,7 @@ export const HostView = ({
                     <Label className="text-muted-foreground text-xs font-black tracking-[0.3em] uppercase opacity-60">
                         {t('sender.active_code')}
                     </Label>
-                    {!isCodeExpired && connectionCode && (
+                    {!isCodeExpired && connectionCode && !isSignalFound && (
                         <div className="border-border flex items-center gap-1.5 rounded-full border bg-white/10 px-2.5 py-1 transition-none!">
                             <div className="bg-primary h-1.5 w-1.5 animate-pulse rounded-full" />
                             <span className="text-[10px] font-bold tabular-nums">
@@ -202,7 +214,7 @@ export const HostView = ({
                             : 'bg-white/5',
                     )}
                 >
-                    {isConnecting ? (
+                    {isSignalFound ? (
                         <div className="flex flex-col items-center gap-3">
                             <div className="flex items-center gap-2">
                                 <Loader2 className="text-primary h-4 w-4 animate-spin" />
@@ -215,11 +227,21 @@ export const HostView = ({
                             </p>
                         </div>
                     ) : (
-                        <p className="text-muted-foreground text-xs leading-relaxed font-medium">
-                            {isCodeExpired
-                                ? t('sender.expired_desc')
-                                : t('sender.waiting')}
-                        </p>
+                        <div className="flex flex-col items-center gap-3">
+                            {!isCodeExpired && (
+                                <div className="flex items-center gap-2">
+                                    <div className="bg-primary/20 h-2 w-2 animate-ping rounded-full" />
+                                    <p className="text-xs font-bold tracking-widest uppercase opacity-80 text-muted-foreground">
+                                        {t('sender.waiting_title', 'Waiting')}
+                                    </p>
+                                </div>
+                            )}
+                            <p className="text-muted-foreground text-[11px] leading-relaxed font-medium">
+                                {isCodeExpired
+                                    ? t('sender.expired_desc')
+                                    : t('sender.waiting')}
+                            </p>
+                        </div>
                     )}
                 </div>
 

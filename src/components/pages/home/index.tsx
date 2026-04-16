@@ -68,6 +68,7 @@ export default function HomePageComponent() {
         clearTransfer,
         deleteFile,
         cancelTransfer,
+        isSignalFound,
         disconnect,
     } = useWebRTC();
 
@@ -239,6 +240,7 @@ export default function HomePageComponent() {
                                         <HostView
                                             connectionCode={connectionCode}
                                             isConnecting={isConnecting}
+                                            isSignalFound={isSignalFound}
                                             isCodeExpired={isCodeExpired}
                                             onStart={startConnection}
                                             onCopy={handleCopy}
