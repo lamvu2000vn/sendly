@@ -7,10 +7,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "eslint -f stylish",
-        "lint:fix": "eslint --fix .",
-        "format:check": "prettier --check .",
-        "format:write": "npm run lint:fix && prettier --write .",
-        "tailwind:fix": "npm run format:write"
+        "lint:fix": "eslint --fix && prettier --write ."
     },
     "dependencies": {
         "@tanstack/react-query": "^5.97.0",

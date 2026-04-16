@@ -38,13 +38,25 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
                     >
                         <div className="bg-primary/5 absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100" />
 
-                        <div className="border-border relative flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full border bg-background/50 shadow-sm">
+                        <div className="border-border bg-background/50 relative flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full border shadow-sm">
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={theme}
-                                    initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
-                                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                                    exit={{ opacity: 0, scale: 0.5, rotate: 45 }}
+                                    initial={{
+                                        opacity: 0,
+                                        scale: 0.5,
+                                        rotate: -45,
+                                    }}
+                                    animate={{
+                                        opacity: 1,
+                                        scale: 1,
+                                        rotate: 0,
+                                    }}
+                                    exit={{
+                                        opacity: 0,
+                                        scale: 0.5,
+                                        rotate: 45,
+                                    }}
                                     transition={{ duration: 0.2 }}
                                 >
                                     <currentTheme.icon className="text-primary h-3.5 w-3.5" />
@@ -99,7 +111,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
 
                                     <div
                                         className={cn(
-                                            'border-border relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border bg-background/50 shadow-md transition-all duration-500',
+                                            'border-border bg-background/50 relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border shadow-md transition-all duration-500',
                                             isActive
                                                 ? 'ring-primary/20 ring-offset-background/50 scale-110 ring-2 ring-offset-2'
                                                 : 'group-hover:scale-105',
@@ -135,4 +147,3 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
         </motion.div>
     );
 };
-

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppStore } from '@/store/useAppStore';
 import { toast } from '@/store/useNotificationStore';
 import { useQuery } from '@tanstack/react-query';
+import { useNetwork } from '@/hooks/useNetwork';
 import { pollSignal, sendSignal } from '@/lib/signaling';
 import { ICE_SERVERS, POLL_INTERVAL } from './constants';
 
@@ -11,6 +12,7 @@ export function useWebRTCConnection(
     isTransferFinished: () => boolean,
 ) {
     const { t } = useTranslation('common');
+    const isOnline = useNetwork();
     const pcRef = useRef<RTCPeerConnection | null>(null);
     const dcRef = useRef<RTCDataChannel | null>(null);
     const iceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -54,7 +56,7 @@ export function useWebRTCConnection(
                 }
             }
 
-            if (state === 'checking' || state === 'connecting') {
+            if (state === 'checking') {
                 // Start timeout if not already started
                 if (!iceTimeoutRef.current) {
                     iceTimeoutRef.current = setTimeout(() => {
@@ -83,11 +85,9 @@ export function useWebRTCConnection(
                 const currentStatus = useAppStore.getState().connectionStatus;
                 if (currentStatus === 'disconnected') return;
 
-                const isOffline =
-                    typeof window !== 'undefined' && !window.navigator.onLine;
                 setConnectionStatus(
                     'error',
-                    isOffline ? 'offline' : 'network_failed',
+                    !isOnline ? 'offline' : 'network_failed',
                 );
                 toast.error(t('toast.connection_issue'));
             }
@@ -100,7 +100,7 @@ export function useWebRTCConnection(
 
         pcRef.current = pc;
         return pc;
-    }, [setConnectionStatus, onDataChannel, isTransferFinished, t]);
+    }, [setConnectionStatus, onDataChannel, isTransferFinished, t, isOnline]);
 
     // TanStack Query for Signaling
     const targetSignalType = mode === 'host' ? 'answer' : 'offer';
@@ -135,11 +135,7 @@ export function useWebRTCConnection(
             }, 15000); // 15 seconds for signaling
         }
 
-        if (
-            !remoteSignal ||
-            !pcRef.current ||
-            pcRef.current.remoteDescription
-        )
+        if (!remoteSignal || !pcRef.current || pcRef.current.remoteDescription)
             return;
 
         // Clear timeout as soon as we get signal
@@ -220,5 +216,6 @@ export function useWebRTCConnection(
         dcRef,
         cleanup,
         initializePeerConnection,
+        isSignalFound: !!remoteSignal,
     };
 }

@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { CopyIcon, ZapIcon, RefreshCw } from 'lucide-react';
+import { CopyIcon, ZapIcon, RefreshCw, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
@@ -108,10 +108,22 @@ export const HostView = ({
                 </div>
 
                 <div className="flex-center group relative overflow-hidden rounded-xl sm:rounded-2xl">
+                    {/* Background Pulse when connecting */}
+                    {isConnecting && !isCodeExpired && (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="bg-primary/5 absolute inset-0 z-0 animate-pulse"
+                        />
+                    )}
+
                     <div
                         className={cn(
-                            'flex-center bg-muted border-border h-16 w-full rounded-xl border backdrop-blur-md transition-all duration-500 sm:h-20 sm:rounded-2xl md:h-24',
+                            'flex-center border-border bg-muted/50 relative z-10 h-16 w-full rounded-xl border backdrop-blur-md transition-all duration-500 sm:h-20 sm:rounded-2xl md:h-24',
                             isCodeExpired && 'blur-md grayscale',
+                            isConnecting &&
+                                !isCodeExpired &&
+                                'border-primary/30 shadow-[0_0_30px_-10px_rgba(var(--primary),0.3)]',
                         )}
                     >
                         <div className="flex-center w-full gap-3 sm:gap-4 md:gap-6">
@@ -128,6 +140,7 @@ export const HostView = ({
                                         'text-lg sm:text-2xl md:text-3xl',
                                         'aspect-square font-bold',
                                         'flex-center',
+                                        isConnecting && 'text-primary',
                                     )}
                                 >
                                     {char}
@@ -179,12 +192,33 @@ export const HostView = ({
                     </motion.div>
                 )}
 
-                <div className="border-border max-w-[280px] rounded-2xl border bg-white/5 px-6 py-3 text-center transition-all duration-500">
-                    <p className="text-muted-foreground text-xs leading-relaxed font-medium">
-                        {isCodeExpired
-                            ? t('sender.expired_desc')
-                            : t('sender.waiting')}
-                    </p>
+                <div
+                    className={cn(
+                        'border-border max-w-[320px] rounded-2xl border px-6 py-4 text-center transition-all duration-500',
+                        isConnecting
+                            ? 'bg-primary/5 border-primary/20'
+                            : 'bg-white/5',
+                    )}
+                >
+                    {isConnecting ? (
+                        <div className="flex flex-col items-center gap-3">
+                            <div className="flex items-center gap-2">
+                                <Loader2 className="text-primary h-4 w-4 animate-spin" />
+                                <p className="text-primary text-xs font-bold tracking-widest uppercase">
+                                    {t('status.connecting')}
+                                </p>
+                            </div>
+                            <p className="text-muted-foreground text-[11px] leading-relaxed">
+                                {t('sender.connecting_subtitle')}
+                            </p>
+                        </div>
+                    ) : (
+                        <p className="text-muted-foreground text-xs leading-relaxed font-medium">
+                            {isCodeExpired
+                                ? t('sender.expired_desc')
+                                : t('sender.waiting')}
+                        </p>
+                    )}
                 </div>
 
                 <Button

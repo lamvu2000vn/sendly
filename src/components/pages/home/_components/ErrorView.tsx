@@ -3,7 +3,14 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, AlertTriangle, Home, ShieldAlert, WifiOff, SearchX } from 'lucide-react';
+import {
+    AlertCircle,
+    AlertTriangle,
+    Home,
+    ShieldAlert,
+    WifiOff,
+    SearchX,
+} from 'lucide-react';
 
 import { useNetwork } from '@/hooks/useNetwork';
 

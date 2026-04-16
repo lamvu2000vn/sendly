@@ -40,6 +40,7 @@
     --radius-5xl: 3.5rem;
 
     --animate-gradient: gradient 8s linear infinite;
+    --animate-spin-fast: spin 0.5s linear infinite;
 
     @keyframes gradient {
         0% {
@@ -52,6 +53,15 @@
 
         100% {
             background-position: 0% 50%;
+        }
+    }
+
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
         }
     }
 }

@@ -12,8 +12,12 @@ import { useFileReceiver } from './webrtc/useFileReceiver';
 import { useWebRTCConnection } from './webrtc/useWebRTCConnection';
 import { SEND_OFFER_DELAY } from './webrtc/constants';
 
+import { audioService } from '@/utils/audio';
+import { useNetwork } from '@/hooks/useNetwork';
+
 export function useWebRTC() {
     const { t } = useTranslation('common');
+    const isOnline = useNetwork();
     const [dc, setDc] = useState<RTCDataChannel | null>(null);
 
     const {
@@ -26,6 +30,15 @@ export function useWebRTC() {
         setCodeExpired,
         connectionCodeCreatedAt,
     } = useAppStore();
+
+    // Sound effects for connection status
+    useEffect(() => {
+        if (connectionStatus === 'connected') {
+            audioService.playSuccess();
+        } else if (connectionStatus === 'error') {
+            audioService.playError();
+        }
+    }, [connectionStatus]);
 
     // Expiration Timer Logic
     useEffect(() => {
@@ -108,10 +121,8 @@ export function useWebRTC() {
         ],
     );
 
-    const { cleanup, initializePeerConnection, dcRef } = useWebRTCConnection(
-        setupDataChannel,
-        isTransferFinished,
-    );
+    const { cleanup, initializePeerConnection, dcRef, isSignalFound } =
+        useWebRTCConnection(setupDataChannel, isTransferFinished);
 
     // Overwrite setDc when dcRef changes (internal to useWebRTCConnection)
     useEffect(() => {
@@ -263,11 +274,7 @@ export function useWebRTC() {
     }, [clearTransfers]);
 
     useEffect(() => {
-        const handleOnline = () => {
-            // When coming back online, we don't necessarily reset error,
-            // but we might want to if the error was 'offline'
-        };
-        const handleOffline = () => {
+        if (!isOnline) {
             const currentStatus = useAppStore.getState().connectionStatus;
             if (
                 currentStatus === 'connected' ||
@@ -276,16 +283,8 @@ export function useWebRTC() {
                 setConnectionStatus('error', 'offline');
                 toast.error(t('error.offline'));
             }
-        };
-
-        window.addEventListener('online', handleOnline);
-        window.addEventListener('offline', handleOffline);
-
-        return () => {
-            window.removeEventListener('online', handleOnline);
-            window.removeEventListener('offline', handleOffline);
-        };
-    }, [setConnectionStatus, t]);
+        }
+    }, [isOnline, setConnectionStatus, t]);
 
     useEffect(() => {
         return () => {
@@ -328,6 +327,7 @@ export function useWebRTC() {
         clearTransfer: handleClearTransfer,
         deleteFile: handleDeleteFile,
         cancelTransfer: handleCancelTransfer,
+        isSignalFound,
         disconnect,
     };
 }
