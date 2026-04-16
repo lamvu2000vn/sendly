@@ -243,7 +243,32 @@ export function useWebRTC() {
     );
 
     const disconnect = useCallback(
-        (stayOnCurrentMode = false) => {
+        async (stayOnCurrentMode = false) => {
+            const activeFiles =
+                transferState?.files.filter(
+                    (f) =>
+                        f.status === 'transferring' || f.status === 'pending',
+                ) || [];
+
+            if (activeFiles.length > 0 && dc && dc.readyState === 'open') {
+                activeFiles.forEach((file) => {
+                    try {
+                        dc.send(
+                            JSON.stringify({
+                                type: 'file-cancel',
+                                fileId: file.id,
+                            }),
+                        );
+                        cancelTransfer(file.id);
+                    } catch (e) {
+                        console.error('Failed to send cancel message', e);
+                    }
+                });
+
+                // Small delay to ensure messages are dispatched before closing
+                await new Promise((resolve) => setTimeout(resolve, 200));
+            }
+
             cleanup();
             purgeStorage().catch(console.error);
             setConnectionStatus('disconnected');
@@ -261,6 +286,9 @@ export function useWebRTC() {
             clearTransfers,
             setConnectionCode,
             setMode,
+            transferState,
+            dc,
+            cancelTransfer,
         ],
     );
 
