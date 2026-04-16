@@ -20,6 +20,14 @@
     --color-accent: var(--accent);
     --color-accent-foreground: var(--accent-foreground);
 
+    /* Semantic Colors */
+    --color-success: var(--success);
+    --color-success-foreground: var(--success-foreground);
+    --color-warning: var(--warning);
+    --color-warning-foreground: var(--warning-foreground);
+    --color-info: var(--info);
+    --color-info-foreground: var(--info-foreground);
+
     --color-muted: var(--muted);
     --color-muted-foreground: var(--muted-foreground);
 
@@ -67,31 +75,39 @@
 }
 
 :root {
-    /* 2026 Pastel Harmony - Digital Lavender & Powder Pink */
-    --background: oklch(0.98 0.01 320);
-    --foreground: oklch(0.25 0.04 320);
+    /* Sendly Pastel Premium - Soft Harmony Theme */
+    --background: oklch(0.99 0.01 270);
+    --foreground: oklch(0.25 0.04 270);
 
     --card: oklch(1 0 0 / 0.7);
-    --card-foreground: oklch(0.25 0.04 320);
+    --card-foreground: oklch(0.25 0.04 270);
 
-    --primary: oklch(0.78 0.1 275);
-    /* Digital Lavender */
-    --primary-foreground: oklch(0.99 0.02 275);
+    /* Primary: Digital Lavender */
+    --primary: oklch(0.78 0.1 270);
+    --primary-foreground: oklch(0.99 0.02 270);
 
+    /* Secondary: Powder Pink */
     --secondary: oklch(0.88 0.08 350);
-    /* Powder Pink (Hồng phấn) */
     --secondary-foreground: oklch(0.45 0.1 350);
 
+    /* Accent: Luminous Mint */
     --accent: oklch(0.85 0.1 165);
-    /* Luminous Mint */
     --accent-foreground: oklch(0.35 0.1 165);
 
-    --muted: oklch(0.96 0.02 320);
-    --muted-foreground: oklch(0.5 0.04 320);
+    /* Semantic Colors (Pastel) */
+    --success: oklch(0.85 0.1 145);
+    --success-foreground: oklch(0.35 0.1 145);
+    --warning: oklch(0.88 0.1 85);
+    --warning-foreground: oklch(0.4 0.1 85);
+    --info: oklch(0.85 0.1 230);
+    --info-foreground: oklch(0.35 0.1 230);
 
-    --border: oklch(0.85 0.03 320 / 0.8);
-    --input: oklch(0.85 0.03 320 / 0.8);
-    --ring: oklch(0.88 0.08 350 / 0.3);
+    --muted: oklch(0.96 0.02 270);
+    --muted-foreground: oklch(0.5 0.04 270);
+
+    --border: oklch(0.85 0.04 270 / 0.6);
+    --input: oklch(0.85 0.04 270 / 0.6);
+    --ring: oklch(0.78 0.1 270 / 0.3);
 
     --destructive: oklch(0.7 0.15 25);
     --destructive-foreground: oklch(0.98 0.01 25);
@@ -100,31 +116,39 @@
 }
 
 .dark {
-    /* 2026 Midnight Pastel - Refined Soft Tones */
-    --background: oklch(0.14 0.02 275);
-    --foreground: oklch(0.92 0.02 275);
+    /* Sendly Midnight Pastel - Brightened Purple Tones */
+    --background: oklch(0.22 0.04 270);
+    --foreground: oklch(0.95 0.02 270);
 
-    --card: oklch(0.18 0.03 275 / 0.7);
-    --card-foreground: oklch(0.92 0.02 275);
+    --card: oklch(0.26 0.05 270 / 0.7);
+    --card-foreground: oklch(0.95 0.02 270);
 
-    --primary: oklch(0.78 0.08 275);
-    /* Soft Digital Lavender */
-    --primary-foreground: oklch(0.15 0.04 275);
+    /* Primary: Soft Digital Lavender */
+    --primary: oklch(0.78 0.1 270);
+    --primary-foreground: oklch(0.2 0.05 270);
 
+    /* Secondary: Soft Powder Pink */
     --secondary: oklch(0.78 0.08 350);
-    /* Soft Powder Pink */
     --secondary-foreground: oklch(0.98 0.02 350);
 
+    /* Accent: Soft Mint Glow */
     --accent: oklch(0.82 0.08 170);
-    /* Soft Mint Glow */
-    --accent-foreground: oklch(0.15 0.04 170);
+    --accent-foreground: oklch(0.2 0.05 170);
 
-    --muted: oklch(0.22 0.03 275);
-    --muted-foreground: oklch(0.65 0.03 275);
+    /* Semantic Colors (Pastel Dark) */
+    --success: oklch(0.82 0.08 145);
+    --success-foreground: oklch(0.15 0.04 145);
+    --warning: oklch(0.85 0.08 85);
+    --warning-foreground: oklch(0.15 0.04 85);
+    --info: oklch(0.82 0.08 230);
+    --info-foreground: oklch(0.15 0.04 230);
 
-    --border: oklch(0.32 0.04 275 / 0.5);
-    --input: oklch(0.32 0.04 275 / 0.5);
-    --ring: oklch(0.78 0.08 350 / 0.3);
+    --muted: oklch(0.32 0.05 270);
+    --muted-foreground: oklch(0.75 0.04 270);
+
+    --border: oklch(0.42 0.06 270 / 0.4);
+    --input: oklch(0.42 0.06 270 / 0.4);
+    --ring: oklch(0.78 0.1 270 / 0.4);
 
     --destructive: oklch(0.65 0.12 25);
     --destructive-foreground: oklch(0.98 0.01 25);

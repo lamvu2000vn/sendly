@@ -17,7 +17,9 @@ export const NotificationProvider: React.FC = () => {
         const checkMobile = () => {
             // Kết hợp cả User Agent (react-device-detect) và Screen Width để tối ưu đa nền tảng
             // Thêm check touch points để nhận diện tốt hơn trên iOS thực tế
-            const hasTouch = typeof window !== 'undefined' && (navigator.maxTouchPoints > 0 || 'ontouchstart' in window);
+            const hasTouch =
+                typeof window !== 'undefined' &&
+                (navigator.maxTouchPoints > 0 || 'ontouchstart' in window);
             setIsMobileDevice(isMobile || window.innerWidth < 768 || hasTouch);
         };
         checkMobile();
@@ -28,7 +30,6 @@ export const NotificationProvider: React.FC = () => {
     if (!mounted) return null;
 
     const position = isMobileDevice ? 'bottom' : 'top';
-
 
     return (
         <div

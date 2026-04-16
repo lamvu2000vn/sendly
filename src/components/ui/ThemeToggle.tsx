@@ -33,7 +33,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
                     <Button
                         variant="secondary"
                         size="sm"
-                        className="group glass relative flex h-12 items-center gap-3 overflow-hidden rounded-2xl px-4 shadow-xl transition-all duration-500 hover:scale-105 active:scale-95"
+                        className="group glass relative flex h-12 items-center gap-3 overflow-hidden rounded-2xl px-4 shadow-xl transition-all duration-500 active:scale-95"
                         title="Switch Theme"
                     >
                         <div className="bg-primary/5 absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100" />

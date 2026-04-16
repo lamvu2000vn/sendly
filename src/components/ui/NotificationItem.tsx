@@ -23,10 +23,10 @@ interface NotificationItemProps {
 }
 
 const icons = {
-    success: <CheckCircle2 className="text-accent h-5 w-5" />,
+    success: <CheckCircle2 className="text-success h-5 w-5" />,
     error: <AlertCircle className="text-destructive h-5 w-5" />,
-    info: <Info className="text-primary h-5 w-5" />,
-    warning: <AlertTriangle className="text-secondary h-5 w-5" />,
+    info: <Info className="text-info h-5 w-5" />,
+    warning: <AlertTriangle className="text-warning h-5 w-5" />,
 };
 
 export const NotificationItem: React.FC<NotificationItemProps> = ({
@@ -173,10 +173,10 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
             <div
                 className={cn(
                     'shrink-0 rounded-2xl p-2',
-                    notification.type === 'success' && 'bg-accent/10',
+                    notification.type === 'success' && 'bg-success/10',
                     notification.type === 'error' && 'bg-destructive/10',
-                    notification.type === 'info' && 'bg-primary/10',
-                    notification.type === 'warning' && 'bg-secondary/10',
+                    notification.type === 'info' && 'bg-info/10',
+                    notification.type === 'warning' && 'bg-warning/10',
                 )}
             >
                 {notification.icon || icons[notification.type]}
@@ -193,10 +193,10 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
                 animate={controls}
                 className={cn(
                     'absolute bottom-0 left-0 h-1 opacity-40',
-                    notification.type === 'success' && 'bg-accent',
+                    notification.type === 'success' && 'bg-success',
                     notification.type === 'error' && 'bg-destructive',
-                    notification.type === 'info' && 'bg-primary',
-                    notification.type === 'warning' && 'bg-secondary',
+                    notification.type === 'info' && 'bg-info',
+                    notification.type === 'warning' && 'bg-warning',
                 )}
             />
 
@@ -206,10 +206,10 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
                     layoutId="glow"
                     className={cn(
                         'absolute inset-0 -z-10 rounded-3xl opacity-30 blur-2xl',
-                        notification.type === 'success' && 'bg-accent/40',
+                        notification.type === 'success' && 'bg-success/40',
                         notification.type === 'error' && 'bg-destructive/40',
-                        notification.type === 'info' && 'bg-primary/40',
-                        notification.type === 'warning' && 'bg-secondary/40',
+                        notification.type === 'info' && 'bg-info/40',
+                        notification.type === 'warning' && 'bg-warning/40',
                     )}
                 />
             )}
