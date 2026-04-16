@@ -13,6 +13,8 @@ export function useWebRTCConnection(
     const { t } = useTranslation('common');
     const pcRef = useRef<RTCPeerConnection | null>(null);
     const dcRef = useRef<RTCDataChannel | null>(null);
+    const iceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const signalingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const {
         connectionStatus,
@@ -23,6 +25,14 @@ export function useWebRTCConnection(
     } = useAppStore();
 
     const cleanup = useCallback(() => {
+        if (iceTimeoutRef.current) {
+            clearTimeout(iceTimeoutRef.current);
+            iceTimeoutRef.current = null;
+        }
+        if (signalingTimeoutRef.current) {
+            clearTimeout(signalingTimeoutRef.current);
+            signalingTimeoutRef.current = null;
+        }
         pcRef.current?.close();
         pcRef.current = null;
         dcRef.current = null;
@@ -34,11 +44,42 @@ export function useWebRTCConnection(
         });
 
         pc.oniceconnectionstatechange = () => {
-            console.log('ICE Connection State:', pc.iceConnectionState);
-            if (pc.iceConnectionState === 'failed') {
+            const state = pc.iceConnectionState;
+            console.log('ICE Connection State:', state);
+
+            if (state === 'connected' || state === 'completed') {
+                if (iceTimeoutRef.current) {
+                    clearTimeout(iceTimeoutRef.current);
+                    iceTimeoutRef.current = null;
+                }
+            }
+
+            if (state === 'checking' || state === 'connecting') {
+                // Start timeout if not already started
+                if (!iceTimeoutRef.current) {
+                    iceTimeoutRef.current = setTimeout(() => {
+                        console.warn('ICE Connection Timeout');
+                        const currentStatus =
+                            useAppStore.getState().connectionStatus;
+                        if (
+                            currentStatus === 'connecting' &&
+                            pc.iceConnectionState !== 'connected'
+                        ) {
+                            setConnectionStatus('error', 'network_restricted');
+                            toast.error(t('toast.connection_issue'));
+                        }
+                    }, 30000); // 30 seconds timeout
+                }
+            }
+
+            if (state === 'failed') {
+                if (iceTimeoutRef.current) {
+                    clearTimeout(iceTimeoutRef.current);
+                    iceTimeoutRef.current = null;
+                }
+
                 if (isTransferFinished()) return;
 
-                // Don't trigger error if we are already disconnecting
                 const currentStatus = useAppStore.getState().connectionStatus;
                 if (currentStatus === 'disconnected') return;
 
@@ -76,15 +117,36 @@ export function useWebRTCConnection(
         gcTime: 0,
     });
 
-    // Reaction to remote signal (Handshake)
+    // Reaction to remote signal (Handshake) & Signaling Timeout
     useEffect(() => {
+        if (connectionStatus !== 'connecting') {
+            if (signalingTimeoutRef.current) {
+                clearTimeout(signalingTimeoutRef.current);
+                signalingTimeoutRef.current = null;
+            }
+            return;
+        }
+
+        // Start signaling timeout if not already started and no signal yet
+        if (!remoteSignal && !signalingTimeoutRef.current) {
+            signalingTimeoutRef.current = setTimeout(() => {
+                console.warn('Signaling Timeout - Code might be invalid');
+                setConnectionStatus('error', 'invalid_code');
+            }, 15000); // 15 seconds for signaling
+        }
+
         if (
             !remoteSignal ||
-            connectionStatus !== 'connecting' ||
             !pcRef.current ||
             pcRef.current.remoteDescription
         )
             return;
+
+        // Clear timeout as soon as we get signal
+        if (signalingTimeoutRef.current) {
+            clearTimeout(signalingTimeoutRef.current);
+            signalingTimeoutRef.current = null;
+        }
 
         const handleHandshake = async () => {
             try {

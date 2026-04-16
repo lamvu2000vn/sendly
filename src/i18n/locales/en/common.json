@@ -104,11 +104,13 @@
     "error": {
         "title": "Connection Failed",
         "network_issue": "Could not establish a peer-to-peer connection. This is often due to network restrictions (like corporate firewalls) or one side losing internet connection.",
+        "network_restricted": "Connection blocked by network. Your network environment (Firewall, NAT) does not allow direct P2P connections.",
+        "invalid_code": "Invalid access key or expired. Please verify the code from the sending device.",
         "offline": "You are currently offline. Please check your internet connection and try again.",
         "troubleshoot_title": "How to fix:",
         "troubleshoot_1": "Ensure both devices have a stable internet connection.",
-        "troubleshoot_2": "Disable VPN or proxy if you are using one.",
-        "troubleshoot_3": "If you are on a corporate network, try using a different network or mobile data.",
+        "troubleshoot_2": "Try switching to a different network (e.g., use 4G/5G instead of corporate Wi-Fi).",
+        "troubleshoot_3": "Disable VPN, Proxy, or firewall software if you are using one.",
         "back_to_home": "Back to Home"
     }
 }

@@ -1,7 +1,8 @@
 # Antigravity Rules — Sendly
 
-You are assisting development of the Sendly project.
-Reading context.txt for full context.
+- You are assisting development of the Sendly project.
+- Reading context.txt for full context.
+- Always use Vietnamese for communication.
 
 ## Architectural Assumptions
 - This project DOES NOT use a backend server.
@@ -19,13 +20,19 @@ Never suggest:
 - Prefer hooks over utilities
 - Zustand for global state
 - TanStack Query for async logic
+- Always use shadcn/ui for UI components.
+- Always use Tailwind CSS for styling.
+- Always use lucide-react for icons.
+- Always use framer-motion for animations.
 
 ## Design Rules
 - Keep components small
 - Separate UI and business logic
 - Prefer composition over inheritance
+- Use the Container/Presentational pattern for components.
 
 ## Performance Priority
 - Avoid unnecessary re-renders
 - Stream files in chunks
 - Memory efficiency is critical
+- Use the Next.js best practices for performance optimization.

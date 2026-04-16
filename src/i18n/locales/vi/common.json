@@ -104,11 +104,13 @@
     "error": {
         "title": "Kết nối thất bại",
         "network_issue": "Không thể thiết lập kết nối peer-to-peer. Điều này thường do các hạn chế về mạng (như tường lửa công ty) hoặc do một trong hai bên mất kết nối internet.",
+        "network_restricted": "Không thể thiết lập kết nối. Vui lòng kiểm tra lại mã truy cập hoặc môi trường mạng của bạn (Firewall, NAT) có thể đang chặn kết nối.",
+        "invalid_code": "Mã truy cập không hợp lệ hoặc đã hết hạn. Vui lòng kiểm tra lại mã từ thiết bị gửi.",
         "offline": "Bạn hiện đang ngoại tuyến. Vui lòng kiểm tra kết nối internet và thử lại.",
         "troubleshoot_title": "Cách khắc phục:",
-        "troubleshoot_1": "Đảm bảo cả hai thiết bị đều có kết nối mạng ổn định.",
-        "troubleshoot_2": "Vô hiệu hóa VPN hoặc proxy nếu đang sử dụng.",
-        "troubleshoot_3": "Nếu bạn đang ở trong mạng doanh nghiệp, hãy thử sử dụng mạng khác hoặc dữ liệu di động.",
+        "troubleshoot_1": "Kiểm tra chính xác mã truy cập đã nhập.",
+        "troubleshoot_2": "Đảm bảo cả hai thiết bị đều đang mở ứng dụng và có kết nối mạng.",
+        "troubleshoot_3": "Thử chuyển sang mạng khác (ví dụ: dùng 4G/5G thay vì Wi-Fi công ty).",
         "back_to_home": "Quay lại trang chủ"
     }
 }

@@ -3,7 +3,7 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, AlertTriangle, Home } from 'lucide-react';
+import { AlertCircle, AlertTriangle, Home, ShieldAlert, WifiOff, SearchX } from 'lucide-react';
 
 import { useNetwork } from '@/hooks/useNetwork';
 
@@ -17,6 +17,22 @@ export const ErrorView = ({ reason, onBackToHome }: ErrorViewProps) => {
     const isOnline = useNetwork();
     const isReasonOffline = reason === 'offline';
     const isOffline = isReasonOffline || !isOnline;
+    const isRestricted = reason === 'network_restricted';
+    const isInvalidCode = reason === 'invalid_code';
+
+    const getErrorContent = () => {
+        if (isOffline) return t('error.offline');
+        if (isRestricted) return t('error.network_restricted');
+        if (isInvalidCode) return t('error.invalid_code');
+        return t('error.network_issue');
+    };
+
+    const getErrorIcon = () => {
+        if (isOffline) return <WifiOff className="h-10 w-10" />;
+        if (isRestricted) return <ShieldAlert className="h-10 w-10" />;
+        if (isInvalidCode) return <SearchX className="h-10 w-10" />;
+        return <AlertCircle className="h-10 w-10" />;
+    };
 
     return (
         <motion.div
@@ -28,7 +44,7 @@ export const ErrorView = ({ reason, onBackToHome }: ErrorViewProps) => {
             <div className="relative">
                 <div className="absolute inset-0 animate-pulse rounded-full bg-red-500/20 blur-xl" />
                 <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-red-500/10 text-red-500 ring-1 ring-red-500/20">
-                    <AlertCircle className="h-10 w-10" />
+                    {getErrorIcon()}
                 </div>
             </div>
 
@@ -37,7 +53,7 @@ export const ErrorView = ({ reason, onBackToHome }: ErrorViewProps) => {
                     {t('error.title')}
                 </h2>
                 <p className="text-muted-foreground mx-auto max-w-sm">
-                    {isOffline ? t('error.offline') : t('error.network_issue')}
+                    {getErrorContent()}
                 </p>
             </div>
 
