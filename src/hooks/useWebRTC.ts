@@ -10,7 +10,7 @@ import { useAppStore } from '@/store/useAppStore';
 import { useFileSender } from './webrtc/useFileSender';
 import { useFileReceiver } from './webrtc/useFileReceiver';
 import { useWebRTCConnection } from './webrtc/useWebRTCConnection';
-import { SEND_OFFER_DELAY } from './webrtc/constants';
+import { SEND_OFFER_DELAY, HOST_CODE_EXPIRATION } from './webrtc/constants';
 
 import { audioService } from '@/utils/audio';
 import { useNetwork } from '@/hooks/useNetwork';
@@ -21,6 +21,7 @@ export function useWebRTC() {
     const [dc, setDc] = useState<RTCDataChannel | null>(null);
 
     const {
+        mode,
         connectionStatus,
         setConnectionStatus,
         connectionCode,
@@ -54,7 +55,9 @@ export function useWebRTC() {
         const checkExpiration = () => {
             const now = Date.now();
             const elapsed = now - connectionCodeCreatedAt;
-            const remaining = 30000 - elapsed;
+            const expirationTime =
+                mode === 'host' ? HOST_CODE_EXPIRATION : 30000;
+            const remaining = expirationTime - elapsed;
 
             if (remaining <= 0) {
                 setCodeExpired(true);

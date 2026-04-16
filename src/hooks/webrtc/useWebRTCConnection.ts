@@ -5,7 +5,12 @@ import { toast } from '@/store/useNotificationStore';
 import { useQuery } from '@tanstack/react-query';
 import { useNetwork } from '@/hooks/useNetwork';
 import { pollSignal, sendSignal } from '@/lib/signaling';
-import { ICE_SERVERS, POLL_INTERVAL } from './constants';
+import {
+    ICE_SERVERS,
+    POLL_INTERVAL,
+    GUEST_SIGNAL_TIMEOUT,
+    GUEST_ICE_TIMEOUT,
+} from './constants';
 
 export function useWebRTCConnection(
     onDataChannel: (channel: RTCDataChannel) => void,
@@ -59,6 +64,8 @@ export function useWebRTCConnection(
             if (state === 'checking') {
                 // Start timeout if not already started
                 if (!iceTimeoutRef.current) {
+                    const timeoutMs =
+                        mode === 'guest' ? GUEST_ICE_TIMEOUT : 30000;
                     iceTimeoutRef.current = setTimeout(() => {
                         console.warn('ICE Connection Timeout');
                         const currentStatus =
@@ -70,7 +77,7 @@ export function useWebRTCConnection(
                             setConnectionStatus('error', 'network_restricted');
                             toast.error(t('toast.connection_issue'));
                         }
-                    }, 30000); // 30 seconds timeout
+                    }, timeoutMs);
                 }
             }
 
@@ -100,7 +107,7 @@ export function useWebRTCConnection(
 
         pcRef.current = pc;
         return pc;
-    }, [setConnectionStatus, onDataChannel, isTransferFinished, t, isOnline]);
+    }, [mode, setConnectionStatus, t, isTransferFinished, isOnline, onDataChannel]);
 
     // TanStack Query for Signaling
     const targetSignalType = mode === 'host' ? 'answer' : 'offer';
@@ -128,11 +135,12 @@ export function useWebRTCConnection(
         }
 
         // Start signaling timeout if not already started and no signal yet
-        if (!remoteSignal && !signalingTimeoutRef.current) {
+        // Guest only: if we don't find a signal within 15s, the code is likely invalid
+        if (mode === 'guest' && !remoteSignal && !signalingTimeoutRef.current) {
             signalingTimeoutRef.current = setTimeout(() => {
                 console.warn('Signaling Timeout - Code might be invalid');
                 setConnectionStatus('error', 'invalid_code');
-            }, 15000); // 15 seconds for signaling
+            }, GUEST_SIGNAL_TIMEOUT);
         }
 
         if (!remoteSignal || !pcRef.current || pcRef.current.remoteDescription)

@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useAppStore } from '@/store/useAppStore';
+import { HOST_CODE_EXPIRATION } from '@/hooks/webrtc/constants';
 
 interface HostViewProps {
     connectionCode: string;
@@ -18,7 +19,6 @@ interface HostViewProps {
     onBack: () => void;
 }
 
-const EXPIRATION_TIME = 60 * 1000;
 
 export const HostView = ({
     connectionCode,
@@ -30,7 +30,7 @@ export const HostView = ({
 }: HostViewProps) => {
     const { t } = useTranslation();
     const { connectionCodeCreatedAt } = useAppStore();
-    const [timeLeft, setTimeLeft] = useState(30);
+    const [timeLeft, setTimeLeft] = useState(HOST_CODE_EXPIRATION / 1000);
 
     useEffect(() => {
         if (!connectionCodeCreatedAt || isCodeExpired || !connectionCode)
@@ -40,7 +40,7 @@ export const HostView = ({
             const elapsed = Date.now() - connectionCodeCreatedAt;
             const remaining = Math.max(
                 0,
-                Math.ceil((EXPIRATION_TIME - elapsed) / 1000),
+                Math.ceil((HOST_CODE_EXPIRATION - elapsed) / 1000),
             );
             setTimeLeft(remaining);
         };
@@ -101,10 +101,12 @@ export const HostView = ({
                         <div className="border-border flex items-center gap-1.5 rounded-full border bg-white/10 px-2.5 py-1 transition-none!">
                             <div className="bg-primary h-1.5 w-1.5 animate-pulse rounded-full" />
                             <span className="text-[10px] font-bold tabular-nums">
-                                {timeLeft}s
+                                {Math.floor(timeLeft / 60)}:
+                                {(timeLeft % 60).toString().padStart(2, '0')}
                             </span>
                         </div>
                     )}
+
                 </div>
 
                 <div className="flex-center group relative overflow-hidden rounded-xl sm:rounded-2xl">
@@ -122,8 +124,8 @@ export const HostView = ({
                             'flex-center border-border bg-muted/50 relative z-10 h-16 w-full rounded-xl border backdrop-blur-md transition-all duration-500 sm:h-20 sm:rounded-2xl md:h-24',
                             isCodeExpired && 'blur-md grayscale',
                             isConnecting &&
-                                !isCodeExpired &&
-                                'border-primary/30 shadow-[0_0_30px_-10px_rgba(var(--primary),0.3)]',
+                            !isCodeExpired &&
+                            'border-primary/30 shadow-[0_0_30px_-10px_rgba(var(--primary),0.3)]',
                         )}
                     >
                         <div className="flex-center w-full gap-3 sm:gap-4 md:gap-6">
