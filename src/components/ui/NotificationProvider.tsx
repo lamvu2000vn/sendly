@@ -5,6 +5,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useNotificationStore } from '@/store/useNotificationStore';
 import { NotificationItem } from './NotificationItem';
 import { cn } from '@/lib/utils';
+import { isMobile } from 'react-device-detect';
 
 export const NotificationProvider: React.FC = () => {
     const notifications = useNotificationStore((state) => state.notifications);
@@ -21,8 +22,9 @@ export const NotificationProvider: React.FC = () => {
     return (
         <div
             className={cn(
-                'pointer-events-none fixed right-0 left-0 z-[100] flex flex-col items-center px-4 transition-all duration-500',
-                'top-8 pt-[env(safe-area-inset-top)]',
+                'pointer-events-none fixed right-0 left-0 z-100 flex flex-col items-center px-4 transition-all duration-500',
+                'pt-[env(safe-area-inset-top)]',
+                isMobile ? 'top-4' : 'top-8',
             )}
             aria-live="polite"
         >
