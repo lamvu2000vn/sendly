@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import { motion, useAnimation, PanInfo } from 'framer-motion';
 import {
     CheckCircle2,
     AlertCircle,
@@ -19,6 +19,7 @@ interface NotificationItemProps {
     notification: Notification;
     index: number;
     total: number;
+    position: 'top' | 'bottom';
 }
 
 const icons = {
@@ -32,12 +33,16 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
     notification,
     index,
     total,
+    position,
 }) => {
     const removeNotification = useNotificationStore(
         (state) => state.removeNotification,
     );
     const [isPaused, setIsPaused] = useState(false);
     const [isSwiped, setIsSwiped] = useState(false);
+    const [swipeDirection, setSwipeDirection] = useState<
+        'left' | 'right' | null
+    >(null);
     const controls = useAnimation();
 
     // Timer logic
@@ -84,18 +89,32 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
     const inverseIndex = index; // 0 is newest
     const scale = 1 - inverseIndex * 0.05;
     const opacity = 1 - inverseIndex * 0.2;
-    const yOffset = inverseIndex * 12;
+    // If top, stack downwards (positive y). If bottom, stack upwards (negative y).
+    const yOffset = position === 'top' ? inverseIndex * 12 : -inverseIndex * 12;
     const blur = inverseIndex * 2;
+
+    const handleDragEnd = (_: any, info: PanInfo) => {
+        const threshold = 100;
+        if (info.offset.x > threshold) {
+            setSwipeDirection('right');
+            setIsSwiped(true);
+            setTimeout(() => removeNotification(notification.id), 0);
+        } else if (info.offset.x < -threshold) {
+            setSwipeDirection('left');
+            setIsSwiped(true);
+            setTimeout(() => removeNotification(notification.id), 0);
+        }
+    };
 
     return (
         <motion.div
             layout
             initial={{
                 opacity: 0,
-                y: -32,
+                y: position === 'top' ? -32 : 32,
                 scale: 0.94,
                 filter: 'blur(20px)',
-                rotateX: -15,
+                rotateX: position === 'top' ? -15 : 15,
             }}
             animate={{
                 opacity,
@@ -108,7 +127,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
             exit={
                 isSwiped
                     ? {
-                          x: 600,
+                          x: swipeDirection === 'left' ? -600 : 600,
                           opacity: 0,
                           scale: 0.9,
                           transition: { duration: 0.4, ease: 'easeIn' },
@@ -116,8 +135,8 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
                     : {
                           opacity: 0,
                           scale: 0.9,
-                          y: -20,
-                          rotateX: 10,
+                          y: position === 'top' ? -20 : 20,
+                          rotateX: position === 'top' ? 10 : -10,
                           filter: 'blur(12px)',
                           transition: {
                               duration: 0.6,
@@ -140,17 +159,12 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.7}
-            onDragEnd={(_, info) => {
-                if (info.offset.x > 100) {
-                    setIsSwiped(true);
-                    // Use a small delay to ensure the exit animation state is captured
-                    setTimeout(() => removeNotification(notification.id), 0);
-                }
-            }}
+            onDragEnd={handleDragEnd}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
             className={cn(
-                'group pointer-events-auto absolute top-0 left-1/2 w-fit max-w-xl -translate-x-1/2 overflow-hidden',
+                'group pointer-events-auto absolute left-1/2 w-[calc(100vw-2rem)] max-w-sm -translate-x-1/2 overflow-hidden md:w-fit md:max-w-xl',
+                position === 'top' ? 'top-0' : 'bottom-0',
                 'glass cursor-grab rounded-3xl p-4 shadow-[0_20px_40px_rgba(0,0,0,0.3)] select-none active:cursor-grabbing',
                 'border-border flex items-center gap-4',
             )}
