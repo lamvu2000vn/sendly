@@ -24,20 +24,20 @@ export const ErrorView = ({ reason, onBackToHome }: ErrorViewProps) => {
     const isOnline = useNetwork();
     const isReasonOffline = reason === 'offline';
     const isOffline = isReasonOffline || !isOnline;
-    const isRestricted = reason === 'network_restricted';
+    const isRestricted = reason === 'isRestricted' || reason === 'network_restricted';
     const isInvalidCode = reason === 'invalid_code';
 
     const getErrorContent = () => {
-        if (isOffline) return t('error.offline');
-        if (isRestricted) return t('error.network_restricted');
         if (isInvalidCode) return t('error.invalid_code');
+        if (isRestricted) return t('error.network_restricted');
+        if (isOffline) return t('error.offline');
         return t('error.network_issue');
     };
 
     const getErrorIcon = () => {
-        if (isOffline) return <WifiOff className="h-10 w-10" />;
-        if (isRestricted) return <ShieldAlert className="h-10 w-10" />;
         if (isInvalidCode) return <SearchX className="h-10 w-10" />;
+        if (isRestricted) return <ShieldAlert className="h-10 w-10" />;
+        if (isOffline) return <WifiOff className="h-10 w-10" />;
         return <AlertCircle className="h-10 w-10" />;
     };
 
@@ -85,7 +85,7 @@ export const ErrorView = ({ reason, onBackToHome }: ErrorViewProps) => {
                 <Button
                     variant="ghost"
                     onClick={onBackToHome}
-                    className="h-12 gap-2 rounded-xl px-8 transition-all hover:bg-white/5 active:scale-95"
+                    className="h-12 gap-2 rounded-xl border-none px-8 hover:shadow-xl active:scale-95"
                 >
                     <Home className="h-4 w-4" />
                     {t('error.back_to_home')}

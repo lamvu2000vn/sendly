@@ -10,7 +10,7 @@ import { useAppStore } from '@/store/useAppStore';
 import { useFileSender } from './webrtc/useFileSender';
 import { useFileReceiver } from './webrtc/useFileReceiver';
 import { useWebRTCConnection } from './webrtc/useWebRTCConnection';
-import { SEND_OFFER_DELAY, HOST_CODE_EXPIRATION } from './webrtc/constants';
+import { SEND_OFFER_DELAY, HOST_CODE_EXPIRATION, GUEST_CODE_EXPIRATION } from './webrtc/constants';
 
 import { audioService } from '@/utils/audio';
 import { useNetwork } from '@/hooks/useNetwork';
@@ -56,7 +56,7 @@ export function useWebRTC() {
             const now = Date.now();
             const elapsed = now - connectionCodeCreatedAt;
             const expirationTime =
-                mode === 'host' ? HOST_CODE_EXPIRATION : 30000;
+                mode === 'host' ? HOST_CODE_EXPIRATION : GUEST_CODE_EXPIRATION;
             const remaining = expirationTime - elapsed;
 
             if (remaining <= 0) {
@@ -68,13 +68,7 @@ export function useWebRTC() {
         checkExpiration(); // Initial check
 
         return () => clearInterval(timer);
-    }, [
-        connectionStatus,
-        connectionCode,
-        isCodeExpired,
-        connectionCodeCreatedAt,
-        setCodeExpired,
-    ]);
+    }, [connectionStatus, connectionCode, isCodeExpired, connectionCodeCreatedAt, setCodeExpired, mode]);
 
     const { handleMessage, isTransferFinished, hasSuccessfulFiles } =
         useFileReceiver();

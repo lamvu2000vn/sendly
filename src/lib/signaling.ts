@@ -1,4 +1,5 @@
 import { customAlphabet } from 'nanoid';
+import { POLL_INTERVAL, SIGNALING_FETCH_TIMEOUT } from '@/hooks/webrtc/constants';
 
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const generateCode = customAlphabet(alphabet, 8);
@@ -30,7 +31,7 @@ export async function pollSignal(
 ): Promise<SignalWithMeta | null> {
     const topic = `sendly_${code}_${type}`;
     // Combine provided signal with timeout
-    const timeoutSignal = AbortSignal.timeout(30000);
+    const timeoutSignal = AbortSignal.timeout(SIGNALING_FETCH_TIMEOUT);
     const combinedSignal = signal
         ? AbortSignal.any([signal, timeoutSignal])
         : timeoutSignal;

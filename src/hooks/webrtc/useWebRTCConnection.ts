@@ -8,8 +8,10 @@ import { pollSignal, sendSignal } from '@/lib/signaling';
 import {
     ICE_SERVERS,
     POLL_INTERVAL,
-    GUEST_SIGNAL_TIMEOUT,
-    GUEST_ICE_TIMEOUT,
+    GUEST_VALIDATION_TIMEOUT,
+    GUEST_CONNECTION_TIMEOUT,
+    HOST_ICE_TIMEOUT,
+    SEND_ANSWER_DELAY,
 } from './constants';
 
 export function useWebRTCConnection(
@@ -20,7 +22,7 @@ export function useWebRTCConnection(
     const isOnline = useNetwork();
     const pcRef = useRef<RTCPeerConnection | null>(null);
     const dcRef = useRef<RTCDataChannel | null>(null);
-    const iceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const connectionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const signalingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const {
@@ -32,9 +34,9 @@ export function useWebRTCConnection(
     } = useAppStore();
 
     const cleanup = useCallback(() => {
-        if (iceTimeoutRef.current) {
-            clearTimeout(iceTimeoutRef.current);
-            iceTimeoutRef.current = null;
+        if (connectionTimeoutRef.current) {
+            clearTimeout(connectionTimeoutRef.current);
+            connectionTimeoutRef.current = null;
         }
         if (signalingTimeoutRef.current) {
             clearTimeout(signalingTimeoutRef.current);
@@ -55,18 +57,20 @@ export function useWebRTCConnection(
             console.log('ICE Connection State:', state);
 
             if (state === 'connected' || state === 'completed') {
-                if (iceTimeoutRef.current) {
-                    clearTimeout(iceTimeoutRef.current);
-                    iceTimeoutRef.current = null;
+                if (connectionTimeoutRef.current) {
+                    clearTimeout(connectionTimeoutRef.current);
+                    connectionTimeoutRef.current = null;
                 }
             }
 
             if (state === 'checking') {
                 // Start timeout if not already started
-                if (!iceTimeoutRef.current) {
+                if (!connectionTimeoutRef.current) {
                     const timeoutMs =
-                        mode === 'guest' ? GUEST_ICE_TIMEOUT : 30000;
-                    iceTimeoutRef.current = setTimeout(() => {
+                        mode === 'guest'
+                            ? GUEST_CONNECTION_TIMEOUT
+                            : HOST_ICE_TIMEOUT;
+                    connectionTimeoutRef.current = setTimeout(() => {
                         console.warn('ICE Connection Timeout');
                         const currentStatus =
                             useAppStore.getState().connectionStatus;
@@ -74,7 +78,7 @@ export function useWebRTCConnection(
                             currentStatus === 'connecting' &&
                             pc.iceConnectionState !== 'connected'
                         ) {
-                            setConnectionStatus('error', 'network_restricted');
+                            setConnectionStatus('error', 'isRestricted');
                             toast.error(t('toast.connection_issue'));
                         }
                     }, timeoutMs);
@@ -82,9 +86,9 @@ export function useWebRTCConnection(
             }
 
             if (state === 'failed') {
-                if (iceTimeoutRef.current) {
-                    clearTimeout(iceTimeoutRef.current);
-                    iceTimeoutRef.current = null;
+                if (connectionTimeoutRef.current) {
+                    clearTimeout(connectionTimeoutRef.current);
+                    connectionTimeoutRef.current = null;
                 }
 
                 if (isTransferFinished()) return;
@@ -131,26 +135,46 @@ export function useWebRTCConnection(
                 clearTimeout(signalingTimeoutRef.current);
                 signalingTimeoutRef.current = null;
             }
+            if (connectionTimeoutRef.current) {
+                clearTimeout(connectionTimeoutRef.current);
+                connectionTimeoutRef.current = null;
+            }
             return;
         }
 
-        // Start signaling timeout if not already started and no signal yet
-        // Guest only: if we don't find a signal within 15s, the code is likely invalid
+        // Phase 1: Guest Validation Timeout (15s)
         if (mode === 'guest' && !remoteSignal && !signalingTimeoutRef.current) {
             signalingTimeoutRef.current = setTimeout(() => {
                 console.warn('Signaling Timeout - Code might be invalid');
                 setConnectionStatus('error', 'invalid_code');
-            }, GUEST_SIGNAL_TIMEOUT);
+            }, GUEST_VALIDATION_TIMEOUT);
+        }
+
+        // If signal is found, clear Phase 1 and start Phase 2
+        if (remoteSignal) {
+            if (signalingTimeoutRef.current) {
+                clearTimeout(signalingTimeoutRef.current);
+                signalingTimeoutRef.current = null;
+            }
+
+            // Phase 2: Guest Connection Timeout (20s)
+            // After validation success, if P2P is not established within 20s, it's restricted
+            if (mode === 'guest' && !connectionTimeoutRef.current) {
+                connectionTimeoutRef.current = setTimeout(() => {
+                    console.warn(
+                        'Connection Timeout - Network might be restricted',
+                    );
+                    const currentStatus =
+                        useAppStore.getState().connectionStatus;
+                    if (currentStatus === 'connecting') {
+                        setConnectionStatus('error', 'isRestricted');
+                    }
+                }, GUEST_CONNECTION_TIMEOUT);
+            }
         }
 
         if (!remoteSignal || !pcRef.current || pcRef.current.remoteDescription)
             return;
-
-        // Clear timeout as soon as we get signal
-        if (signalingTimeoutRef.current) {
-            clearTimeout(signalingTimeoutRef.current);
-            signalingTimeoutRef.current = null;
-        }
 
         const handleHandshake = async () => {
             try {
@@ -199,7 +223,7 @@ export function useWebRTCConnection(
                     const answer = await pcRef.current?.createAnswer();
                     if (answer) {
                         await pcRef.current?.setLocalDescription(answer);
-                        setTimeout(sendAnswer, 2000);
+                        setTimeout(sendAnswer, SEND_ANSWER_DELAY);
                     }
                 }
             } catch (err) {
