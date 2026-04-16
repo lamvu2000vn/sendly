@@ -118,7 +118,7 @@ export const FileDropZone = ({ onFileSelect }: FileDropZoneProps) => {
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
-                                className="bg-primary/95 text-primary-foreground fixed inset-0 z-100 flex flex-col items-center justify-center p-6 backdrop-blur-md"
+                                className="bg-primary/95 text-primary-foreground fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 backdrop-blur-md"
                             >
                                 <motion.div
                                     initial={{ scale: 0.5, opacity: 0 }}

@@ -16,7 +16,9 @@ export const NotificationProvider: React.FC = () => {
         setMounted(true);
         const checkMobile = () => {
             // Kết hợp cả User Agent (react-device-detect) và Screen Width để tối ưu đa nền tảng
-            setIsMobileDevice(isMobile || window.innerWidth < 768);
+            // Thêm check touch points để nhận diện tốt hơn trên iOS thực tế
+            const hasTouch = typeof window !== 'undefined' && (navigator.maxTouchPoints > 0 || 'ontouchstart' in window);
+            setIsMobileDevice(isMobile || window.innerWidth < 768 || hasTouch);
         };
         checkMobile();
         window.addEventListener('resize', checkMobile);
@@ -31,10 +33,10 @@ export const NotificationProvider: React.FC = () => {
     return (
         <div
             className={cn(
-                'pointer-events-none fixed right-0 left-0 z-100 flex flex-col items-center px-4 transition-all duration-500',
+                'pointer-events-none fixed right-0 left-0 z-[100] flex flex-col items-center px-4 transition-all duration-500',
                 position === 'top'
-                    ? 'top-6 pt-[env(safe-area-inset-top)]'
-                    : 'bottom-10 pb-[env(safe-area-inset-bottom)]',
+                    ? 'top-8 pt-[env(safe-area-inset-top)]'
+                    : 'bottom-12 pb-[env(safe-area-inset-bottom)]',
             )}
             aria-live="polite"
         >

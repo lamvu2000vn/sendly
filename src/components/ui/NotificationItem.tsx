@@ -167,6 +167,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
                 position === 'top' ? 'top-0' : 'bottom-0',
                 'glass cursor-grab rounded-3xl p-4 shadow-[0_20px_40px_rgba(0,0,0,0.3)] select-none active:cursor-grabbing',
                 'border-border flex items-center gap-4',
+                'z-[101]', // Luôn cao hơn container để tránh bị che
             )}
         >
             <div
