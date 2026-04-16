@@ -70,7 +70,7 @@ export function useWebRTC() {
         return () => clearInterval(timer);
     }, [connectionStatus, connectionCode, isCodeExpired, connectionCodeCreatedAt, setCodeExpired, mode]);
 
-    const { handleMessage, isTransferFinished, hasSuccessfulFiles } =
+    const { handleMessage, isTransferFinished, hasSuccessfulFiles, hasAnyFiles } =
         useFileReceiver();
     const { sendFiles, resumeSending } = useFileSender(dc);
 
@@ -86,7 +86,7 @@ export function useWebRTC() {
 
             channel.onclose = () => {
                 setConnectionStatus('disconnected');
-                if (hasSuccessfulFiles()) {
+                if (hasAnyFiles()) {
                     toast.info(t('toast.partner_disconnected'));
                 } else {
                     clearTransfers();

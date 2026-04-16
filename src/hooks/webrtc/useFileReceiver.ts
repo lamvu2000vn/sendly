@@ -45,6 +45,10 @@ export function useFileReceiver() {
         return transferFilesRef.current.some((f) => f.status === 'completed');
     }, []);
 
+    const hasAnyFiles = useCallback(() => {
+        return transferFilesRef.current.length > 0;
+    }, []);
+
     const handleMessage = useCallback(
         async (event: MessageEvent) => {
             try {
@@ -129,5 +133,10 @@ export function useFileReceiver() {
         [addFiles, updateFileProgress, t],
     );
 
-    return { handleMessage, isTransferFinished, hasSuccessfulFiles };
+    return {
+        handleMessage,
+        isTransferFinished,
+        hasSuccessfulFiles,
+        hasAnyFiles,
+    };
 }

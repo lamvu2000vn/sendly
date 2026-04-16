@@ -111,10 +111,10 @@ export default function HomePageComponent() {
     const handleDisconnect = (stayOnCurrentMode = false) => {
         const files = transferState?.files || [];
         const isTransferring = files.some((f) => f.status === 'transferring');
-        const hasSuccessfulFiles = files.some((f) => f.status === 'completed');
+        const hasAnyFiles = files.length > 0;
 
-        // If no files were successful, always reset the app (go back to tab selection)
-        const effectiveStayOnMode = hasSuccessfulFiles
+        // If no files exist, always reset the app (go back to tab selection)
+        const effectiveStayOnMode = hasAnyFiles
             ? stayOnCurrentMode
             : false;
 
@@ -133,13 +133,9 @@ export default function HomePageComponent() {
         performDisconnect();
     };
 
-    const hasReceivedFiles =
-        transferState &&
-        transferState.files.some(
-            (f) => f.type === 'received' && f.status === 'completed',
-        );
+    const hasAnyFiles = transferState && transferState.files.length > 0;
 
-    const showTransferView = isConnected || hasReceivedFiles;
+    const showTransferView = isConnected || hasAnyFiles;
     const isNoMode = !mode || (mode !== 'host' && mode !== 'guest');
 
     const renderTitle = () => {
