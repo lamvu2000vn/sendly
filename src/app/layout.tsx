@@ -112,6 +112,7 @@ export default function RootLayout({
                 <QueryProvider>
                     <ThemeProvider>
                         <I18nProvider>
+
                             <div className="relative z-10 flex min-h-screen flex-col">
                                 {children}
                             </div>

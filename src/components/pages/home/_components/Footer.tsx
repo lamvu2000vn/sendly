@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import { LanguageToggle } from '@/components/ui/LanguageToggle';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 
-export const Footer = () => (
+export const Footer = memo(() => (
     <footer className="text-muted-foreground flex flex-col items-center space-y-6 pb-8 text-center text-xs opacity-100">
         <div className="space-y-2">
             <p>© 2026 Sendly — Peer-to-Peer Encryption Enabled</p>
@@ -12,4 +13,6 @@ export const Footer = () => (
             <ThemeToggle className="opacity-100" />
         </div>
     </footer>
-);
+));
+
+Footer.displayName = 'Footer';

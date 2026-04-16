@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 const GenerateButton = forwardRef<
     HTMLButtonElement,
     React.ComponentProps<typeof Button>
->(({ className, onClick }, ref) => {
+>(({ className, ...props }, ref) => {
     const { t } = useTranslation('common');
 
     return (
@@ -16,7 +16,7 @@ const GenerateButton = forwardRef<
                 'glow-primary shadow-primary/20 h-16 w-full rounded-full text-lg font-bold shadow-xl transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] sm:h-20 sm:text-xl',
                 className,
             )}
-            onClick={onClick}
+            {...props}
         >
             {t('sender.generate_btn')}
         </Button>

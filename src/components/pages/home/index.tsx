@@ -13,11 +13,24 @@ import { ModeSelection } from '@/components/pages/home/_components/ModeSelection
 import { Hero } from '@/components/pages/home/_components/Hero';
 import { Footer } from '@/components/pages/home/_components/Footer';
 import { ConnectionCard } from '@/components/pages/home/_components/ConnectionCard';
-import { ErrorView } from '@/components/pages/home/_components/ErrorView';
 import DefaultCardSkeleton from '@/components/skeletons/DefaultCardSkeleton';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { lazyNamed } from '@/utils/lazy-named';
+
+const ErrorView = makeAsyncComponent(
+    'ErrorView',
+    lazyNamed(
+        () => import('@/components/pages/home/_components/ErrorView'),
+        'ErrorView',
+    ),
+    <DefaultCardSkeleton />,
+);
+
+const prefetchHost = () =>
+    import('@/components/pages/home/_components/HostView');
+const prefetchGuest = () =>
+    import('@/components/pages/home/_components/GuestView');
 
 const ConfirmDialog = makeAsyncComponent(
     'ConfirmDialog',
@@ -228,6 +241,8 @@ export default function HomePageComponent() {
                                             startConnection();
                                         }}
                                         onGuest={() => setMode('guest')}
+                                        onPrefetchHost={prefetchHost}
+                                        onPrefetchGuest={prefetchGuest}
                                     />
                                 ) : mode === 'host' ? (
                                     <div className="mt-4">

@@ -10,9 +10,16 @@ import GenerateButton from './GenerateButton';
 interface ModeSelectionProps {
     onHost: () => void;
     onGuest: () => void;
+    onPrefetchHost: () => void;
+    onPrefetchGuest: () => void;
 }
 
-export function ModeSelection({ onHost, onGuest }: ModeSelectionProps) {
+export function ModeSelection({
+    onHost,
+    onGuest,
+    onPrefetchHost,
+    onPrefetchGuest,
+}: ModeSelectionProps) {
     const { t } = useTranslation();
 
     return (
@@ -106,7 +113,10 @@ export function ModeSelection({ onHost, onGuest }: ModeSelectionProps) {
                             },
                         }}
                     >
-                        <GenerateButton onClick={onHost} />
+                        <GenerateButton
+                            onClick={onHost}
+                            onMouseEnter={onPrefetchHost}
+                        />
                     </motion.div>
 
                     <motion.div
@@ -142,6 +152,7 @@ export function ModeSelection({ onHost, onGuest }: ModeSelectionProps) {
                             variant="secondary"
                             className="border-border h-12 w-full rounded-2xl border text-base font-bold shadow-lg transition-all duration-500 hover:bg-white/10 sm:h-14"
                             onClick={onGuest}
+                            onMouseEnter={onPrefetchGuest}
                         >
                             {t('sender.enter_code_btn')}
                         </Button>

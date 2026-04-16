@@ -1,10 +1,11 @@
 'use client';
 
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 
-export const Hero = () => {
+export const Hero = memo(() => {
     const { t } = useTranslation();
     return (
         <div className="flex flex-col items-center space-y-6 text-center">
@@ -51,4 +52,6 @@ export const Hero = () => {
             </div>
         </div>
     );
-};
+});
+
+Hero.displayName = 'Hero';
