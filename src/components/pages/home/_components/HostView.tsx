@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { useAppStore } from '@/store/useAppStore';
 import { HOST_CODE_EXPIRATION } from '@/hooks/webrtc/constants';
+import GenerateButton from './GenerateButton';
 
 interface HostViewProps {
     connectionCode: string;
@@ -80,12 +81,9 @@ export const HostView = ({
                             {t('sender.ready_desc')}
                         </p>
                     </div>
-                    <Button
-                        className="glow-primary shadow-primary/20 h-14 w-full rounded-2xl text-lg font-bold shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98] sm:h-18"
+                    <GenerateButton
                         onClick={onStart}
-                    >
-                        {t('sender.generate_btn')}
-                    </Button>
+                    />
                 </div>
             </motion.div>
         );
@@ -129,8 +127,8 @@ export const HostView = ({
                             'flex-center border-border bg-muted/50 relative z-10 h-16 w-full rounded-xl border backdrop-blur-md transition-all duration-500 sm:h-20 sm:rounded-2xl md:h-24',
                             isCodeExpired && 'blur-md grayscale',
                             isConnecting &&
-                                !isCodeExpired &&
-                                'border-primary/30 shadow-[0_0_30px_-10px_rgba(var(--primary),0.3)]',
+                            !isCodeExpired &&
+                            'border-primary/30 shadow-[0_0_30px_-10px_rgba(var(--primary),0.3)]',
                         )}
                     >
                         <div className="flex-center w-full gap-3 sm:gap-4 md:gap-6">
@@ -170,7 +168,7 @@ export const HostView = ({
                                 <Button
                                     size="sm"
                                     onClick={onStart}
-                                    className="bg-primary h-7 gap-2 rounded-xl px-5 text-xs font-bold shadow-xl ring-1 ring-white/20 transition-all duration-500 hover:scale-105 active:scale-95 sm:h-9"
+                                    className="bg-primary h-7 gap-2 rounded-full px-5 text-xs font-bold shadow-xl ring-1 ring-white/20 transition-all duration-500 hover:scale-105 active:scale-95 sm:h-9"
                                 >
                                     <RefreshCw className="h-3.5 w-3.5" />
                                     {t('sender.regenerate_btn')}

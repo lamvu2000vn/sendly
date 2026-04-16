@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ZapIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import GenerateButton from './GenerateButton';
 
 interface ModeSelectionProps {
     onHost: () => void;
@@ -105,12 +106,9 @@ export function ModeSelection({ onHost, onGuest }: ModeSelectionProps) {
                             },
                         }}
                     >
-                        <Button
-                            className="glow-primary shadow-primary/20 h-16 w-full rounded-2xl text-lg font-bold shadow-xl transition-all duration-500 hover:scale-[1.02] active:scale-[0.98] sm:h-20 sm:text-xl"
+                        <GenerateButton
                             onClick={onHost}
-                        >
-                            {t('sender.generate_btn')}
-                        </Button>
+                        />
                     </motion.div>
 
                     <motion.div
