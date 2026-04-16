@@ -68,6 +68,7 @@
         from {
             transform: rotate(0deg);
         }
+
         to {
             transform: rotate(360deg);
         }
@@ -159,19 +160,6 @@
         @apply border-border outline-ring/50;
     }
 
-    /* Unified Theme Transitions: Ensure smooth color morphing when switching dark/light mode */
-    html,
-    body {
-        @apply transition-colors duration-500 ease-in-out;
-    }
-
-    /* Apply global color transitions to all elements to capture text, background, and border changes */
-    *,
-    ::before,
-    ::after {
-        @apply transition-colors duration-500 ease-in-out;
-    }
-
     body {
         @apply bg-background text-foreground selection:bg-primary/30 selection:text-primary overflow-x-hidden;
     }
@@ -247,6 +235,16 @@
     .flex-center {
         @apply flex items-center justify-center;
     }
+}
+
+html,
+body {
+    transition:
+        background-color 500ms ease-in-out,
+        color 500ms ease-in-out,
+        border-color 500ms ease-in-out,
+        outline-color 500ms ease-in-out,
+        text-decoration-color 500ms ease-in-out;
 }
 
 /* Page Transitions */

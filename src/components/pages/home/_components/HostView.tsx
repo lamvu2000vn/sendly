@@ -81,9 +81,7 @@ export const HostView = ({
                             {t('sender.ready_desc')}
                         </p>
                     </div>
-                    <GenerateButton
-                        onClick={onStart}
-                    />
+                    <GenerateButton onClick={onStart} />
                 </div>
             </motion.div>
         );
@@ -127,8 +125,8 @@ export const HostView = ({
                             'flex-center border-border bg-muted/50 relative z-10 h-16 w-full rounded-xl border backdrop-blur-md transition-all duration-500 sm:h-20 sm:rounded-2xl md:h-24',
                             isCodeExpired && 'blur-md grayscale',
                             isConnecting &&
-                            !isCodeExpired &&
-                            'border-primary/30 shadow-[0_0_30px_-10px_rgba(var(--primary),0.3)]',
+                                !isCodeExpired &&
+                                'border-primary/30 shadow-[0_0_30px_-10px_rgba(var(--primary),0.3)]',
                         )}
                     >
                         <div className="flex-center w-full gap-3 sm:gap-4 md:gap-6">

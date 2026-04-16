@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { useAppStore } from '@/store/useAppStore';
 
 export default function ThemeProvider({
@@ -10,7 +10,10 @@ export default function ThemeProvider({
 }) {
     const { theme } = useAppStore();
 
-    useEffect(() => {
+    // useLayoutEffect runs synchronously after DOM mutations but BEFORE the browser paints.
+    // This ensures the .dark class is applied immediately when theme changes,
+    // eliminating the render-cycle delay that causes text color to lag.
+    useLayoutEffect(() => {
         const root = window.document.documentElement;
 
         const applyTheme = (theme: 'light' | 'dark' | 'system') => {

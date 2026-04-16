@@ -106,9 +106,7 @@ export function ModeSelection({ onHost, onGuest }: ModeSelectionProps) {
                             },
                         }}
                     >
-                        <GenerateButton
-                            onClick={onHost}
-                        />
+                        <GenerateButton onClick={onHost} />
                     </motion.div>
 
                     <motion.div
@@ -122,7 +120,7 @@ export function ModeSelection({ onHost, onGuest }: ModeSelectionProps) {
                             <Separator />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background/40 text-muted-foreground border-border dark:border-border rounded-full border px-5 py-1.5 text-[10px] font-black tracking-[0.2em] uppercase shadow-sm backdrop-blur-xl">
+                            <span className="bg-background/40 text-muted-foreground border-border rounded-full border px-5 py-1.5 text-[10px] font-black tracking-[0.2em] uppercase shadow-sm backdrop-blur-xl">
                                 {t('common.or') || 'or'}
                             </span>
                         </div>
