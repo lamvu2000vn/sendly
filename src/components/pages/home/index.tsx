@@ -114,9 +114,7 @@ export default function HomePageComponent() {
         const hasAnyFiles = files.length > 0;
 
         // If no files exist, always reset the app (go back to tab selection)
-        const effectiveStayOnMode = hasAnyFiles
-            ? stayOnCurrentMode
-            : false;
+        const effectiveStayOnMode = hasAnyFiles ? stayOnCurrentMode : false;
 
         const performDisconnect = () => {
             disconnect(effectiveStayOnMode);

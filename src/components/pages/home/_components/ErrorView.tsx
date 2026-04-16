@@ -24,7 +24,8 @@ export const ErrorView = ({ reason, onBackToHome }: ErrorViewProps) => {
     const isOnline = useNetwork();
     const isReasonOffline = reason === 'offline';
     const isOffline = isReasonOffline || !isOnline;
-    const isRestricted = reason === 'isRestricted' || reason === 'network_restricted';
+    const isRestricted =
+        reason === 'isRestricted' || reason === 'network_restricted';
     const isInvalidCode = reason === 'invalid_code';
 
     const getErrorContent = () => {

@@ -111,7 +111,14 @@ export function useWebRTCConnection(
 
         pcRef.current = pc;
         return pc;
-    }, [mode, setConnectionStatus, t, isTransferFinished, isOnline, onDataChannel]);
+    }, [
+        mode,
+        setConnectionStatus,
+        t,
+        isTransferFinished,
+        isOnline,
+        onDataChannel,
+    ]);
 
     // TanStack Query for Signaling
     const targetSignalType = mode === 'host' ? 'answer' : 'offer';

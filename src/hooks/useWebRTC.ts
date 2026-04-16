@@ -10,7 +10,11 @@ import { useAppStore } from '@/store/useAppStore';
 import { useFileSender } from './webrtc/useFileSender';
 import { useFileReceiver } from './webrtc/useFileReceiver';
 import { useWebRTCConnection } from './webrtc/useWebRTCConnection';
-import { SEND_OFFER_DELAY, HOST_CODE_EXPIRATION, GUEST_CODE_EXPIRATION } from './webrtc/constants';
+import {
+    SEND_OFFER_DELAY,
+    HOST_CODE_EXPIRATION,
+    GUEST_CODE_EXPIRATION,
+} from './webrtc/constants';
 
 import { audioService } from '@/utils/audio';
 import { useNetwork } from '@/hooks/useNetwork';
@@ -68,10 +72,21 @@ export function useWebRTC() {
         checkExpiration(); // Initial check
 
         return () => clearInterval(timer);
-    }, [connectionStatus, connectionCode, isCodeExpired, connectionCodeCreatedAt, setCodeExpired, mode]);
+    }, [
+        connectionStatus,
+        connectionCode,
+        isCodeExpired,
+        connectionCodeCreatedAt,
+        setCodeExpired,
+        mode,
+    ]);
 
-    const { handleMessage, isTransferFinished, hasSuccessfulFiles, hasAnyFiles } =
-        useFileReceiver();
+    const {
+        handleMessage,
+        isTransferFinished,
+        hasSuccessfulFiles,
+        hasAnyFiles,
+    } = useFileReceiver();
     const { sendFiles, resumeSending } = useFileSender(dc);
 
     const { clearTransfers, deleteFile, cancelTransfer, transferState } =
@@ -110,7 +125,7 @@ export function useWebRTC() {
             handleMessage,
             setConnectionStatus,
             t,
-            hasSuccessfulFiles,
+            hasAnyFiles,
             clearTransfers,
             setConnectionCode,
             setMode,

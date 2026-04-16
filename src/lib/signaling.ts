@@ -1,5 +1,5 @@
 import { customAlphabet } from 'nanoid';
-import { POLL_INTERVAL, SIGNALING_FETCH_TIMEOUT } from '@/hooks/webrtc/constants';
+import { SIGNALING_FETCH_TIMEOUT } from '@/hooks/webrtc/constants';
 
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const generateCode = customAlphabet(alphabet, 8);

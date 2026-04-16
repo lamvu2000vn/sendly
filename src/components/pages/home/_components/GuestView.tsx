@@ -134,7 +134,7 @@ export const GuestView = ({
                                     className={cn(
                                         'bg-muted focus-visible:ring-primary/50 focus-visible:border-primary/50 border-border relative h-16 rounded-xl text-center text-lg font-bold tracking-[0.5em] uppercase backdrop-blur-md transition-all duration-500 placeholder:text-sm placeholder:font-black placeholder:tracking-widest sm:h-20 sm:rounded-2xl sm:text-2xl sm:tracking-[0.7em] sm:placeholder:text-lg md:h-24 md:text-3xl md:placeholder:text-xl',
                                         isCodeValid &&
-                                        'border-primary/50 ring-primary/20 bg-primary/5 ring-4',
+                                            'border-primary/50 ring-primary/20 bg-primary/5 ring-4',
                                     )}
                                     disabled={isConnecting}
                                 />

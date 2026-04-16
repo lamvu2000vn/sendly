@@ -20,7 +20,6 @@ interface HostViewProps {
     onBack: () => void;
 }
 
-
 export const HostView = ({
     connectionCode,
     isConnecting,
@@ -56,12 +55,7 @@ export const HostView = ({
         updateTimer();
 
         return () => clearInterval(timer);
-    }, [
-        connectionCodeCreatedAt,
-        isCodeExpired,
-        connectionCode,
-        isSignalFound,
-    ]);
+    }, [connectionCodeCreatedAt, isCodeExpired, connectionCode, isSignalFound]);
 
     if (!connectionCode && !isConnecting) {
         return (
@@ -118,7 +112,6 @@ export const HostView = ({
                             </span>
                         </div>
                     )}
-
                 </div>
 
                 <div className="flex-center group relative overflow-hidden rounded-xl sm:rounded-2xl">
@@ -136,8 +129,8 @@ export const HostView = ({
                             'flex-center border-border bg-muted/50 relative z-10 h-16 w-full rounded-xl border backdrop-blur-md transition-all duration-500 sm:h-20 sm:rounded-2xl md:h-24',
                             isCodeExpired && 'blur-md grayscale',
                             isConnecting &&
-                            !isCodeExpired &&
-                            'border-primary/30 shadow-[0_0_30px_-10px_rgba(var(--primary),0.3)]',
+                                !isCodeExpired &&
+                                'border-primary/30 shadow-[0_0_30px_-10px_rgba(var(--primary),0.3)]',
                         )}
                     >
                         <div className="flex-center w-full gap-3 sm:gap-4 md:gap-6">
@@ -231,7 +224,7 @@ export const HostView = ({
                             {!isCodeExpired && (
                                 <div className="flex items-center gap-2">
                                     <div className="bg-primary/20 h-2 w-2 animate-ping rounded-full" />
-                                    <p className="text-xs font-bold tracking-widest uppercase opacity-80 text-muted-foreground">
+                                    <p className="text-muted-foreground text-xs font-bold tracking-widest uppercase opacity-80">
                                         {t('sender.waiting_title', 'Waiting')}
                                     </p>
                                 </div>
