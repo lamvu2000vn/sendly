@@ -81,12 +81,8 @@ export function useWebRTC() {
         mode,
     ]);
 
-    const {
-        handleMessage,
-        isTransferFinished,
-        hasSuccessfulFiles,
-        hasAnyFiles,
-    } = useFileReceiver();
+    const { handleMessage, isTransferFinished, hasAnyFiles } =
+        useFileReceiver();
     const { sendFiles, resumeSending } = useFileSender(dc);
 
     const { clearTransfers, deleteFile, cancelTransfer, transferState } =

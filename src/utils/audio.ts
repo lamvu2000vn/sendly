@@ -52,7 +52,6 @@ class AudioService {
         try {
             this.init();
             // Upward arpeggio for success
-            const now = this.ctx!.currentTime;
             this.createOscillator(523.25, 'sine', 0.5); // C5
             setTimeout(() => this.createOscillator(659.25, 'sine', 0.5), 50); // E5
             setTimeout(() => this.createOscillator(783.99, 'sine', 0.5), 100); // G5
