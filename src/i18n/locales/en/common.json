@@ -119,5 +119,10 @@
         "troubleshoot_2": "Try switching to a different network (e.g., use 4G/5G instead of corporate Wi-Fi).",
         "troubleshoot_3": "Disable VPN, Proxy, or firewall software if you are using one.",
         "back_to_home": "Back to Home"
+    },
+    "footer": {
+        "copyright": "© 2026 Sendly — Peer-to-Peer Encryption Enabled",
+        "description": "Uses ephemeral signaling for private handshake."
     }
 }
+

@@ -86,7 +86,13 @@ export const viewport: Viewport = {
 
 import ThemeProvider from '@/components/providers/ThemeProvider';
 import { NotificationProvider } from '@/components/ui/NotificationProvider';
-import { NetworkMonitor } from '@/components/common/NetworkMonitor';
+import { Suspense } from 'react';
+import { lazyNamed } from '@/utils/lazy-named';
+
+const NetworkMonitor = lazyNamed(
+    () => import('@/components/common/NetworkMonitor'),
+    'NetworkMonitor',
+);
 
 export default function RootLayout({
     children,
@@ -112,11 +118,13 @@ export default function RootLayout({
                 <QueryProvider>
                     <ThemeProvider>
                         <I18nProvider>
+                            <Suspense fallback={null}>
+                                <NetworkMonitor />
+                            </Suspense>
 
                             <div className="relative z-10 flex min-h-screen flex-col">
                                 {children}
                             </div>
-                            <NetworkMonitor />
                         </I18nProvider>
                     </ThemeProvider>
                 </QueryProvider>

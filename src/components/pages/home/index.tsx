@@ -1,5 +1,3 @@
-'use client';
-
 import { useAppStore } from '@/store/useAppStore';
 import { useWebRTC } from '@/hooks/useWebRTC';
 
@@ -18,6 +16,12 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { lazyNamed } from '@/utils/lazy-named';
 
+const prefetchHost = () =>
+    import('@/components/pages/home/_components/HostView');
+
+const prefetchGuest = () =>
+    import('@/components/pages/home/_components/GuestView');
+
 const ErrorView = makeAsyncComponent(
     'ErrorView',
     lazyNamed(
@@ -26,11 +30,6 @@ const ErrorView = makeAsyncComponent(
     ),
     <DefaultCardSkeleton />,
 );
-
-const prefetchHost = () =>
-    import('@/components/pages/home/_components/HostView');
-const prefetchGuest = () =>
-    import('@/components/pages/home/_components/GuestView');
 
 const ConfirmDialog = makeAsyncComponent(
     'ConfirmDialog',

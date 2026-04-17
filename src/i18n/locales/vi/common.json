@@ -119,5 +119,10 @@
         "troubleshoot_2": "Đảm bảo cả hai thiết bị đều đang mở ứng dụng và có kết nối mạng.",
         "troubleshoot_3": "Thử chuyển sang mạng khác (ví dụ: dùng 4G/5G thay vì Wi-Fi công ty).",
         "back_to_home": "Quay lại trang chủ"
+    },
+    "footer": {
+        "copyright": "© 2026 Sendly — Đã bật mã hóa ngang hàng (P2P)",
+        "description": "Sử dụng tín hiệu ngắn hạn để kết nối riêng tư."
     }
 }
+
