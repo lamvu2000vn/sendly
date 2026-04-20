@@ -91,10 +91,10 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
                                     key={t.key}
                                     onClick={() => setTheme(t.key)}
                                     className={cn(
-                                        'group relative flex w-full items-center gap-3 overflow-hidden rounded-2xl p-2.5 transition-all duration-500',
+                                        'group relative flex w-full items-center gap-3 overflow-hidden rounded-2xl p-2.5 transition-all duration-300 outline-none',
                                         isActive
                                             ? 'bg-primary/10 text-primary shadow-sm'
-                                            : 'text-muted-foreground hover:text-foreground hover:bg-border',
+                                            : 'text-muted-foreground hover:text-foreground hover:bg-border focus-visible:bg-border',
                                     )}
                                 >
                                     {isActive && (
@@ -111,7 +111,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
 
                                     <div
                                         className={cn(
-                                            'border-border bg-background/50 relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border shadow-md transition-all duration-500',
+                                            'border-border bg-background/50 relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border shadow-md transition-all duration-300',
                                             isActive
                                                 ? 'ring-primary/20 ring-offset-background/50 scale-110 ring-2 ring-offset-2'
                                                 : 'group-hover:scale-105',
