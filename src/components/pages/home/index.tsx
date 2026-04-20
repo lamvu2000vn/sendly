@@ -36,6 +36,11 @@ const ConfirmDialog = makeAsyncComponent(
     lazy(() => import('@/components/dialogs/ConfirmDialog')),
 );
 
+const HelpDialog = makeAsyncComponent(
+    'HelpDialog',
+    lazy(() => import('@/components/dialogs/HelpDialog')),
+);
+
 const HostView = makeAsyncComponent(
     'HostView',
     lazyNamed(
@@ -95,6 +100,7 @@ export default function HomePageComponent() {
         message: '',
         onConfirm: () => {},
     });
+    const [helpOpen, setHelpOpen] = useState(false);
 
     useEffect(() => {
         if (mode !== 'host' && mode !== 'guest') {
@@ -279,8 +285,10 @@ export default function HomePageComponent() {
                     </AnimatePresence>
                 </ConnectionCard>
 
-                <Footer />
+                <Footer onOpenGuide={() => setHelpOpen(true)} />
             </div>
+
+            <HelpDialog open={helpOpen} onOpenChange={setHelpOpen} />
 
             <ConfirmDialog
                 open={confirmConfig.open}

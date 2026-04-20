@@ -123,5 +123,16 @@
     "footer": {
         "copyright": "© 2026 Sendly — Peer-to-Peer Encryption Enabled",
         "description": "Uses ephemeral signaling for private handshake."
+    },
+    "guide": {
+        "title": "User Guide",
+        "trigger": "Guide",
+        "step_1_title": "1. Select Mode",
+        "step_1_desc": "The sender selects 'Generate access key'. The receiver selects 'Enter code'.",
+        "step_2_title": "2. Connect",
+        "step_2_desc": "Enter the 8-character code from the sender into the receiver and click 'Establish Connection'.",
+        "step_3_title": "3. Transfer",
+        "step_3_desc": "Once connected, you can drag and drop or select files to send. Files are transferred directly between devices.",
+        "p2p_note": "Note: Sendly uses WebRTC for direct data transfer. Your data does not pass through any server, ensuring maximum speed and absolute privacy."
     }
 }

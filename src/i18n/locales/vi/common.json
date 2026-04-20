@@ -123,5 +123,16 @@
     "footer": {
         "copyright": "© 2026 Sendly — Đã bật mã hóa ngang hàng (P2P)",
         "description": "Sử dụng tín hiệu ngắn hạn để kết nối riêng tư."
+    },
+    "guide": {
+        "title": "Hướng dẫn sử dụng",
+        "trigger": "Hướng dẫn",
+        "step_1_title": "1. Chọn chế độ",
+        "step_1_desc": "Thiết bị gửi chọn 'Tạo mã truy cập'. Thiết bị nhận chọn 'Nhập mã'.",
+        "step_2_title": "2. Kết nối",
+        "step_2_desc": "Nhập mã 8 ký tự từ thiết bị gửi vào thiết bị nhận và nhấn 'Thiết lập kết nối'.",
+        "step_3_title": "3. Truyền tải",
+        "step_3_desc": "Sau khi kết nối, bạn có thể kéo thả hoặc chọn tệp để gửi. Tệp sẽ được truyền trực tiếp giữa 2 thiết bị.",
+        "p2p_note": "Lưu ý: Sendly sử dụng công nghệ WebRTC để truyền dữ liệu trực tiếp. Dữ liệu của bạn không đi qua máy chủ, đảm bảo tốc độ tối đa và tính riêng tư tuyệt đối."
     }
 }
