@@ -88,7 +88,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                                     key={lang.code}
                                     onClick={() => changeLanguage(lang.code)}
                                     className={cn(
-                                        'group relative flex w-full items-center gap-3 overflow-hidden rounded-2xl p-2.5 transition-all duration-300',
+                                        'group relative flex w-full items-center gap-3 overflow-hidden rounded-2xl p-2.5 transition-all duration-300 outline-none',
                                         isActive
                                             ? 'bg-primary/10 text-primary shadow-sm'
                                             : 'text-muted-foreground hover:text-foreground hover:bg-border',
@@ -108,7 +108,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
 
                                     <div
                                         className={cn(
-                                            'border-border relative h-8 w-8 shrink-0 overflow-hidden rounded-full border shadow-md transition-all duration-500',
+                                            'border-border relative h-8 w-8 shrink-0 overflow-hidden rounded-full border shadow-md transition-all duration-300',
                                             isActive
                                                 ? 'ring-primary/20 ring-offset-background/50 scale-110 ring-2 ring-offset-2'
                                                 : 'group-hover:scale-105',

@@ -94,7 +94,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
                                         'group relative flex w-full items-center gap-3 overflow-hidden rounded-2xl p-2.5 transition-all duration-300 outline-none',
                                         isActive
                                             ? 'bg-primary/10 text-primary shadow-sm'
-                                            : 'text-muted-foreground hover:text-foreground hover:bg-border focus-visible:bg-border',
+                                            : 'text-muted-foreground hover:text-foreground hover:bg-border',
                                     )}
                                 >
                                     {isActive && (
