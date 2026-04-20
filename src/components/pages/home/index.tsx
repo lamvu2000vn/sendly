@@ -15,6 +15,7 @@ import DefaultCardSkeleton from '@/components/skeletons/DefaultCardSkeleton';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { lazyNamed } from '@/utils/lazy-named';
+import { audioService } from '@/utils/audio';
 
 const prefetchHost = () =>
     import('@/components/pages/home/_components/HostView');
@@ -114,6 +115,7 @@ export default function HomePageComponent() {
 
     const handleCopy = () => {
         if (connectionCode) {
+            audioService.playCopy();
             navigator.clipboard.writeText(connectionCode);
             toast.success(t('toast.copy_success'));
         }

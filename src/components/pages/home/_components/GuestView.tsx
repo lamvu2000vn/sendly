@@ -34,10 +34,10 @@ export const GuestView = ({
     const { isSignalFound } = useWebRTC();
     const isCodeValid = inputCode.length === CODE_LENGTH;
 
-    // Play subtle pop sound when code becomes valid
+    // Play validation sound when code becomes valid
     useEffect(() => {
         if (isCodeValid) {
-            audioService.playPop();
+            audioService.playValidation();
         }
     }, [isCodeValid]);
 

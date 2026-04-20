@@ -71,6 +71,18 @@ class AudioService {
         }
     }
 
+    public playDisconnect() {
+        try {
+            this.init();
+            // Downward sequence for disconnect
+            this.createOscillator(392.0, 'sine', 0.3); // G4
+            setTimeout(() => this.createOscillator(329.63, 'sine', 0.3), 80); // E4
+            setTimeout(() => this.createOscillator(261.63, 'sine', 0.3), 160); // C4
+        } catch (e) {
+            console.warn('Audio playback failed:', e);
+        }
+    }
+
     public playPop() {
         try {
             this.init();
@@ -78,6 +90,28 @@ class AudioService {
             this.createOscillator(880, 'sine', 0.1);
         } catch (e) {
             // Silently ignore audio errors on user interaction
+        }
+    }
+
+    public playValidation() {
+        try {
+            this.init();
+            // Two quick high-pitched pulses for validation
+            this.createOscillator(1046.5, 'sine', 0.15); // C6
+            setTimeout(() => this.createOscillator(1318.51, 'sine', 0.15), 60); // E6
+        } catch (e) {
+            console.warn('Audio playback failed:', e);
+        }
+    }
+
+    public playCopy() {
+        try {
+            this.init();
+            // Subtle, clean double-tone for copy confirmation
+            this.createOscillator(700, 'sine', 0.08);
+            setTimeout(() => this.createOscillator(1000, 'sine', 0.08), 50);
+        } catch (e) {
+            // Silently ignore
         }
     }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from '@/store/useNotificationStore';
 import { generateCode, sendSignal } from '@/lib/signaling';
@@ -36,13 +36,25 @@ export function useWebRTC() {
         connectionCodeCreatedAt,
     } = useAppStore();
 
+    const prevStatusRef = useRef<typeof connectionStatus>(connectionStatus);
+
     // Sound effects for connection status
     useEffect(() => {
+        const prevStatus = prevStatusRef.current;
+        if (connectionStatus === prevStatus) return;
+
         if (connectionStatus === 'connected') {
             audioService.playSuccess();
         } else if (connectionStatus === 'error') {
             audioService.playError();
+        } else if (
+            connectionStatus === 'disconnected' &&
+            (prevStatus === 'connected' || prevStatus === 'connecting')
+        ) {
+            audioService.playDisconnect();
         }
+
+        prevStatusRef.current = connectionStatus;
     }, [connectionStatus]);
 
     // Expiration Timer Logic
