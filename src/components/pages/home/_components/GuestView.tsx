@@ -12,6 +12,7 @@ import { ConnectionLoading } from './ConnectionLoading';
 import { audioService } from '@/utils/audio';
 import { useEffect } from 'react';
 import { useWebRTC } from '@/hooks/useWebRTC';
+import { useReducedMotion } from '@/hooks/use-reduced-motion';
 
 const CODE_LENGTH = 8;
 
@@ -32,6 +33,7 @@ export const GuestView = ({
 }: GuestViewProps) => {
     const { t } = useTranslation();
     const { isSignalFound } = useWebRTC();
+    const reducedMotion = useReducedMotion();
     const isCodeValid = inputCode.length === CODE_LENGTH;
 
     // Play validation sound when code becomes valid
@@ -46,9 +48,9 @@ export const GuestView = ({
             {isConnecting ? (
                 <motion.div
                     key="connecting"
-                    initial={{ opacity: 0, scale: 0.95 }}
+                    initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
+                    exit={{ opacity: 0, scale: reducedMotion ? 1 : 0.95 }}
                     className="space-y-6"
                 >
                     <ConnectionLoading
@@ -79,9 +81,9 @@ export const GuestView = ({
             ) : (
                 <motion.div
                     key="input"
-                    initial={{ opacity: 0, scale: 0.95 }}
+                    initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
+                    exit={{ opacity: 0, scale: reducedMotion ? 1 : 0.95 }}
                     className="relative space-y-12"
                 >
                     <div className="space-y-8">
@@ -98,8 +100,8 @@ export const GuestView = ({
                                         <motion.div
                                             initial={{
                                                 opacity: 0,
-                                                scale: 0.8,
-                                                x: -10,
+                                                scale: reducedMotion ? 1 : 0.8,
+                                                x: reducedMotion ? 0 : -10,
                                             }}
                                             animate={{
                                                 opacity: 1,
@@ -108,8 +110,8 @@ export const GuestView = ({
                                             }}
                                             exit={{
                                                 opacity: 0,
-                                                scale: 0.8,
-                                                x: -10,
+                                                scale: reducedMotion ? 1 : 0.8,
+                                                x: reducedMotion ? 0 : -10,
                                             }}
                                         >
                                             <Badge className="glow-primary h-6 gap-1.5 rounded-full px-3 text-[10px] font-black tracking-widest uppercase transition-all duration-500 sm:h-7 sm:px-4 sm:text-[11px]">
@@ -157,7 +159,9 @@ export const GuestView = ({
                                     <ArrowRight
                                         className={cn(
                                             'h-5 w-5 transition-transform sm:h-6 sm:w-6',
-                                            isCodeValid && 'animate-pulse',
+                                            isCodeValid &&
+                                                !reducedMotion &&
+                                                'animate-pulse',
                                         )}
                                     />
                                 </span>

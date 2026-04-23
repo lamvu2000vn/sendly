@@ -6,6 +6,7 @@ import { ZapIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import GenerateButton from './GenerateButton';
+import { useReducedMotion } from '@/hooks/use-reduced-motion';
 
 interface ModeSelectionProps {
     onHost: () => void;
@@ -21,6 +22,7 @@ export function ModeSelection({
     onPrefetchGuest,
 }: ModeSelectionProps) {
     const { t } = useTranslation();
+    const reducedMotion = useReducedMotion();
 
     return (
         <motion.div
@@ -29,7 +31,7 @@ export function ModeSelection({
                 visible: {
                     opacity: 1,
                     transition: {
-                        staggerChildren: 0.15,
+                        staggerChildren: reducedMotion ? 0 : 0.15,
                     },
                 },
             }}
@@ -40,7 +42,7 @@ export function ModeSelection({
             <motion.div
                 variants={{
                     hidden: {
-                        scale: 0.8,
+                        scale: reducedMotion ? 1 : 0.8,
                         opacity: 0,
                     },
                     visible: {
@@ -50,9 +52,15 @@ export function ModeSelection({
                 }}
                 className="relative mx-auto h-20 w-20"
             >
-                <div className="bg-primary/20 absolute inset-0 animate-ping rounded-full" />
+                <div
+                    className={`bg-primary/20 absolute inset-0 rounded-full ${!reducedMotion ? 'animate-ping' : ''}`}
+                    aria-hidden="true"
+                />
                 <div className="bg-primary/10 relative z-10 flex h-full w-full items-center justify-center rounded-full">
-                    <ZapIcon className="text-primary h-10 w-10" />
+                    <ZapIcon
+                        className="text-primary h-10 w-10"
+                        aria-hidden="true"
+                    />
                 </div>
             </motion.div>
 
@@ -62,7 +70,7 @@ export function ModeSelection({
                     visible: {
                         opacity: 1,
                         transition: {
-                            staggerChildren: 0.1,
+                            staggerChildren: reducedMotion ? 0 : 0.1,
                         },
                     },
                 }}
@@ -71,7 +79,7 @@ export function ModeSelection({
                 <motion.div
                     variants={{
                         hidden: {
-                            y: 10,
+                            y: reducedMotion ? 0 : 10,
                             opacity: 0,
                         },
                         visible: {
@@ -95,7 +103,7 @@ export function ModeSelection({
                         visible: {
                             opacity: 1,
                             transition: {
-                                staggerChildren: 0.1,
+                                staggerChildren: reducedMotion ? 0 : 0.1,
                             },
                         },
                     }}
@@ -104,7 +112,7 @@ export function ModeSelection({
                     <motion.div
                         variants={{
                             hidden: {
-                                y: 10,
+                                y: reducedMotion ? 0 : 10,
                                 opacity: 0,
                             },
                             visible: {
@@ -139,7 +147,7 @@ export function ModeSelection({
                     <motion.div
                         variants={{
                             hidden: {
-                                y: 10,
+                                y: reducedMotion ? 0 : 10,
                                 opacity: 0,
                             },
                             visible: {

@@ -47,7 +47,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                         variant="secondary"
                         size="sm"
                         className="group glass relative flex h-12 items-center gap-3 overflow-hidden rounded-2xl px-4 shadow-xl transition-all duration-500 active:scale-95"
-                        title={t('language.toggle')}
+                        aria-label={t('language.toggle')}
                     >
                         <div className="bg-primary/5 absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100" />
 
@@ -93,6 +93,7 @@ export const LanguageToggle = ({ className }: { className?: string }) => {
                                             ? 'bg-primary/10 text-primary shadow-sm'
                                             : 'text-muted-foreground hover:text-foreground hover:bg-border',
                                     )}
+                                    aria-current={isActive ? 'true' : undefined}
                                 >
                                     {isActive && (
                                         <motion.div

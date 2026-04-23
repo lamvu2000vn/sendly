@@ -34,7 +34,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
                         variant="secondary"
                         size="sm"
                         className="group glass relative flex h-12 items-center gap-3 overflow-hidden rounded-2xl px-4 shadow-xl transition-all duration-500 active:scale-95"
-                        title="Switch Theme"
+                        aria-label="Switch Theme"
                     >
                         <div className="bg-primary/5 absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100" />
 
@@ -96,6 +96,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
                                             ? 'bg-primary/10 text-primary shadow-sm'
                                             : 'text-muted-foreground hover:text-foreground hover:bg-border',
                                     )}
+                                    aria-current={isActive ? 'true' : undefined}
                                 >
                                     {isActive && (
                                         <motion.div

@@ -79,8 +79,6 @@ export const viewport: Viewport = {
     ],
     width: 'device-width',
     initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
     viewportFit: 'cover',
 };
 
@@ -127,7 +125,16 @@ export default function RootLayout({
                                 <NotificationProvider />
                             </Suspense>
 
-                            <div className="relative z-10 flex min-h-screen flex-col">
+                            <a
+                                href="#main-content"
+                                className="bg-primary text-primary-foreground absolute top-4 left-4 z-[100] -translate-y-20 rounded-lg px-4 py-2 transition-transform focus:translate-y-0"
+                            >
+                                Skip to content
+                            </a>
+                            <div
+                                id="main-content"
+                                className="relative z-10 flex min-h-screen flex-col"
+                            >
                                 {children}
                             </div>
                         </I18nProvider>

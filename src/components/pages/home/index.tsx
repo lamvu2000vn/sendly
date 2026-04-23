@@ -190,14 +190,15 @@ export default function HomePageComponent() {
                             setMode(null);
                         }}
                         onMouseEnter={prefetchModeSelection}
+                        aria-label={t('common.back')}
                     >
                         <ArrowLeft className="h-5 w-5" />
                     </Button>
                 )}
 
-                <span className="text-[10px] font-black tracking-widest uppercase opacity-70 sm:text-xs md:text-sm">
+                <h2 className="text-[10px] font-black tracking-widest uppercase opacity-70 sm:text-xs md:text-sm">
                     {titleText}
-                </span>
+                </h2>
             </>
         );
     };
