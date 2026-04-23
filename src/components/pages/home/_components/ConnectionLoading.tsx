@@ -40,7 +40,7 @@ export const ConnectionLoading = ({
                         initial={
                             isConnecting
                                 ? { width: 240, height: 240, opacity: 0 }
-                                : { width: 80, height: 80, opacity: 0.5 }
+                                : { width: 80, height: 80, opacity: 0 }
                         }
                         animate={
                             isConnecting
@@ -52,7 +52,7 @@ export const ConnectionLoading = ({
                                 : {
                                       width: [80, 240],
                                       height: [80, 240],
-                                      opacity: [0.5, 0],
+                                      opacity: [0, 0.5, 0],
                                   }
                         }
                         transition={{
