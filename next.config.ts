@@ -22,6 +22,8 @@ const nextConfig: NextConfig = {
             'sonner',
             'clsx',
             'tailwind-merge',
+            'i18next',
+            'react-i18next',
         ],
     },
     typedRoutes: true,

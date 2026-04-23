@@ -7,7 +7,6 @@ import { useState, useCallback, useEffect, lazy } from 'react';
 import { toast } from '@/store/useNotificationStore';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ModeSelection } from '@/components/pages/home/_components/ModeSelection';
 import { Hero } from '@/components/pages/home/_components/Hero';
 import { Footer } from '@/components/pages/home/_components/Footer';
 import { ConnectionCard } from '@/components/pages/home/_components/ConnectionCard';
@@ -22,6 +21,18 @@ const prefetchHost = () =>
 
 const prefetchGuest = () =>
     import('@/components/pages/home/_components/GuestView');
+
+const prefetchModeSelection = () =>
+    import('@/components/pages/home/_components/ModeSelection');
+
+const ModeSelection = makeAsyncComponent(
+    'ModeSelection',
+    lazyNamed(
+        () => import('@/components/pages/home/_components/ModeSelection'),
+        'ModeSelection',
+    ),
+    <DefaultCardSkeleton />,
+);
 
 const ErrorView = makeAsyncComponent(
     'ErrorView',
@@ -178,6 +189,7 @@ export default function HomePageComponent() {
                             handleDisconnect();
                             setMode(null);
                         }}
+                        onMouseEnter={prefetchModeSelection}
                     >
                         <ArrowLeft className="h-5 w-5" />
                     </Button>
