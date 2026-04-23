@@ -12,7 +12,7 @@ const LANGUAGES = [
     {
         code: 'en',
         label: 'English',
-        flag: 'https://flagcdn.com/w80/us.png',
+        flag: 'https://flagcdn.com/w80/gb.png',
     },
     {
         code: 'vi',
