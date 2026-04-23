@@ -18,7 +18,14 @@ export default function I18nProvider({
 
     useEffect(() => {
         if (mounted) {
-            document.documentElement.lang = i18n.language || 'en';
+            const lang = i18n.language || 'en';
+            document.documentElement.lang = lang;
+            
+            if (lang.startsWith('vi')) {
+                document.documentElement.classList.add('font-vi');
+            } else {
+                document.documentElement.classList.remove('font-vi');
+            }
         }
     }, [i18n.language, mounted]);
 

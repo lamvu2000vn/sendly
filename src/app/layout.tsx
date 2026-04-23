@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Outfit, Inter, JetBrains_Mono } from 'next/font/google';
+import { Outfit, Inter, JetBrains_Mono, Roboto } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import QueryProvider from '@/components/providers/QueryProvider';
@@ -20,6 +20,13 @@ const inter = Inter({
 const jetbrainsMono = JetBrains_Mono({
     subsets: ['latin'],
     variable: '--font-mono',
+    display: 'swap',
+});
+
+const roboto = Roboto({
+    subsets: ['vietnamese', 'latin'],
+    weight: ['300', '400', '500', '700'],
+    variable: '--font-roboto',
     display: 'swap',
 });
 
@@ -110,12 +117,11 @@ export default function RootLayout({
                 outfit.variable,
                 inter.variable,
                 jetbrainsMono.variable,
+                roboto.variable,
             )}
-            suppressHydrationWarning
         >
             <body
                 className="selection:bg-primary/30 selection:text-primary flex min-h-full flex-col font-sans"
-                suppressHydrationWarning
             >
                 <QueryProvider>
                     <ThemeProvider>
@@ -127,7 +133,7 @@ export default function RootLayout({
 
                             <a
                                 href="#main-content"
-                                className="bg-primary text-primary-foreground absolute top-4 left-4 z-[100] -translate-y-20 rounded-lg px-4 py-2 transition-transform focus:translate-y-0"
+                                className="bg-primary text-primary-foreground absolute top-4 left-4 z-100 -translate-y-20 rounded-lg px-4 py-2 transition-transform focus:translate-y-0"
                             >
                                 Skip to content
                             </a>

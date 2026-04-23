@@ -116,6 +116,11 @@
     --radius: 1.25rem;
 }
 
+:root.font-vi {
+    --font-sans: var(--font-roboto);
+    --font-heading: var(--font-roboto);
+}
+
 .dark {
     /* Sendly Midnight Pastel - Brightened Purple Tones */
     --background: oklch(0.22 0.04 270);
