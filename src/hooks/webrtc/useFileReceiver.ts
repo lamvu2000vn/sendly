@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { toast } from '@/store/useNotificationStore';
 import { useTransferStore, type FileTransfer } from '@/store/useTransferStore';
 import { saveChunk, clearStorage, getBlobFromStorage } from '@/lib/fileStorage';
+import { WebRTCMessageSchema } from '@/types/schemas';
+import { calculateFileHash } from '@/utils/crypto';
 
 export function useFileReceiver() {
     const { t } = useTranslation('common');
@@ -14,6 +16,7 @@ export function useFileReceiver() {
         name: string;
         size: number;
         received: number;
+        expectedHash?: string;
     } | null>(null);
     const lastUpdateRef = useRef<number>(0);
 
@@ -53,17 +56,27 @@ export function useFileReceiver() {
         async (event: MessageEvent) => {
             try {
                 if (typeof event.data === 'string') {
-                    const msg = JSON.parse(event.data);
+                    const rawMsg = JSON.parse(event.data);
+                    const validation = WebRTCMessageSchema.safeParse(rawMsg);
+
+                    if (!validation.success) {
+                        console.error(
+                            'Invalid WebRTC message received',
+                            validation.error,
+                        );
+                        return;
+                    }
+
+                    const msg = validation.data;
 
                     if (msg.type === 'manifest') {
-                        const newFiles: FileTransfer[] = msg.files.map(
-                            (f: any) => ({
-                                ...f,
-                                progress: 0,
-                                status: 'pending' as const,
-                                type: 'received' as const,
-                            }),
-                        );
+                        const newFiles: FileTransfer[] = msg.files.map((f) => ({
+                            ...f,
+                            progress: 0,
+                            status: 'pending' as const,
+                            type: 'received' as const,
+                            hash: f.hash,
+                        }));
 
                         addFiles(newFiles, true);
                     } else if (msg.type === 'file-start') {
@@ -72,6 +85,7 @@ export function useFileReceiver() {
                             name: msg.fileName,
                             size: msg.fileSize,
                             received: 0,
+                            expectedHash: msg.hash,
                         };
                         await clearStorage(msg.fileId);
                         updateFileProgress(msg.fileId, 0, 'transferring');
@@ -110,19 +124,43 @@ export function useFileReceiver() {
                     // Throttle progress updates to UI
                     if (isComplete || now - lastUpdateRef.current > 100) {
                         lastUpdateRef.current = now;
+                        // Keep as transferring until integrity check is done
                         updateFileProgress(
                             file.id,
                             (file.received / file.size) * 100,
-                            isComplete ? 'completed' : 'transferring',
+                            'transferring',
                         );
                     }
 
                     if (isComplete) {
                         const blob = await getBlobFromStorage(file.id);
+
+                        // Verify Integrity
+                        if (file.expectedHash) {
+                            const actualHash = await calculateFileHash(blob);
+                            if (actualHash !== file.expectedHash) {
+                                console.error('Integrity check failed!', {
+                                    expected: file.expectedHash,
+                                    actual: actualHash,
+                                });
+                                updateFileProgress(file.id, 100, 'error');
+                                toast.error(t('toast.integrity_error'));
+                                // Only reset if this is still the active file
+                                if (currentFileRef.current?.id === file.id) {
+                                    currentFileRef.current = null;
+                                }
+                                return;
+                            }
+                        }
+
                         const url = URL.createObjectURL(blob);
                         updateFileProgress(file.id, 100, 'completed', url);
                         toast.success(t('toast.received', { name: file.name }));
-                        currentFileRef.current = null;
+
+                        // Only reset if this is still the active file
+                        if (currentFileRef.current?.id === file.id) {
+                            currentFileRef.current = null;
+                        }
                     }
                 }
             } catch (error) {

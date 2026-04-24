@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from '@/store/useNotificationStore';
 import { useTransferStore, type FileTransfer } from '@/store/useTransferStore';
 import { DEFAULT_CHUNK_SIZE, MAX_CHUNK_SIZE } from './constants';
+import { calculateFileHash } from '@/utils/crypto';
 
 export function useFileSender(dc: RTCDataChannel | null) {
     const { t } = useTranslation('common');
@@ -22,14 +23,25 @@ export function useFileSender(dc: RTCDataChannel | null) {
         async (files: File[]) => {
             if (!dc || dc.readyState !== 'open') return;
 
-            const fileTransfers: FileTransfer[] = files.map((file) => ({
-                id: `${file.name}-${file.size}-${Date.now()}-${Math.random()}`,
-                fileName: file.name,
-                fileSize: file.size,
-                progress: 0,
-                status: 'pending' as const,
-                type: 'sent' as const,
-            }));
+            // Calculate hashes for all files
+            const filesWithHashes = await Promise.all(
+                files.map(async (file) => ({
+                    file,
+                    hash: await calculateFileHash(file),
+                })),
+            );
+
+            const fileTransfers: FileTransfer[] = filesWithHashes.map(
+                ({ file, hash }) => ({
+                    id: `${file.name}-${file.size}-${Date.now()}-${Math.random()}`,
+                    fileName: file.name,
+                    fileSize: file.size,
+                    progress: 0,
+                    status: 'pending' as const,
+                    type: 'sent' as const,
+                    hash,
+                }),
+            );
 
             addFiles(fileTransfers, false);
 
@@ -41,12 +53,13 @@ export function useFileSender(dc: RTCDataChannel | null) {
                         id: f.id,
                         fileName: f.fileName,
                         fileSize: f.fileSize,
+                        hash: f.hash,
                     })),
                 }),
             );
 
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
+            for (let i = 0; i < filesWithHashes.length; i++) {
+                const { file, hash } = filesWithHashes[i];
                 const transfer = fileTransfers[i];
 
                 if (dc.readyState !== 'open') break;
@@ -74,6 +87,7 @@ export function useFileSender(dc: RTCDataChannel | null) {
                         fileName: file.name,
                         fileSize: file.size,
                         chunkSize: currentChunkSize,
+                        hash,
                     }),
                 );
 

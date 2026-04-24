@@ -120,9 +120,7 @@ export default function RootLayout({
                 roboto.variable,
             )}
         >
-            <body
-                className="selection:bg-primary/30 selection:text-primary flex min-h-full flex-col font-sans"
-            >
+            <body className="selection:bg-primary/30 selection:text-primary flex min-h-full flex-col font-sans">
                 <QueryProvider>
                     <ThemeProvider>
                         <I18nProvider>

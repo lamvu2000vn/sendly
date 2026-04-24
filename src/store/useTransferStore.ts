@@ -8,6 +8,7 @@ export interface FileTransfer {
     status: 'pending' | 'transferring' | 'completed' | 'error' | 'cancelled';
     type: 'sent' | 'received';
     objectUrl?: string;
+    hash?: string | null;
 }
 
 export interface TransferState {

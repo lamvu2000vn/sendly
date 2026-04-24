@@ -13,6 +13,7 @@ import {
     HOST_ICE_TIMEOUT,
     SEND_ANSWER_DELAY,
 } from './constants';
+import { RTCSessionDescriptionSchema } from '@/types/schemas';
 
 export function useWebRTCConnection(
     onDataChannel: (channel: RTCDataChannel) => void,
@@ -186,17 +187,31 @@ export function useWebRTCConnection(
         const handleHandshake = async () => {
             try {
                 if (mode === 'host' && remoteSignal.message.type === 'answer') {
-                    const answer = JSON.parse(remoteSignal.message.data);
+                    const rawAnswer = JSON.parse(remoteSignal.message.data);
+                    const validation =
+                        RTCSessionDescriptionSchema.safeParse(rawAnswer);
+
+                    if (!validation.success) {
+                        throw new Error('Invalid answer SDP');
+                    }
+
                     await pcRef.current?.setRemoteDescription(
-                        new RTCSessionDescription(answer),
+                        new RTCSessionDescription(validation.data),
                     );
                 } else if (
                     mode === 'guest' &&
                     remoteSignal.message.type === 'offer'
                 ) {
-                    const offer = JSON.parse(remoteSignal.message.data);
+                    const rawOffer = JSON.parse(remoteSignal.message.data);
+                    const validation =
+                        RTCSessionDescriptionSchema.safeParse(rawOffer);
+
+                    if (!validation.success) {
+                        throw new Error('Invalid offer SDP');
+                    }
+
                     await pcRef.current?.setRemoteDescription(
-                        new RTCSessionDescription(offer),
+                        new RTCSessionDescription(validation.data),
                     );
 
                     let signalSent = false;

@@ -87,6 +87,7 @@
         "join_error": "Could not join connection. Please check the code.",
         "sent": "Sent: {{name}}",
         "cancelled": "Transfer cancelled: {{name}}",
+        "integrity_error": "Data integrity check failed. The file may be corrupted.",
         "network_restored": "Internet connection restored",
         "network_lost": "Internet connection lost"
     },

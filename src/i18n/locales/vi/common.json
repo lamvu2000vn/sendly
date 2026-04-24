@@ -87,6 +87,7 @@
         "join_error": "Không thể tham gia kết nối. Vui lòng kiểm tra mã code.",
         "sent": "Đã gửi: {{name}}",
         "cancelled": "Đã hủy truyền: {{name}}",
+        "integrity_error": "Kiểm tra tính toàn vẹn dữ liệu thất bại. Tệp có thể đã bị hỏng.",
         "network_restored": "Đã khôi phục kết nối internet",
         "network_lost": "Mất kết nối internet"
     },

@@ -1,15 +1,11 @@
 import { customAlphabet } from 'nanoid';
 import { SIGNALING_FETCH_TIMEOUT } from '@/hooks/webrtc/constants';
+import { SignalMessageSchema, type SignalMessage } from '@/types/schemas';
 
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const generateCode = customAlphabet(alphabet, 8);
 
 const NTFY_URL = 'https://ntfy.sh';
-
-export interface SignalMessage {
-    type: 'offer' | 'answer' | 'candidate';
-    data: string;
-}
 
 export async function sendSignal(code: string, message: SignalMessage) {
     const topic = `sendly_${code}_${message.type}`;
@@ -57,8 +53,20 @@ export async function pollSignal(
         const ntfyMsg = JSON.parse(lastLine);
 
         if (ntfyMsg.message) {
+            const rawMessage = JSON.parse(ntfyMsg.message);
+            // Validate the message using Zod
+            const validation = SignalMessageSchema.safeParse(rawMessage);
+
+            if (!validation.success) {
+                console.error(
+                    'Invalid signal message format',
+                    validation.error,
+                );
+                return null;
+            }
+
             return {
-                message: JSON.parse(ntfyMsg.message),
+                message: validation.data,
                 timestamp: ntfyMsg.time, // unixtime in seconds
             };
         }
