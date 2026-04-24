@@ -5,12 +5,13 @@ import { AnimatePresence } from 'framer-motion';
 import { useNotificationStore } from '@/store/useNotificationStore';
 import { NotificationItem } from './NotificationItem';
 import { cn } from '@/lib/utils';
-import { isMobile } from 'react-device-detect';
+import { useDevice } from '@/hooks/useDevice';
 
 export const NotificationProvider: React.FC = () => {
     const notifications = useNotificationStore((state) => state.notifications);
     const [mounted, setMounted] = useState(false);
-
+    const { isMobile } = useDevice();
+    
     useEffect(() => {
         setMounted(true);
     }, []);
