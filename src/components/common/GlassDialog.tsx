@@ -9,7 +9,7 @@ import {
     DialogClose,
     DialogFooter,
 } from '@/components/ui/dialog';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ReactNode } from 'react';
@@ -50,14 +50,14 @@ export function GlassDialog({
                 {/* Custom Close Button with framer-motion */}
                 <div className="absolute top-4 right-4 z-20">
                     <DialogClose asChild>
-                        <motion.button
+                        <m.button
                             whileHover={{ scale: 1.1, rotate: 90 }}
                             whileTap={{ scale: 0.9 }}
                             className="text-muted-foreground hover:bg-muted/50 hover:text-foreground flex h-8 w-8 items-center justify-center rounded-full transition-colors"
                         >
                             <X className="h-5 w-5" />
                             <span className="sr-only">Close</span>
-                        </motion.button>
+                        </m.button>
                     </DialogClose>
                 </div>
 
@@ -67,7 +67,7 @@ export function GlassDialog({
 
                 <AnimatePresence>
                     {open && (
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0, scale: 0.95, y: 10 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -103,7 +103,7 @@ export function GlassDialog({
                                     {footer}
                                 </DialogFooter>
                             )}
-                        </motion.div>
+                        </m.div>
                     )}
                 </AnimatePresence>
             </DialogContent>

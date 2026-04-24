@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
-import { motion, useAnimation, PanInfo } from 'framer-motion';
+import { m, useAnimation, PanInfo } from 'framer-motion';
 import {
     CheckCircle2,
     AlertCircle,
@@ -107,7 +107,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
     };
 
     return (
-        <motion.div
+        <m.div
             layout
             initial={{
                 opacity: 0,
@@ -188,7 +188,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
             </div>
 
             {/* Progress Bar Timer */}
-            <motion.div
+            <m.div
                 initial={{ width: '100%' }}
                 animate={controls}
                 className={cn(
@@ -202,7 +202,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
 
             {/* 2026 Glow effect */}
             {index === 0 && (
-                <motion.div
+                <m.div
                     layoutId="glow"
                     className={cn(
                         'absolute inset-0 -z-10 rounded-3xl opacity-30 blur-2xl',
@@ -220,6 +220,6 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({
             >
                 <X className="text-muted-foreground h-3.5 w-3.5" />
             </button>
-        </motion.div>
+        </m.div>
     );
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import {
     AlertCircle,
@@ -43,7 +43,7 @@ export const ErrorView = ({ reason, onBackToHome }: ErrorViewProps) => {
     };
 
     return (
-        <motion.div
+        <m.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -92,6 +92,6 @@ export const ErrorView = ({ reason, onBackToHome }: ErrorViewProps) => {
                     {t('error.back_to_home')}
                 </Button>
             </div>
-        </motion.div>
+        </m.div>
     );
 };

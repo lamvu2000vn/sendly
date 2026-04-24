@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Download, Trash2, File } from 'lucide-react';
 import { type TransferState } from '@/store/useTransferStore';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { TransferItem } from './TransferItem';
 
@@ -103,14 +103,14 @@ export const TransferProgress = ({
                     </AnimatePresence>
 
                     {transferState.files.length === 0 && (
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             className="space-y-4 py-16 text-center"
                         >
                             <div className="bg-muted/50 border-border/50 relative mx-auto flex size-16 items-center justify-center rounded-2xl border">
                                 <File className="text-muted-foreground/40 h-6 w-6" />
-                                <motion.div
+                                <m.div
                                     className="border-primary/20 absolute inset-0 rounded-2xl border"
                                     animate={{
                                         scale: [1, 1.1, 1],
@@ -130,7 +130,7 @@ export const TransferProgress = ({
                                     {t('connected.drag_and_drop_hint')}
                                 </p>
                             </div>
-                        </motion.div>
+                        </m.div>
                     )}
                 </div>
             </div>

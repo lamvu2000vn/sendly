@@ -2,7 +2,7 @@
 
 import { GlassDialog } from '@/components/common/GlassDialog';
 import { Button } from '../ui/button';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { TriangleAlert, Info, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -57,7 +57,7 @@ export default function ConfirmDialog({
 }: ConfirmDialogProps) {
     const footer = (
         <>
-            <motion.div
+            <m.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="w-full sm:w-auto"
@@ -69,8 +69,8 @@ export default function ConfirmDialog({
                 >
                     {cancelText}
                 </Button>
-            </motion.div>
-            <motion.div
+            </m.div>
+            <m.div
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95, y: 0 }}
                 className="w-full sm:w-auto"
@@ -90,12 +90,12 @@ export default function ConfirmDialog({
                 >
                     {confirmText}
                 </Button>
-            </motion.div>
+            </m.div>
         </>
     );
 
     const headerContent = (
-        <motion.div
+        <m.div
             initial={{ scale: 0.5, opacity: 0 }}
             animate={
                 open ? { scale: 1, opacity: 1 } : { scale: 0.5, opacity: 0 }
@@ -114,7 +114,7 @@ export default function ConfirmDialog({
             )}
         >
             <RenderIcon variant={variant} />
-        </motion.div>
+        </m.div>
     );
 
     return (

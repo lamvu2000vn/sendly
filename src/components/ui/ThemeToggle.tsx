@@ -2,7 +2,7 @@
 
 import { useAppStore } from '@/store/useAppStore';
 import { Sun, Moon, Monitor, Check } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Button } from './button';
 import { Popover, PopoverContent, PopoverTrigger } from './popover';
@@ -23,7 +23,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
     const currentTheme = THEMES.find((t) => t.key === theme) || THEMES[0];
 
     return (
-        <motion.div
+        <m.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className={cn('relative z-50', className)}
@@ -40,7 +40,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
 
                         <div className="border-border bg-background/50 relative flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full border shadow-sm">
                             <AnimatePresence mode="wait">
-                                <motion.div
+                                <m.div
                                     key={theme}
                                     initial={{
                                         opacity: 0,
@@ -60,12 +60,12 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
                                     transition={{ duration: 0.2 }}
                                 >
                                     <currentTheme.icon className="text-primary h-3.5 w-3.5" />
-                                </motion.div>
+                                </m.div>
                             </AnimatePresence>
                         </div>
 
                         <AnimatePresence mode="wait">
-                            <motion.span
+                            <m.span
                                 key={theme}
                                 initial={{ y: 10, opacity: 0 }}
                                 animate={{ y: 0, opacity: 1 }}
@@ -73,7 +73,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
                                 className="text-muted-foreground group-hover:text-foreground text-xs font-black tracking-widest uppercase"
                             >
                                 {theme}
-                            </motion.span>
+                            </m.span>
                         </AnimatePresence>
                     </Button>
                 </PopoverTrigger>
@@ -99,7 +99,7 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
                                     aria-current={isActive ? 'true' : undefined}
                                 >
                                     {isActive && (
-                                        <motion.div
+                                        <m.div
                                             layoutId="active-theme-bg"
                                             className="bg-primary/5 absolute inset-0 -z-10 rounded-2xl"
                                             transition={{
@@ -131,13 +131,13 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
                                     </div>
 
                                     {isActive && (
-                                        <motion.div
+                                        <m.div
                                             initial={{ scale: 0, opacity: 0 }}
                                             animate={{ scale: 1, opacity: 1 }}
                                             className="bg-primary text-primary-foreground flex h-5 w-5 items-center justify-center rounded-full"
                                         >
                                             <Check className="h-3 w-3 stroke-3" />
-                                        </motion.div>
+                                        </m.div>
                                     )}
                                 </button>
                             );
@@ -145,6 +145,6 @@ export const ThemeToggle = ({ className }: ThemeToggleProps) => {
                     </div>
                 </PopoverContent>
             </Popover>
-        </motion.div>
+        </m.div>
     );
 };

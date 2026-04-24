@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Radar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -29,7 +29,7 @@ export const ConnectionLoading = ({
             <div className="relative flex items-center justify-center">
                 {/* Radar Rings */}
                 {[...Array(3)].map((_, i) => (
-                    <motion.div
+                    <m.div
                         key={i}
                         className={cn(
                             'absolute rounded-full border',
@@ -65,7 +65,7 @@ export const ConnectionLoading = ({
                 ))}
 
                 {/* Central Icon */}
-                <motion.div
+                <m.div
                     className={cn(
                         'glow-primary border-primary/20 relative z-10 flex h-20 w-20 items-center justify-center rounded-full border backdrop-blur-md transition-colors duration-500',
                         isConnecting ? 'bg-primary/20' : 'bg-primary/10',
@@ -85,22 +85,22 @@ export const ConnectionLoading = ({
                             isConnecting ? 'animate-spin-fast' : 'animate-spin',
                         )}
                     />
-                </motion.div>
+                </m.div>
             </div>
 
             <div className="space-y-3 text-center">
                 {title && (
-                    <motion.h3
+                    <m.h3
                         key={title}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="text-xl font-bold tracking-tight"
                     >
                         {title}
-                    </motion.h3>
+                    </m.h3>
                 )}
                 {subtitle && (
-                    <motion.p
+                    <m.p
                         key={subtitle}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -108,7 +108,7 @@ export const ConnectionLoading = ({
                         className="text-muted-foreground mx-auto max-w-[280px] text-sm leading-relaxed"
                     >
                         {subtitle}
-                    </motion.p>
+                    </m.p>
                 )}
             </div>
         </div>

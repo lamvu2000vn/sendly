@@ -6,15 +6,26 @@ import { makeAsyncComponent } from '@/utils/async-load';
 import { useState, useCallback, useEffect, lazy } from 'react';
 import { toast } from '@/store/useNotificationStore';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Hero } from '@/components/pages/home/_components/Hero';
-import { Footer } from '@/components/pages/home/_components/Footer';
+import { m, AnimatePresence } from 'framer-motion';
 import { ConnectionCard } from '@/components/pages/home/_components/ConnectionCard';
 import DefaultCardSkeleton from '@/components/skeletons/DefaultCardSkeleton';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { lazyNamed } from '@/utils/lazy-named';
 import { audioService } from '@/utils/audio';
+
+const Hero = makeAsyncComponent(
+    'Hero',
+    lazyNamed(() => import('@/components/pages/home/_components/Hero'), 'Hero'),
+);
+
+const Footer = makeAsyncComponent(
+    'Footer',
+    lazyNamed(
+        () => import('@/components/pages/home/_components/Footer'),
+        'Footer',
+    ),
+);
 
 const prefetchHost = () =>
     import('@/components/pages/home/_components/HostView');
@@ -211,7 +222,7 @@ export default function HomePageComponent() {
                 <ConnectionCard status={connectionStatus} title={renderTitle()}>
                     <AnimatePresence mode="wait">
                         {connectionStatus === 'error' ? (
-                            <motion.div
+                            <m.div
                                 key="error"
                                 initial={{ opacity: 0, scale: 0.98 }}
                                 animate={{ opacity: 1, scale: 1 }}
@@ -225,9 +236,9 @@ export default function HomePageComponent() {
                                         setMode(null);
                                     }}
                                 />
-                            </motion.div>
+                            </m.div>
                         ) : showTransferView ? (
-                            <motion.div
+                            <m.div
                                 key="connected"
                                 initial={{ opacity: 0, scale: 0.98 }}
                                 animate={{ opacity: 1, scale: 1 }}
@@ -245,9 +256,9 @@ export default function HomePageComponent() {
                                     onDeleteFile={deleteFile}
                                     onCancel={cancelTransfer}
                                 />
-                            </motion.div>
+                            </m.div>
                         ) : (
-                            <motion.div
+                            <m.div
                                 key="view-switcher"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
@@ -295,7 +306,7 @@ export default function HomePageComponent() {
                                         />
                                     </div>
                                 )}
-                            </motion.div>
+                            </m.div>
                         )}
                     </AnimatePresence>
                 </ConnectionCard>

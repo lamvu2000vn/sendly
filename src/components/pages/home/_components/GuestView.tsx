@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useTranslation } from 'react-i18next';
@@ -46,7 +46,7 @@ export const GuestView = ({
     return (
         <AnimatePresence mode="wait">
             {isConnecting ? (
-                <motion.div
+                <m.div
                     key="connecting"
                     initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -77,9 +77,9 @@ export const GuestView = ({
                             {t('receiver.abort')}
                         </Button>
                     </div>
-                </motion.div>
+                </m.div>
             ) : (
-                <motion.div
+                <m.div
                     key="input"
                     initial={{ opacity: 0, scale: reducedMotion ? 1 : 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -97,7 +97,7 @@ export const GuestView = ({
                                 </Label>
                                 <AnimatePresence>
                                     {isCodeValid && (
-                                        <motion.div
+                                        <m.div
                                             initial={{
                                                 opacity: 0,
                                                 scale: reducedMotion ? 1 : 0.8,
@@ -118,7 +118,7 @@ export const GuestView = ({
                                                 <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4" />
                                                 {t('receiver.valid_code')}
                                             </Badge>
-                                        </motion.div>
+                                        </m.div>
                                     )}
                                 </AnimatePresence>
                             </div>
@@ -172,7 +172,7 @@ export const GuestView = ({
                             </p>
                         </div>
                     </div>
-                </motion.div>
+                </m.div>
             )}
         </AnimatePresence>
     );

@@ -2,7 +2,7 @@ import { FileIcon, UploadCloud, Plus } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface FileDropZoneProps {
@@ -70,7 +70,7 @@ export const FileDropZone = ({ onFileSelect }: FileDropZoneProps) => {
 
     return (
         <div className="relative">
-            <motion.div
+            <m.div
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
                 className={cn(
@@ -108,19 +108,19 @@ export const FileDropZone = ({ onFileSelect }: FileDropZoneProps) => {
                     ref={fileInputRef}
                     onChange={handleFileChange}
                 />
-            </motion.div>
+            </m.div>
 
             {typeof document !== 'undefined' &&
                 createPortal(
                     <AnimatePresence>
                         {isDragging && (
-                            <motion.div
+                            <m.div
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 className="bg-primary/95 text-primary-foreground fixed inset-0 z-[100] flex flex-col items-center justify-center p-6 backdrop-blur-md"
                             >
-                                <motion.div
+                                <m.div
                                     initial={{ scale: 0.5, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
                                     exit={{ scale: 0.5, opacity: 0 }}
@@ -140,8 +140,8 @@ export const FileDropZone = ({ onFileSelect }: FileDropZoneProps) => {
                                     <p className="max-w-md text-xl opacity-80">
                                         {t('drop_zone.overlay_subtitle')}
                                     </p>
-                                </motion.div>
-                            </motion.div>
+                                </m.div>
+                            </m.div>
                         )}
                     </AnimatePresence>,
                     document.body,

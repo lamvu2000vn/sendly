@@ -20,12 +20,6 @@ export default function I18nProvider({
         if (mounted) {
             const lang = i18n.language || 'en';
             document.documentElement.lang = lang;
-
-            if (lang.startsWith('vi')) {
-                document.documentElement.classList.add('font-vi');
-            } else {
-                document.documentElement.classList.remove('font-vi');
-            }
         }
     }, [i18n.language, mounted]);
 

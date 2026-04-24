@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { CopyIcon, ZapIcon, RefreshCw, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
@@ -60,7 +60,7 @@ export const HostView = ({
 
     if (!connectionCode && !isConnecting) {
         return (
-            <motion.div
+            <m.div
                 key="host-ready"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -83,12 +83,12 @@ export const HostView = ({
                     </div>
                     <GenerateButton onClick={onStart} />
                 </div>
-            </motion.div>
+            </m.div>
         );
     }
 
     return (
-        <motion.div
+        <m.div
             key="host-active"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -113,7 +113,7 @@ export const HostView = ({
                 <div className="flex-center group relative overflow-hidden rounded-xl sm:rounded-2xl">
                     {/* Background Pulse when connecting */}
                     {isConnecting && !isCodeExpired && (
-                        <motion.div
+                        <m.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             className="bg-primary/5 absolute inset-0 z-0 animate-pulse"
@@ -131,7 +131,7 @@ export const HostView = ({
                     >
                         <div className="flex-center w-full gap-3 sm:gap-4 md:gap-6">
                             {connectionCode.split('').map((char, i) => (
-                                <motion.span
+                                <m.span
                                     initial={{ y: 10, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{
@@ -147,14 +147,14 @@ export const HostView = ({
                                     )}
                                 >
                                     {char}
-                                </motion.span>
+                                </m.span>
                             ))}
                         </div>
                     </div>
 
                     <AnimatePresence>
                         {isCodeExpired && (
-                            <motion.div
+                            <m.div
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
@@ -171,7 +171,7 @@ export const HostView = ({
                                     <RefreshCw className="h-3.5 w-3.5" />
                                     {t('sender.regenerate_btn')}
                                 </Button>
-                            </motion.div>
+                            </m.div>
                         )}
                     </AnimatePresence>
                 </div>
@@ -179,7 +179,7 @@ export const HostView = ({
 
             <div className="flex flex-col items-center gap-6">
                 {connectionCode && !isCodeExpired && (
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.5 }}
@@ -192,7 +192,7 @@ export const HostView = ({
                             <CopyIcon className="mr-3 h-4 w-4" />
                             {t('sender.copy_btn')}
                         </Button>
-                    </motion.div>
+                    </m.div>
                 )}
 
                 <div
@@ -244,6 +244,6 @@ export const HostView = ({
                     {t('sender.terminate')}
                 </Button>
             </div>
-        </motion.div>
+        </m.div>
     );
 };

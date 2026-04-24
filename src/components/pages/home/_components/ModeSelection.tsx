@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { ZapIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -25,7 +25,7 @@ export function ModeSelection({
     const reducedMotion = useReducedMotion();
 
     return (
-        <motion.div
+        <m.div
             variants={{
                 hidden: { opacity: 0 },
                 visible: {
@@ -39,7 +39,7 @@ export function ModeSelection({
             animate="visible"
             className="space-y-8 py-4 text-center"
         >
-            <motion.div
+            <m.div
                 variants={{
                     hidden: {
                         scale: reducedMotion ? 1 : 0.8,
@@ -62,9 +62,9 @@ export function ModeSelection({
                         aria-hidden="true"
                     />
                 </div>
-            </motion.div>
+            </m.div>
 
-            <motion.div
+            <m.div
                 variants={{
                     hidden: { opacity: 0 },
                     visible: {
@@ -76,7 +76,7 @@ export function ModeSelection({
                 }}
                 className="space-y-6"
             >
-                <motion.div
+                <m.div
                     variants={{
                         hidden: {
                             y: reducedMotion ? 0 : 10,
@@ -95,9 +95,9 @@ export function ModeSelection({
                     <p className="text-muted-foreground mx-auto max-w-[240px] text-sm leading-relaxed">
                         {t('sender.ready_desc')}
                     </p>
-                </motion.div>
+                </m.div>
 
-                <motion.div
+                <m.div
                     variants={{
                         hidden: { opacity: 0 },
                         visible: {
@@ -109,7 +109,7 @@ export function ModeSelection({
                     }}
                     className="space-y-6"
                 >
-                    <motion.div
+                    <m.div
                         variants={{
                             hidden: {
                                 y: reducedMotion ? 0 : 10,
@@ -125,9 +125,9 @@ export function ModeSelection({
                             onClick={onHost}
                             onMouseEnter={onPrefetchHost}
                         />
-                    </motion.div>
+                    </m.div>
 
-                    <motion.div
+                    <m.div
                         variants={{
                             hidden: { opacity: 0 },
                             visible: { opacity: 1 },
@@ -142,9 +142,9 @@ export function ModeSelection({
                                 {t('common.or') || 'or'}
                             </span>
                         </div>
-                    </motion.div>
+                    </m.div>
 
-                    <motion.div
+                    <m.div
                         variants={{
                             hidden: {
                                 y: reducedMotion ? 0 : 10,
@@ -164,9 +164,9 @@ export function ModeSelection({
                         >
                             {t('sender.enter_code_btn')}
                         </Button>
-                    </motion.div>
-                </motion.div>
-            </motion.div>
-        </motion.div>
+                    </m.div>
+                </m.div>
+            </m.div>
+        </m.div>
     );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { memo } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
@@ -12,7 +12,7 @@ export const Hero = memo(() => {
 
     return (
         <div className="flex flex-col items-center space-y-6 text-center">
-            <motion.div
+            <m.div
                 initial={{
                     scale: 0.8,
                     opacity: 0,
@@ -35,10 +35,10 @@ export const Hero = memo(() => {
                     className="drop-shadow-[0_0_8px_var(--secondary)]"
                     priority
                 />
-            </motion.div>
+            </m.div>
 
             <div className="space-y-2">
-                <motion.h1
+                <m.h1
                     initial={{ y: reducedMotion ? 0 : 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
@@ -47,8 +47,8 @@ export const Hero = memo(() => {
                     <span className="text-gradient inline-block px-2 pb-1">
                         Sendly
                     </span>
-                </motion.h1>
-                <motion.p
+                </m.h1>
+                <m.p
                     initial={{ y: reducedMotion ? 0 : 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.3 }}
@@ -58,7 +58,7 @@ export const Hero = memo(() => {
                     <span className="mt-1 block text-sm font-normal tracking-widest uppercase opacity-70">
                         {t('hero.p2p')}
                     </span>
-                </motion.p>
+                </m.p>
             </div>
         </div>
     );

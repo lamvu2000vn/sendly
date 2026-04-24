@@ -1,7 +1,7 @@
 'use client';
 
 import { GlassDialog } from '@/components/common/GlassDialog';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { MousePointerClick, Zap, Files, ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { memo } from 'react';
@@ -48,7 +48,7 @@ const HelpDialog = memo(({ open, onOpenChange }: HelpDialogProps) => {
     ];
 
     const headerContent = (
-        <motion.div
+        <m.div
             initial={{ scale: 0.5, opacity: 0 }}
             animate={
                 open ? { scale: 1, opacity: 1 } : { scale: 0.5, opacity: 0 }
@@ -57,7 +57,7 @@ const HelpDialog = memo(({ open, onOpenChange }: HelpDialogProps) => {
             className="bg-primary/10 flex h-16 w-16 items-center justify-center rounded-2xl shadow-inner"
         >
             <ShieldCheck className="text-primary h-8 w-8" />
-        </motion.div>
+        </m.div>
     );
 
     return (
@@ -68,14 +68,14 @@ const HelpDialog = memo(({ open, onOpenChange }: HelpDialogProps) => {
             headerContent={headerContent}
             maxWidth="sm:max-w-lg"
         >
-            <motion.div
+            <m.div
                 variants={containerVariants}
                 initial="hidden"
                 animate={open ? 'visible' : 'hidden'}
                 className="space-y-6"
             >
                 {steps.map((step, index) => (
-                    <motion.div
+                    <m.div
                         key={index}
                         variants={itemVariants}
                         className="flex items-start gap-4"
@@ -91,18 +91,18 @@ const HelpDialog = memo(({ open, onOpenChange }: HelpDialogProps) => {
                                 {step.description}
                             </p>
                         </div>
-                    </motion.div>
+                    </m.div>
                 ))}
 
-                <motion.div
+                <m.div
                     variants={itemVariants}
                     className="bg-muted/30 mt-6 rounded-2xl p-4 text-xs italic"
                 >
                     <p className="text-muted-foreground">
                         {t('guide.p2p_note')}
                     </p>
-                </motion.div>
-            </motion.div>
+                </m.div>
+            </m.div>
         </GlassDialog>
     );
 });

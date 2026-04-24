@@ -1,7 +1,7 @@
 'use client';
 
 import { memo } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import {
     Download,
     RefreshCw,
@@ -34,7 +34,7 @@ export const TransferItem = memo(
         const isError = file.status === 'error';
 
         return (
-            <motion.div
+            <m.div
                 layout
                 initial={{ opacity: 0, y: 20, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -54,7 +54,7 @@ export const TransferItem = memo(
             >
                 {/* Animated background for transferring state */}
                 {isTransferring && (
-                    <motion.div
+                    <m.div
                         className="from-accent/5 to-primary/5 pointer-events-none absolute inset-0 rounded-2xl bg-linear-to-r via-transparent"
                         animate={{
                             backgroundPosition: [
@@ -225,7 +225,7 @@ export const TransferItem = memo(
                                     )}
                                 />
                                 {isTransferring && (
-                                    <motion.div
+                                    <m.div
                                         className="pointer-events-none absolute top-0 bottom-0 w-20 bg-white/30 blur-md"
                                         animate={{
                                             left: ['-20%', '120%'],
@@ -241,7 +241,7 @@ export const TransferItem = memo(
                         </div>
                     </div>
                 </div>
-            </motion.div>
+            </m.div>
         );
     },
 );

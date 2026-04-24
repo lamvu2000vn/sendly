@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ConnectionStatusIndicator } from './ConnectionStatusIndicator';
 import { ConnectionStatus } from '@/store/useAppStore';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
 
 interface ConnectionCardProps {
@@ -16,7 +16,7 @@ export const ConnectionCard = memo(
         const reducedMotion = useReducedMotion();
 
         return (
-            <motion.div
+            <m.div
                 initial={{ y: reducedMotion ? 0 : 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -36,7 +36,7 @@ export const ConnectionCard = memo(
                         </AnimatePresence>
                     </CardContent>
                 </Card>
-            </motion.div>
+            </m.div>
         );
     },
 );
