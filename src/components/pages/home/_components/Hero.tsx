@@ -28,7 +28,7 @@ export const Hero = memo(() => {
                     aria-hidden="true"
                 />
                 <Image
-                    src="/assets/images/icon-2_256.webp"
+                    src="/assets/images/icon-3.webp"
                     alt="Sendly Logo"
                     width={64}
                     height={64}
